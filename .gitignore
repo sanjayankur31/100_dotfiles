@@ -16,3 +16,8 @@ vimgolf
 sec.conf
 
 plugins.xml.gz
+
+logs
+
+pid
+*.pid
