@@ -1,0 +1,26 @@
+# https://wiki.archlinux.org/index.php/readline#Editing_mode
+# vi mode
+set editing-mode vi
+$if mode=vi
+set keymap vi-command
+set show-mode-in-prompt On
+# these are for vi-command mode
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+j:history-search-forward
+k:history-search-backward
+set keymap vi-insert
+# these are for vi-insert mode
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+$endif
+# Color files by types
+set colored-stats On
+# Append char to indicate type
+set visible-stats On
+# Mark symlinked directories
+set mark-symlinked-directories On
+# Color the common prefix
+set colored-completion-prefix On
+# Color the common prefix in menu-complete
+set menu-complete-display-prefix On

@@ -1,0 +1,17 @@
+#!/usr/bin/env python2
+# API is here: https://taskwarrior.org/docs/hooks.html
+import json
+import os
+import sys
+
+# Make no changes to the task, simply observe.
+old = json.loads(sys.stdin.readline())
+new = json.loads(sys.stdin.readline())
+print(json.dumps(new))
+
+# Start pomodoro when task is started
+if 'start' in new and 'start' not in old:
+    os.system('gnome-pomodoro --start')
+# Stop pomodoro when a task is stopped
+elif 'start' not in new and 'start' in old:
+    os.system('gnome-pomodoro --stop')

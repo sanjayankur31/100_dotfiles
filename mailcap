@@ -1,0 +1,26 @@
+### 
+### Begin Red Hat Mailcap
+###
+
+audio/*; /usr/bin/xdg-open %s ; copiousoutput
+
+image/*; /usr/bin/xdg-open %s ; copiousoutput
+
+application/msword;             libreoffice %s; copiousoutput
+application/vnd.msword;         libreoffice %s; copiousoutput
+application/excel;              libreoffice %s; copiousoutput
+application/msexcel;            libreoffice %s; copiousoutput
+application/vnd.ms-excel;       libreoffice %s; copiousoutput
+application/x-excel;            libreoffice %s; copiousoutput
+application/x-msexcel;          libreoffice %s; copiousoutput
+application/vnd.ms-powerpoint;  libreoffice %s; copiousoutput
+application/x-mspowerpoint;     libreoffice %s; copiousoutput
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; libreoffice '%s';  description="Office Open XML Spreadsheet"; nametemplate=%s.xlsxapplication/pdf; /usr/bin/xdg-open %s ; copiousoutput
+application/ppt;                libreoffice %s; copiousoutput
+
+application/pdf; /usr/bin/xdg-open %s ; copiousoutput
+application/postscript ; /usr/bin/xdg-open %s ; copiousoutput
+
+text/html; qutebrowser %s && sleep 5 ; test=test -n "$DISPLAY"; nametemplate=%s.html; needsterminal
+# text/html; lynx -dump %s ; copiousoutput; nametemplate=%s.html
+text/html; w3m -I %{charset} -T text/html ; copiousoutput; nametemplate=%s.html

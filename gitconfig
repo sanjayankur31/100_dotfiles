@@ -1,0 +1,25 @@
+[user]
+	name = Ankur Sinha (Ankur Sinha Gmail)
+	email = sanjay.ankur@gmail.com
+	signingkey = E629112D
+[color]
+	status = auto
+	ui = auto
+[push]
+	default = tracking
+[alias]
+    lg1 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    lg2 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(bold white)— %an%C(reset)' --abbrev-commit
+    lg = !"git lg1"
+[sendemail]
+	smtpserver = smtp.gmail.com
+	smtpserverport = 587
+	smtpencryption = tls
+	smtpuser = sanjay.ankur@gmail.com
+[core]
+	pager = less -r
+	excludesfile = /home/asinha/.gitignore_global
+[gpg]
+	program = gpg2
+[commit]
+	gpgsign = true

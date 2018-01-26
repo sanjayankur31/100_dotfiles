@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# Copyright 2010 Ankur Sinha 
+# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File : wiley2bibtex : convert the wiley citations to bibtex
+#
+
+usage ()
+{
+    echo -ne "wiley2bibtex : Convert citations from Wiley on line library to BibTeX\n"
+    echo -ne "Usage: wiley2bibtex inputfile outputfile\n"
+}
+
+parse()
+{
+    if [ -f /usr/bin/dos2unix ] ; then  
+        dos2unix "$1" > /dev/null 2>&1 
+    else
+        echo "Could not find dos2unix. Continuing without converting"
+    fi
+
+    # Check if it's downloaded from Wiley
+    grep "Provider: John Wiley & Sons, Ltd" "$1" > /dev/null
+
+    if [ 0 -ne $? ]; then
+        echo -ne "Does not appear to be from the Wiley online library\n"
+        echo -ne "Misses the required Provider: header\n"
+        echo -ne "Exiting"
+        exit 1
+    fi
+
+    echo -ne "@Article{" > $2
+
+    # Get the values
+    TY=$(grep "TY  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    TITLE=$(grep "TI  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    JOURNAL=$(grep "JO  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    VOLUME=$(grep "VL  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    ISSUE=$(grep "IS  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    PUBLISHER=$(grep "PB  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    SERIAL=$(grep "SN  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    URL=$(grep "UR  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    DOI=$(grep "DO  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    START_PAGE=$(grep "SP  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    END_PAGE=$(grep "EP  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    YEAR=$(grep "PY  -" "$1" | awk 'BEGIN { FS = " - " }; { print $2 }')
+    AUTHOR_NUM=$(grep "AU  -" "$1" | wc -l)
+
+    # understand this!
+    for i in "$(grep "AU  -" $1 )"; do 
+        AUTHOR=$(echo "$i" | awk 'BEGIN{FS = " - "}; { print $2}' | awk 'BEGIN {FS = ","};{print $2 " " $1 " and"}')
+    done
+    AUTHOR=$(echo $AUTHOR | sed "s/and$//")
+
+    # create ourselves a keyword
+    PRIME_AUTHOR=$(grep "AU  -" -m 1 $1 | awk 'BEGIN{FS = " - "}; {print $2}' | awk 'BEGIN {FS = ","};{print $2}')
+    KEYWORD="$PRIME_AUTHOR$YEAR"
+
+    # Start making our file!
+    echo -ne $KEYWORD >> $2 ; echo "," >> $2
+    if [ "$DOI" ] ; then 
+        echo -ne "\tDoi = {" >> $2 ; echo -ne $DOI >> $2 ; echo "}," >> $2
+    fi
+    if [ "$AUTHOR" ] ; then 
+        echo -ne "\tauthor = {" >> $2 ; echo -ne $AUTHOR >> $2 ; echo "}," >> $2
+    fi
+    if [ "$TITLE" ] ; then 
+        echo -ne "\ttitle = {" >> $2 ; echo -ne $TITLE >> $2 ; echo "}," >> $2
+    fi
+    if [ "$JOURNAL" ] ; then 
+        echo -ne "\tjournal = {" >> $2 ; echo -ne $JOURNAL >> $2 ; echo "}," >> $2
+    fi
+    if [ "$VOLUME" ] ; then 
+        echo -ne "\tvolume = {" >> $2 ; echo -ne $VOLUME >> $2 ; echo "}," >> $2
+    fi
+    if [ "$ISSUE" ] ; then 
+        echo -ne "\tissue = {" >> $2 ; echo -ne $ISSUE >> $2 ; echo "}," >> $2
+    fi
+    if [ "$YEAR" ] ; then 
+        echo -ne "\tyear = {" >> $2 ; echo -ne $YEAR >> $2 ; echo "}," >> $2
+    fi
+    if [ "$URL" ] ; then 
+        echo -ne "\turl = {" >> $2 ; echo -ne $URL >> $2 ; echo "}," >> $2
+    fi
+    if [ "$PUBLISHER" ] ; then 
+        echo -ne "\tpublisher = {" >> $2 ; echo -ne $PUBLISHER >> $2 ; echo "}," >> $2
+    fi
+    if [ "$PAGES" ] ; then 
+        echo -ne "\tpages = {" >> $2 ; echo -ne $START_PAGE >> $2 ; echo -ne "-" >> $2 ; echo -ne $END_PAGE >> $2 ; echo "}," >> $2
+    fi
+    echo -e "}" >> $2
+
+    cat $2
+
+
+
+}
+if [ $# -ne 2 ] ; then
+    echo "Incorrect usage"
+    usage
+    exit 1;
+fi
+
+if [ ! -f "$1" ] ; then
+    echo "$1: No such file." 2>&1
+    usage                 # Print usage message and exit.
+    exit 2
+fi 
+
+parse $*

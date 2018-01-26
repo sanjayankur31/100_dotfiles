@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# dvi2pdf
+# written by Luke Abraham, 2006/05/15
+
+set headname=`echo $1 | awk 'BEGIN{FS="."}{print $1}'`
+set dvifile=$headname.dvi
+set pdffile=$headname.pdf
+set psfile=$headname.ps
+set cdvips=`which dvips`
+set cps2pdf=`which ps2pdf`
+
+if ( ${#argv} > 2 ) then
+    echo " Error - wrong number of arguments"
+    echo " ---------------------------------"
+    echo " "
+fi
+
+# help options
+if ( ${#argv} > 2 || ${1} == -h || ${1} == --help) then
+    echo " dvi2pdf"
+    echo " "
+    echo " Converts .dvi files to .pdf files with the command"
+    echo " "
+    echo "  dvips -t a4 foo.dvi -Ppdf -o bar.ps"
+    echo "  ps2pdf bar.ps bar.pdf"
+    echo " "
+    echo " This program will also output a .ps file"
+    echo " "
+    echo " Useage is:"
+    echo " "
+    echo "  dvi2pdf foo.dvi {bar.pdf}"
+    echo " "
+    echo " If a .pdf filename is not specified, it defaults to"
+    echo " that of the .dvi file."
+    echo " "
+    echo " written by Luke Abraham 2006/05/15"
+    exit 1
+fi
+
+# are we changing the name of the file?
+if ( ${#argv} == 2 ) then
+    set pdfhead=`echo $2 | awk 'BEGIN{FS="."}{print $1}'`
+    set pdffile=$pdfhead.pdf
+    set psfile=$pdfhead.ps
+fi
+
+# convert to ps
+echo $cdvips" -t a4 "$dvifile" -Ppdf -o "$psfile
+$cdvips -t a4 $dvifile -Ppdf -o $psfile
+# convert ps to pdf
+echo $cps2pdf" "$psfile" "$pdffile
+$cps2pdf $psfile $pdffile

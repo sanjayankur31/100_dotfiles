@@ -1,0 +1,6 @@
+[submodule "vimfiles"]
+	path = vimfiles
+	url = git@github.com:sanjayankur31/vimfiles.git
+[submodule "task-theme"]
+	path = task-theme
+	url = git@github.com:sanjayankur31/task-theme.git

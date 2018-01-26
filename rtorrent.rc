@@ -1,0 +1,57 @@
+# Directory to manage temporary downloads to
+directory = ~/Downloads/torrent_temps/rtorrent_temp/
+
+# Torrent sessions, to save and resume
+session = ~/Downloads/torrent_temps/rtorrent_sessions/
+
+# Default upload,download rate
+upload_rate = 2500
+download_rate = 7500
+peer_exchange = yes
+tracker_numwant= 40
+use_udp_trackers = yes
+
+# DHT enabled
+dht = on
+
+# custom throttles
+throttle_up = low,500
+throttle_down = low,1000
+throttle_up = med,500
+throttle_down = med,2000
+throttle_up = high,4000
+throttle_down = high,4000
+
+# Scheduling throttle
+# 200 from 1-5, 100 from 5-1
+#schedule = throttle_1,01:30:00,24:00:00,download_rate=1200
+#schedule = throttle_2,05:30:00,24:00:00,download_rate=100
+
+# Watch a directory for new torrents, restart torrents that have been
+# copied back and stop those that have been deleted.
+schedule = tied_directory,10,10,start_tied=
+schedule = untied_directory,10,10,close_untied=
+
+# Move finished torrents to completed
+system.method.set_key = event.download.finished,move_complete,"d.set_directory=~/Downloads/;execute=mv,-u,$d.get_base_path=,~/Downloads/"
+
+# Enable the default ratio group.
+ratio.enable=
+
+# Change the limits, the defaults should be sufficient.
+ratio.min.set=0
+ratio.max.set=150
+ratio.upload.set=5M
+
+# Maximum and minimum number of peers to connect to per torrent.
+min_peers = 1
+max_peers = 100
+
+# Changing the command triggered when the ratio is reached.
+system.method.set = group.seeding.ratio.command, d.close=, d.erase=
+
+schedule = watch_directory,0,10,load_start=~/Downloads/torrent_temps/rtorrent_watch/*.torrent
+
+# scgi
+scgi_port = 127.0.0.1:5000
+
