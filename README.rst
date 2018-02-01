@@ -1,4 +1,4 @@
 Dotfiles
 --------
 
-My dotfiles. Keep private - irssi has credentials.
+My dotfiles!
