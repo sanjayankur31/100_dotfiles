@@ -22,36 +22,6 @@
 # one file
 #
 
-# if ! pgrep -f "systemd --user" ; then
-#     systemd --user &
-# fi
-
-#mpDris2 --debug >> ~/mpDris2.log 2>&1 &
-
-#run rssdler
-#if ! rssdler -s ; then
-#	if [ -f "/home/ankur/Downloads/torrent-temps/daemon.info" ]; then
-#		rm -fv "/home/ankur/Downloads/torrent-temps/daemon.info";
-#	fi
-#    rssdler -d
-#fi
-
-# rtorrentqueuemanager
-#if ! pgrep -f "rtorrentQM" ; then
-#	rm -fv "/home/ankur/.local/share/rtorrentQM/pid"
-#    /home/ankur/bin/rtorrentQM.pl &
-#fi
-
-# Replaced by user systemd files
-# mpd
-# if ! pgrep "^mpd$" ; then
-    # mpd &
-# fi
-#
-# Ensure that mpd is running before starting the others
-#sleep 5
-
-# mpdas
 if ! pgrep "mpdscribble" && pgrep "mpd$" ; then
    mpdscribble
 fi
@@ -61,8 +31,4 @@ fi
 #    pushd /home/ankur/Documents/work/organize/planning/UTS_masters/tjplan
 #    tj3d && sleep 1; tj3client add plan.tjp && tj3webd
 #    popd
-#fi
-#ret=`ps aux | egrep "task-web" | sed '/grep/ d' | wc -l`
-#if [ ! $ret -gt 0 ]; then
-#    task-web
 #fi
