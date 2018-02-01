@@ -52,9 +52,9 @@
 #sleep 5
 
 # mpdas
-#if ! pgrep "mpdscribble" ; then 
-#    mpdscribble
-#fi
+if ! pgrep "mpdscribble" && pgrep "mpd$" ; then
+   mpdscribble
+fi
 
 # tj3daemon
 #if ! pgrep "tj3d" ; then
