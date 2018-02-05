@@ -5,6 +5,18 @@ fi
 
 # Only when it is an interactive shell, not a login shell
 if [[ $- == *i* ]] ; then
+    # SSH agent - hostname based, why not?
+    SSH_ENV="$HOME/.ssh/environment.""$(hostname)"
+    # If no SSH agent found, run this function
+    function start_ssh_agent {
+        echo "Initialising new SSH agent..."
+        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+        echo succeeded
+        chmod 600 "${SSH_ENV}"
+        . "${SSH_ENV}" > /dev/null
+        /usr/bin/ssh-add;
+    }
+
     # Common settings
     # User specific aliases and functions
     source /usr/share/git-core/contrib/completion/git-prompt.sh
@@ -46,17 +58,6 @@ if [[ $- == *i* ]] ; then
     fi
     alias man='vman'
 
-    # SSH agent
-    SSH_ENV="$HOME/.ssh/environment"
-    # If no SSH agent found, run this function
-    function start_ssh_agent {
-        echo "Initialising new SSH agent..."
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-        echo succeeded
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add;
-    }
     # Source SSH settings, if applicable
     if [ -f "${SSH_ENV}" ]; then
         . "${SSH_ENV}" > /dev/null
