@@ -21,3 +21,7 @@ logs
 
 pid
 *.pid
+
+*db
+history.search
+history.cmdline
