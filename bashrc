@@ -41,6 +41,7 @@ if [[ $- == *i* ]] ; then
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
         vman() { /usr/bin/man $* | col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
         export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+        export MV2_ENABLE_AFFINITY=0
         source activate python3
         module unload mpi/mpich-x86_64
         module load mvapich2
