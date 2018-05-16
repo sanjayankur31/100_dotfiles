@@ -23,6 +23,7 @@ if [[ $- == *i* ]] ; then
     export PATH=$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/asinha/.local/bin:/home/asinha/bin:/usr/lib64/mpich/bin/
     CFLAGS=$(rpm -E %optflags); export CFLAGS
     CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
+    export CUPS_USER=as14ahs
 
     #alias rm='trash-put'
     alias rm='rm -i'
@@ -45,6 +46,7 @@ if [[ $- == *i* ]] ; then
         vman() { /usr/bin/man $* | col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
         export PATH=/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
         source activate python3
+        module load mvapich2-1.7
         source ~/installed-software/nest/bin/nest_vars.sh
     else
         fortune | cowsay -f vader
