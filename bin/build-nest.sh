@@ -18,12 +18,14 @@
 #
 # File : 
 #
-export CFLAGS="-ggdb"
-export CXXFLAGS="-ggdb"
-if [ "$HOSTNAME" = "stri-cluster.herts.ac.uk" ]; then
+if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
+    export CFLAGS="-O2"
+    export CXXFLAGS="-O2"
     INSTALL_PATH="/home/asinha/installed-software/nest/"
     cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH -Dwith-python:STRING=3 -Dwith-mpi:BOOL=ON  .
 else
+    export CFLAGS="-ggdb"
+    export CXXFLAGS="-ggdb"
     INSTALL_PATH="/opt/nest/"
     cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH -Dwith-python:STRING=3 -Dwith-mpi:BOOL=ON -Dwith-debug:BOOL=ON -Dwith-optimize:BOOL=OFF .
 fi
