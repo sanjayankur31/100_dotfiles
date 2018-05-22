@@ -3,6 +3,16 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
+# Always needed for the cluster: whether the shell is interactive or login
+if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
+    export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+    export MV2_ENABLE_AFFINITY=0
+    source activate python3
+    module unload mpi/mpich-x86_64
+    module load mvapich2
+    source ~/installed-software/nest/bin/nest_vars.sh
+fi
+
 # Only when it is an interactive shell, not a login shell
 if [[ $- == *i* ]] ; then
     # SSH agent - hostname based, why not?
@@ -37,15 +47,11 @@ if [[ $- == *i* ]] ; then
     export GIT_PS1_SHOWUPSTREAM="auto"
     export GIT_PS1_SHOWUNTRACKEDFILES=1
 
-    # Host specific settings. Cluster doesn't have vimx, for example
+    # Host specific settings. Cluster doesn't have vimx and cowsay, the
+    # flags won't apply, and the path to NEST is different too.
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
         vman() { /usr/bin/man $* | col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
-        export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
-        export MV2_ENABLE_AFFINITY=0
-        source activate python3
-        module unload mpi/mpich-x86_64
-        module load mvapich2
-        source ~/installed-software/nest/bin/nest_vars.sh
+    # for all my other machines
     else
         fortune | cowsay -f vader
         module load mpi/openmpi-x86_64
@@ -144,15 +150,5 @@ if [[ $- == *i* ]] ; then
         export PS1="\[$FGGRN\][\u@\h \[$FGBLU\] \W\[$FGRED\]\$(__git_ps1 \(%s\))\[$FGGRN\]]\$ \[$RESET\]"
     else
         export PS1="[\u@\h \W\$(__git_ps1 \(%s\))]\$ "
-    fi
-else
-    # non interactive shell for simulations using qsub
-    if [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
-        export PATH=/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
-        export MV2_ENABLE_AFFINITY=0
-        source activate python3
-        module unload mpi/mpich-x86_64
-        module load mvapich2
-        source ~/installed-software/nest/bin/nest_vars.sh
     fi
 fi
