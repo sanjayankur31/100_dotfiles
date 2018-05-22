@@ -149,7 +149,10 @@ else
     # non interactive shell for simulations using qsub
     if [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
         export PATH=/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+        export MV2_ENABLE_AFFINITY=0
         source activate python3
+        module unload mpi/mpich-x86_64
+        module load mvapich2
         source ~/installed-software/nest/bin/nest_vars.sh
     fi
 fi
