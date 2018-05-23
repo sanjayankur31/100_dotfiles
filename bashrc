@@ -3,16 +3,24 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# Always needed for the cluster: whether the shell is interactive or login
-if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
-    export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+# Cluster head node
+if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] ; then
+    export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake/bin/:$PATH
     export MODULEPATH=/home/asinha/installed-software/modulefiles:$MODULEPATH
-    export MV2_ENABLE_AFFINITY=0
-    # export MV2_USE_LAZY_MEM_UNREGISTER=0
-    source activate python3
+    # do not load any modules by default
     module unload mpi/mpich-x86_64
-    module load mvapich-ankur
-    export LD_PRELOAD=/home/asinha/installed-software/mvapich2.3r2/lib/libmpi.so
+    source activate python3
+    source ~/installed-software/nest/bin/nest_vars.sh
+fi
+# Cluster runner nodes
+if [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
+    module unload mpi/mpich-x86_64
+    module load mvapich2
+    export LD_PRELOAD=/usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
+    export MV2_ENABLE_AFFINITY=0
+    export MV2_USE_LAZY_MEM_UNREGISTER=0
+    export MV2_SHOW_CPU_BINDING=1
+    source activate python3
     source ~/installed-software/nest/bin/nest_vars.sh
 fi
 
