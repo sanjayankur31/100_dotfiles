@@ -14,6 +14,8 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] ; t
 fi
 # Cluster runner nodes
 if [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
+    export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake/bin/:$PATH
+    export MODULEPATH=/home/asinha/installed-software/modulefiles:$MODULEPATH
     module unload mpi/mpich-x86_64
     module load mvapich2
     export LD_PRELOAD=/usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
