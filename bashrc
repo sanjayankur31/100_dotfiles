@@ -6,10 +6,13 @@ fi
 # Always needed for the cluster: whether the shell is interactive or login
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
     export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake-3.4.3-Linux-x86_64/bin/:$PATH
+    export MODULEPATH=/home/asinha/installed-software/modulefiles:$MODULEPATH
     export MV2_ENABLE_AFFINITY=0
+    # export MV2_USE_LAZY_MEM_UNREGISTER=0
     source activate python3
     module unload mpi/mpich-x86_64
-    module load mvapich2
+    module load mvapich-ankur
+    export LD_PRELOAD=/home/asinha/installed-software/mvapich2.3r2/lib/libmpi.so
     source ~/installed-software/nest/bin/nest_vars.sh
 fi
 
