@@ -9,15 +9,14 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || 
     export MODULEPATH=/home/asinha/installed-software/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
+    module load mvapich2
+    export LD_PRELOAD=/usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
     source activate python3
     source ~/installed-software/nest/bin/nest_vars.sh
 
     # Extra bits for the running nodes
     if [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
-        module load mvapich2
-        export LD_PRELOAD=/usr/mpi/gcc/mvapich2-2.1a/lib/libmpi.so
         export MV2_ENABLE_AFFINITY=0
-        export MV2_USE_LAZY_MEM_UNREGISTER=0
         export MV2_SHOW_CPU_BINDING=1
     fi
 fi
