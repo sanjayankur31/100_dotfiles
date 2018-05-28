@@ -51,7 +51,6 @@ if [[ $- == *i* ]] ; then
     # for all my other machines
     else
         fortune | cowsay -f vader
-        module load mpi/openmpi-x86_64
         export PATH=$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/asinha/.local/bin:/home/asinha/bin
         CFLAGS=$(rpm -E %optflags); export CFLAGS
         CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
