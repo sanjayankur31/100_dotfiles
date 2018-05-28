@@ -9,10 +9,7 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || 
     export MODULEPATH=/beegfs/general/asinha/software/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
-    # pick what mpi implementation to use
-    module load mvapich2
     source activate python3
-    source ~/installed-software/nest/bin/nest_vars.sh
 fi
 
 # Only when it is an interactive shell, not a login shell
