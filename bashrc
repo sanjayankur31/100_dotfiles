@@ -6,7 +6,7 @@ fi
 # Cluster head node
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
     export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake/bin/:$PATH
-    export MODULEPATH=/beegfs/general/asinha/software/modulefiles:$MODULEPATH
+    export MODULEPATH=/home/asinha/software/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
     source activate python3
