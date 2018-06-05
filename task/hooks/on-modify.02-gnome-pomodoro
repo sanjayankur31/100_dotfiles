@@ -11,7 +11,7 @@ print(json.dumps(new))
 
 # Start pomodoro when task is started
 if 'start' in new and 'start' not in old:
-    os.system('gnome-pomodoro --start')
+    os.system('pgrep -fc gnome-pomodoro && gnome-pomodoro --start')
 # Stop pomodoro when a task is stopped
 elif 'start' not in new and 'start' in old:
-    os.system('gnome-pomodoro --stop')
+    os.system('pgrep -fc gnome-pomodoro && gnome-pomodoro --stop')
