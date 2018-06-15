@@ -1,57 +1,106 @@
-# Directory to manage temporary downloads to
-directory = ~/Downloads/torrent_temps/rtorrent_temp/
+#############################################################################
+# A minimal rTorrent configuration that provides the basic features
+# you want to have in addition to the built-in defaults.
+#
+# See https://github.com/rakshasa/rtorrent/wiki/CONFIG-Template
+# for an up-to-date version.
+#############################################################################
 
-# Torrent sessions, to save and resume
-session = ~/Downloads/torrent_temps/rtorrent_sessions/
+# Instance layout (base paths)
+method.insert = cfg.basedir,  private|const|string, (cat,"/home/asinha/Downloads/rtorrent/")
+method.insert = cfg.download, private|const|string, (cat,(cfg.basedir),"download/")
+method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
+method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
+method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),".session/")
+method.insert = cfg.watch,    private|const|string, (cat,(cfg.basedir),"watch/")
 
-# Default upload,download rate
-upload_rate = 2500
-download_rate = 7500
-peer_exchange = yes
-tracker_numwant= 40
-use_udp_trackers = yes
+# Create instance directories
+execute.throw = sh, -c, (cat,\
+    "mkdir -p \"",(cfg.download),"\" ",\
+    "\"",(cfg.logs),"\" ",\
+    "\"",(cfg.session),"\" ",\
+    "\"",(cfg.watch),"/load\" ",\
+    "\"",(cfg.watch),"/start\" ")
 
-# DHT enabled
-dht = on
+# Listening port for incoming peer traffic (fixed; you can also randomize it)
+network.port_range.set = 50000-50000
+network.port_random.set = no
 
-# custom throttles
-throttle_up = low,500
-throttle_down = low,1000
-throttle_up = med,500
-throttle_down = med,2000
-throttle_up = high,4000
-throttle_down = high,4000
+# Tracker-less torrent and UDP tracker support
+# (conservative settings for 'private' trackers, change for 'public')
+dht.mode.set = auto
+protocol.pex.set = no
+trackers.use_udp.set = yes
 
-# Scheduling throttle
-# 200 from 1-5, 100 from 5-1
-#schedule = throttle_1,01:30:00,24:00:00,download_rate=1200
-#schedule = throttle_2,05:30:00,24:00:00,download_rate=100
+# Peer settings
+throttle.max_uploads.set = 1500
+throttle.max_uploads.global.set = 5000
 
-# Watch a directory for new torrents, restart torrents that have been
-# copied back and stop those that have been deleted.
-schedule = tied_directory,10,10,start_tied=
-schedule = untied_directory,10,10,close_untied=
+throttle.min_peers.normal.set = 20
+throttle.max_peers.normal.set = 60
+throttle.min_peers.seed.set = 30
+throttle.max_peers.seed.set = 80
+trackers.numwant.set = 80
 
-# Move finished torrents to completed
-system.method.set_key = event.download.finished,move_complete,"d.set_directory=~/Downloads/;execute=mv,-u,$d.get_base_path=,~/Downloads/"
+protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
 
-# Enable the default ratio group.
-ratio.enable=
+# Limits for file handle resources, this is optimized for
+# an `ulimit` of 1024 (a common default). You MUST leave
+# a ceiling of handles reserved for rTorrent's internal needs!
+network.http.max_open.set = 50
+network.max_open_files.set = 600
+network.max_open_sockets.set = 300
 
-# Change the limits, the defaults should be sufficient.
-ratio.min.set=0
-ratio.max.set=150
-ratio.upload.set=5M
+# Memory resource usage (increase if you have a large number of items loaded,
+# and/or the available resources to spend)
+pieces.memory.max.set = 1800M
+network.xmlrpc.size_limit.set = 4M
 
-# Maximum and minimum number of peers to connect to per torrent.
-min_peers = 1
-max_peers = 100
+# Basic operational settings (no need to change these)
+session.path.set = (cat, (cfg.session))
+directory.default.set = (cat, (cfg.download))
+log.execute = (cat, (cfg.logs), "execute.log")
+##log.xmlrpc = (cat, (cfg.logs), "xmlrpc.log")
+execute.nothrow = sh, -c, (cat, "echo >",\
+    (session.path), "rtorrent.pid", " ", (system.pid))
 
-# Changing the command triggered when the ratio is reached.
-system.method.set = group.seeding.ratio.command, d.close=, d.erase=
+# Other operational settings (check & adapt)
+encoding.add = utf8
+system.umask.set = 0027
+system.cwd.set = (directory.default)
+network.http.dns_cache_timeout.set = 25
+schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace, 1000M))
+##pieces.hash.on_completion.set = no
+##view.sort_current = seeding, greater=d.ratio=
+##keys.layout.set = qwerty
+##network.http.capath.set = "/etc/ssl/certs"
+##network.http.ssl_verify_peer.set = 0
+##network.http.ssl_verify_host.set = 0
 
-schedule = watch_directory,0,10,load_start=~/Downloads/torrent_temps/rtorrent_watch/*.torrent
+# Some additional values and commands
+method.insert = system.startup_time, value|const, (system.time)
+method.insert = d.data_path, simple,\
+    "if=(d.is_multi_file),\
+        (cat, (d.directory), /),\
+        (cat, (d.directory), /, (d.name))"
+method.insert = d.session_file, simple, "cat=(session.path), (d.hash), .torrent"
 
-# scgi
-scgi_port = 127.0.0.1:5000
+# Watch directories (add more as you like, but use unique schedule names)
+schedule2 = watch_start, 10, 10, ((load.start_verbose, (cat, (cfg.watch), "start/*.torrent")))
+schedule2 = watch_load, 11, 10, ((load.verbose, (cat, (cfg.watch), "load/*.torrent")))
 
+# Run the rTorrent process as a daemon in the background 
+# (and control via XMLRPC sockets)
+#system.daemon.set = true
+#network.scgi.open_local = (cat,(session.path),rtorrent.sock)
+#execute.nothrow = chmod,770,(cat,(session.path),rtorrent.sock)
+
+# Logging:
+#   Levels = critical error warn notice info debug
+#   Groups = connection_* dht_* peer_* rpc_* storage_* thread_* tracker_* torrent_*
+print = (cat, "Logging to ", (cfg.logfile))
+log.open_file = "log", (cfg.logfile)
+log.add_output = "info", "log"
+##log.add_output = "tracker_debug", "log"
+
+### END of rtorrent.rc ###
