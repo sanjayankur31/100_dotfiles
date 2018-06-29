@@ -31,4 +31,3 @@ else
 fi
 echo "Now run:"
 echo "make -j24; make install; source /$INSTALL_PATH/bin/nest_vars.sh"
-
