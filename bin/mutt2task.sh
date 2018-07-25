@@ -11,7 +11,7 @@ do
     fi
     if [ -z "$subject" ]
     then
-        subject="$(echo "$line" | grep "^Subject:" | awk -F: '{print $2}' | sed -e 's/^[[:space:]]*//')"
+        subject="$(echo "$line" | grep "^Subject:" | sed -e  's/Subject://' -e 's/^[[:space:]]*//')"
         # subject="$(echo "$line" | sed -n '/^Subject:/ p;q')"
     fi
 
