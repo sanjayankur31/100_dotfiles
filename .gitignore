@@ -25,3 +25,7 @@ pid
 *db
 history.search
 history.cmdline
+
+bin/rackup
+bin/tilt
+bin/task-web
