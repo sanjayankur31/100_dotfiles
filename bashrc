@@ -31,6 +31,7 @@ if [[ $- == *i* ]] ; then
     source /usr/share/git-core/contrib/completion/git-prompt.sh
 
     #alias rm='trash-put'
+    alias timestamp='date +%Y%m%d%H%M'
     alias rm='rm -i'
     alias lsd='ls -d */ --color=auto'
     alias lash='ls -lAsh --color=auto'
