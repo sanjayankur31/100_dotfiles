@@ -60,6 +60,8 @@ if [[ $- == *i* ]] ; then
         ulimit -c unlimited
         alias vim='vimx --servername $(pwgen 8 1)'
         export EDITOR='gvim -v'
+        # image directory for research diary
+        export RDIMGDIR="/home/asinha/Documents/02_Code/00_repos/00_mine/00_research_diary/diary/2018/images/"
         vman() { /usr/bin/man $* | col -b | vimx -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
 
     fi
