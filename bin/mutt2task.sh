@@ -15,7 +15,8 @@ do
         # subject="$(echo "$line" | sed -n '/^Subject:/ p;q')"
     fi
 
-    if [ -n "$sender" ] && [ -n "$subject" ]
+    # there must be a sender, the subject may be empty
+    if [ -n "$sender" ]
     then
         # echo "$sender: $subject"
         task add project:email due:1d "$sender: $subject"
