@@ -1,13 +1,13 @@
 #new -s default
 new-window -d -n "ncmpcpp" -t 0 -k ncmpcpp
 new-window -d -n "weechat" -t 1
-new-window -d -n "mail" -t 2
-new-window -d -n "vit" -t 3
-new-window -d 
-new-window -d 
-new-window -d 
-new-window -d 
-new-window -d 
+new-window -d -n "mail" -t 2 neomutt
+new-window -d -n "t-l" -t 3 vit 'project!~literature'
+new-window -d -n "r-l" -t 4 vit 'project~literature'
+new-window -d
+new-window -d
+new-window -d
+new-window -d
 
 
 unbind s
