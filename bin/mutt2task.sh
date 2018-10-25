@@ -14,12 +14,12 @@ do
         subject="$(echo "$line" | grep "^Subject:" | sed -e  's/Subject://' -e 's/^[[:space:]]*//')"
         # subject="$(echo "$line" | sed -n '/^Subject:/ p;q')"
     fi
-
-    # there must be a sender, the subject may be empty
-    if [ -n "$sender" ]
-    then
-        # echo "$sender: $subject"
-        task add project:email due:1d "$sender: $subject"
-        exit 0
-    fi 
 done
+
+# there must be a sender, the subject may be empty
+if [ -n "$sender" ]
+then
+    echo "$sender: $subject"
+    task add project:email due:1d "$sender: $subject"
+    exit 0
+fi
