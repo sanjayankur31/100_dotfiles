@@ -208,7 +208,7 @@ class ProxyWrapper(object):
         self.proxy_user = ""
         self.proxy_password = ""
         self.has_proxy = False
-        
+
         if self.proxy_name:
             self.proxy_string = "weechat.proxy.{}".format(self.proxy_name)
             self.proxy_type = w.config_string(weechat.config_get("{}.type".format(self.proxy_string)))
@@ -220,21 +220,21 @@ class ProxyWrapper(object):
                 self.has_proxy = True
             else:
                 w.prnt("", "\nWarning: weechat.network.proxy_curl is set to {} type (name : {}, conf string : {}). Only HTTP proxy is supported.\n\n".format(self.proxy_type, self.proxy_name, self.proxy_string))
-        
+
     def curl(self):
         if not self.has_proxy:
             return ""
-        
+
         if self.proxy_user and self.proxy_password:
             user = "{}:{}@".format(self.proxy_user, self.proxy_password)
         else:
             user = ""
-                    
+
         if self.proxy_port:
             port = ":{}".format(self.proxy_port)
         else:
             port = ""
-                
+
         return "--proxy {}{}{}".format(user, self.proxy_address, port)
 
 
@@ -1247,7 +1247,64 @@ class SlackTeam(object):
         }, expect_reply=False)
 
 
-class SlackChannel(object):
+class SlackChannelCommon(object):
+    def send_add_reaction(self, msg_number, reaction):
+        self.send_change_reaction("reactions.add", msg_number, reaction)
+
+    def send_remove_reaction(self, msg_number, reaction):
+        self.send_change_reaction("reactions.remove", msg_number, reaction)
+
+    def send_change_reaction(self, method, msg_number, reaction):
+        if 0 < msg_number < len(self.messages):
+            keys = self.main_message_keys_reversed()
+            timestamp = next(islice(keys, msg_number - 1, None))
+            data = {"channel": self.identifier, "timestamp": timestamp, "name": reaction}
+            s = SlackRequest(self.team.token, method, data)
+            self.eventrouter.receive(s)
+
+    def edit_nth_previous_message(self, n, old, new, flags):
+        message = self.my_last_message(n)
+        if new == "" and old == "":
+            s = SlackRequest(self.team.token, "chat.delete", {"channel": self.identifier, "ts": message['ts']}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
+            self.eventrouter.receive(s)
+        else:
+            num_replace = 1
+            if 'g' in flags:
+                num_replace = 0
+            new_message = re.sub(old, new, message["text"], num_replace)
+            if new_message != message["text"]:
+                s = SlackRequest(self.team.token, "chat.update", {"channel": self.identifier, "ts": message['ts'], "text": new_message}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
+                self.eventrouter.receive(s)
+
+    def my_last_message(self, msgno):
+        for key in self.main_message_keys_reversed():
+            m = self.messages[key]
+            if "user" in m.message_json and "text" in m.message_json and m.message_json["user"] == self.team.myidentifier:
+                msgno -= 1
+                if msgno == 0:
+                    return m.message_json
+
+    def change_message(self, ts, message_json=None, text=None):
+        ts = SlackTS(ts)
+        m = self.messages.get(ts)
+        if not m:
+            return
+        if message_json:
+            m.message_json.update(message_json)
+        if text:
+            m.change_text(text)
+
+        if type(m) == SlackMessage or config.thread_messages_in_channel:
+            new_text = self.render(m, force=True)
+            modify_buffer_line(self.channel_buffer, new_text, ts.major, ts.minor)
+        if type(m) == SlackThreadMessage:
+            thread_channel = m.parent_message.thread_channel
+            if thread_channel and thread_channel.active:
+                new_text = thread_channel.render(m, force=True)
+                modify_buffer_line(thread_channel.channel_buffer, new_text, ts.major, ts.minor)
+
+
+class SlackChannel(SlackChannelCommon):
     """
     Represents an individual slack channel.
     """
@@ -1334,9 +1391,10 @@ class SlackChannel(object):
             prepend = config.shared_name_prefix
         else:
             prepend = "#"
+        sidebar_color = w.color(config.color_buflist_muted_channels) if self.muted else ""
         select = {
             "default": prepend + self.slack_name,
-            "sidebar": prepend + self.slack_name,
+            "sidebar": sidebar_color + prepend + self.slack_name,
             "base": self.slack_name,
             "long_default": "{}.{}{}".format(self.team.preferred_name, prepend, self.slack_name),
             "long_base": "{}.{}".format(self.team.preferred_name, self.slack_name),
@@ -1526,40 +1584,6 @@ class SlackChannel(object):
                 del self.hashed_messages[message_hash]
         self.messages = OrderedDict(messages_to_keep)
 
-    def change_message(self, ts, message_json=None, text=None):
-        ts = SlackTS(ts)
-        m = self.messages.get(ts)
-        if not m:
-            return
-        if message_json:
-            m.message_json.update(message_json)
-        if text:
-            m.change_text(text)
-        new_text = m.render(force=True)
-        modify_buffer_line(self.channel_buffer, new_text, ts.major, ts.minor)
-
-    def edit_nth_previous_message(self, n, old, new, flags):
-        message = self.my_last_message(n)
-        if new == "" and old == "":
-            s = SlackRequest(self.team.token, "chat.delete", {"channel": self.identifier, "ts": message['ts']}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
-            self.eventrouter.receive(s)
-        else:
-            num_replace = 1
-            if 'g' in flags:
-                num_replace = 0
-            new_message = re.sub(old, new, message["text"], num_replace)
-            if new_message != message["text"]:
-                s = SlackRequest(self.team.token, "chat.update", {"channel": self.identifier, "ts": message['ts'], "text": new_message}, team_hash=self.team.team_hash, channel_identifier=self.identifier)
-                self.eventrouter.receive(s)
-
-    def my_last_message(self, msgno):
-        for key in self.main_message_keys_reversed():
-            m = self.messages[key]
-            if "user" in m.message_json and "text" in m.message_json and m.message_json["user"] == self.team.myidentifier:
-                msgno -= 1
-                if msgno == 0:
-                    return m.message_json
-
     def is_visible(self):
         return w.buffer_get_integer(self.channel_buffer, "hidden") == 0
 
@@ -1575,20 +1599,6 @@ class SlackChannel(object):
             else:
                 self.eventrouter.receive_slow(s)
             self.got_history = True
-
-    def send_add_reaction(self, msg_number, reaction):
-        self.send_change_reaction("reactions.add", msg_number, reaction)
-
-    def send_remove_reaction(self, msg_number, reaction):
-        self.send_change_reaction("reactions.remove", msg_number, reaction)
-
-    def send_change_reaction(self, method, msg_number, reaction):
-        if 0 < msg_number < len(self.messages):
-            keys = self.main_message_keys_reversed()
-            timestamp = next(islice(keys, msg_number - 1, None))
-            data = {"channel": self.identifier, "timestamp": timestamp, "name": reaction}
-            s = SlackRequest(self.team.token, method, data)
-            self.eventrouter.receive(s)
 
     def main_message_keys_reversed(self):
         return (key for key in reversed(self.messages)
@@ -1741,6 +1751,17 @@ class SlackChannel(object):
 
             self.hashed_messages[shorthash] = message
             message.hash = shorthash
+
+    def render(self, message, force=False):
+        text = message.render(force)
+        if isinstance(message, SlackThreadMessage):
+            return '{}[{}]{} {}'.format(
+                w.color(config.color_thread_suffix),
+                message.parent_message.hash or message.parent_message.ts,
+                w.color('reset'),
+                text)
+
+        return text
 
 
 class SlackDMChannel(SlackChannel):
@@ -1918,7 +1939,7 @@ class SlackSharedChannel(SlackChannel):
         self.name = config.shared_name_prefix + slack_name
 
 
-class SlackThreadChannel(object):
+class SlackThreadChannel(SlackChannelCommon):
     """
     A thread channel is a virtual channel. We don't inherit from
     SlackChannel, because most of how it operates will be different.
@@ -1939,6 +1960,14 @@ class SlackThreadChannel(object):
         # self.set_name(self.slack_name)
     # def set_name(self, slack_name):
     #    self.name = "#" + slack_name
+
+    @property
+    def identifier(self):
+        return self.parent_message.channel.identifier
+
+    @property
+    def messages(self):
+        return self.parent_message.channel.messages
 
     @property
     def muted(self):
@@ -1985,16 +2014,11 @@ class SlackThreadChannel(object):
     def get_history(self):
         self.got_history = True
         for message in self.parent_message.submessages:
-
-            # message = SlackMessage(message_json, team, channel)
-            text = message.render()
-            # print text
-
-            # try:
-            #    channel.unread_count += 1
-            # except:
-            #    channel.unread_count = 1
+            text = self.render(message)
             self.buffer_prnt(message.sender, text, message.ts)
+
+    def main_message_keys_reversed(self):
+        return (message.ts for message in reversed(self.parent_message.submessages))
 
     def send_message(self, message, subtype=None):
         if subtype == 'me_message':
@@ -2038,7 +2062,7 @@ class SlackThreadChannel(object):
             w.buffer_set(self.channel_buffer, "short_name", self.formatted_name(style="sidebar", enable_color=True))
             time_format = w.config_string(w.config_get("weechat.look.buffer_time_format"))
             parent_time = time.localtime(SlackTS(self.parent_message.ts).major)
-            topic = '{} {} | {}'.format(time.strftime(time_format, parent_time), self.parent_message.sender, self.parent_message.render()	)
+            topic = '{} {} | {}'.format(time.strftime(time_format, parent_time), self.parent_message.sender, self.render(self.parent_message)	)
             w.buffer_set(self.channel_buffer, "title", topic)
 
             # self.eventrouter.weechat_controller.set_refresh_buffer_list(True)
@@ -2065,6 +2089,9 @@ class SlackThreadChannel(object):
         self.got_history = False
         # if update_remote and not eventrouter.shutting_down:
         self.active = False
+
+    def render(self, message, force=False):
+        return message.render(force)
 
 
 class SlackUser(object):
@@ -2159,7 +2186,7 @@ class SlackMessage(object):
             w.buffer_set(self.thread_channel.channel_buffer, "display", "1")
 
     def render(self, force=False):
-        text = render(self.message_json, self.team, self.channel, force)
+        text = render(self.message_json, self.team, force)
         if (self.message_json.get('subtype') == 'me_message' and
                 not self.message_json['text'].startswith(self.sender)):
             text = "{} {}".format(self.sender, text)
@@ -2170,7 +2197,7 @@ class SlackMessage(object):
             text += " by invitation from {}".format(inviter_nick)
         if len(self.submessages) > 0:
             text += " {}[ Thread: {} Replies: {} ]".format(
-                    w.color(config.thread_suffix_color),
+                    w.color(config.color_thread_suffix),
                     self.hash or self.ts,
                     len(self.submessages))
         return text
@@ -2248,9 +2275,9 @@ class SlackMessage(object):
 
 class SlackThreadMessage(SlackMessage):
 
-    def __init__(self, parent_id, *args):
+    def __init__(self, parent_message, *args):
         super(SlackThreadMessage, self).__init__(*args)
-        self.parent_id = parent_id
+        self.parent_message = parent_message
 
 
 class WeeSlackMetadata(object):
@@ -2562,7 +2589,7 @@ def process_message(message_json, eventrouter, store=True, **kwargs):
         subtype_functions[subtype](message_json, eventrouter, channel, team)
     else:
         message = SlackMessage(message_json, team, channel)
-        text = message.render()
+        text = channel.render(message)
         dbg("Rendered message: %s" % text)
         dbg("Sender: %s (%s)" % (message.sender, message.sender_plain))
 
@@ -2586,18 +2613,21 @@ def subprocess_thread_message(message_json, eventrouter, channel, team):
     if parent_ts:
         parent_message = channel.messages.get(SlackTS(parent_ts), None)
         if parent_message:
-            message = SlackThreadMessage(parent_ts, message_json, team, channel)
+            message = SlackThreadMessage(
+                parent_message, message_json, team, channel)
             parent_message.submessages.append(message)
             channel.hash_message(parent_ts)
             channel.store_message(message, team)
             channel.change_message(parent_ts)
 
-            text = message.render()
-            # channel.buffer_prnt(message.sender, text, message.ts, **kwargs)
             if parent_message.thread_channel and parent_message.thread_channel.active:
-                parent_message.thread_channel.buffer_prnt(message.sender, text, message.ts, tag_nick=message.sender_plain)
+                parent_message.thread_channel.buffer_prnt(message.sender, parent_message.thread_channel.render(message), message.ts, tag_nick=message.sender_plain)
             elif message.ts > channel.last_read and message.has_mention():
                 parent_message.notify_thread(action="mention", sender_id=message_json["user"])
+
+            if config.thread_messages_in_channel:
+                channel.buffer_prnt(
+                    message.sender, channel.render(message), message.ts, tag_nick=message.sender_plain)
 
 #    channel = channels.find(message_json["channel"])
 #    server = channel.server
@@ -2621,14 +2651,14 @@ def subprocess_thread_message(message_json, eventrouter, channel, team):
 def subprocess_channel_join(message_json, eventrouter, channel, team):
     joinprefix = w.prefix("join").strip()
     message = SlackMessage(message_json, team, channel, override_sender=joinprefix)
-    channel.buffer_prnt(joinprefix, message.render(), message_json["ts"], tagset='joinleave')
+    channel.buffer_prnt(joinprefix, channel.render(message), message_json["ts"], tagset='joinleave')
     channel.user_joined(message_json['user'])
 
 
 def subprocess_channel_leave(message_json, eventrouter, channel, team):
     leaveprefix = w.prefix("quit").strip()
     message = SlackMessage(message_json, team, channel, override_sender=leaveprefix)
-    channel.buffer_prnt(leaveprefix, message.render(), message_json["ts"], tagset='joinleave')
+    channel.buffer_prnt(leaveprefix, channel.render(message), message_json["ts"], tagset='joinleave')
     channel.user_left(message_json['user'])
     # channel.update_nicklist(message_json['user'])
     # channel.update_nicklist()
@@ -2795,7 +2825,7 @@ def render_formatting(text):
     return text
 
 
-def render(message_json, team, channel, force=False):
+def render(message_json, team, force=False):
     # If we already have a rendered version in the object, just return that.
     if not force and message_json.get("_rendered_text", ""):
         return message_json["_rendered_text"]
@@ -2826,10 +2856,6 @@ def render(message_json, team, channel, force=False):
         text = unhtmlescape(text.replace("\t", "    "))
         if message_json.get('mrkdwn', True):
             text = render_formatting(text)
-
-#        if self.threads:
-#            text += " [Replies: {} Thread ID: {} ] ".format(len(self.threads), self.thread_id)
-#            #for thread in self.threads:
 
         text += create_reaction_string(message_json.get("reactions", ""))
         message_json["_rendered_text"] = text
@@ -2992,8 +3018,16 @@ def unwrap_attachments(message_json, text_before):
 
 
 def unwrap_files(message_json, text_before):
-    files_texts = ['{} ({})'.format(f['url_private'], f['title'])
-            for f in message_json.get('files', [])]
+    files_texts = []
+    for f in message_json.get('files', []):
+        if f.get('mode', '') != 'tombstone':
+            text = '{} ({})'.format(f['url_private'], f['title'])
+        else:
+            text = '{}(This file was deleted.){}'.format(
+                w.color("red"),
+                w.color("reset"))
+        files_texts.append(text)
+
     if text_before:
         files_texts.insert(0, '')
     return "\n".join(files_texts)
@@ -3039,9 +3073,10 @@ def create_reaction_string(reactions):
     count = 0
     if not isinstance(reactions, list):
         reaction_string = " {}[{}]{}".format(
-                w.color("darkgray"), reactions, w.color("reset"))
+                w.color(config.color_reaction_suffix), reactions, w.color("reset"))
+
     else:
-        reaction_string = ' {}['.format(w.color("darkgray"))
+        reaction_string = ' {}['.format(w.color(config.color_reaction_suffix))
         for r in reactions:
             if len(r["users"]) > 0:
                 count += 1
@@ -3328,7 +3363,7 @@ def command_register_callback(data, command, return_code, out, err):
         w.prnt("", "ERROR: problem when trying to get Slack OAuth token. Got return code {}. Err: ".format(return_code, err))
         w.prnt("", "Check the network or proxy settings")
         return w.WEECHAT_RC_OK_EAT
-    
+
     if len(out) <= 0:
         w.prnt("", "ERROR: problem when trying to get Slack OAuth token. Got 0 length answer. Err: ".format(err))
         w.prnt("", "Check the network or proxy settings")
@@ -3847,6 +3882,17 @@ class PluginConfig(object):
             desc='Change the prefix of a channel from # to > when someone is'
             ' typing in it. Note that this will (temporarily) affect the sort'
             ' order if you sort buffers by name rather than by number.'),
+        'color_buflist_muted_channels': Setting(
+            default='darkgray',
+            desc='Color to use for muted channels in the buflist'),
+        'color_reaction_suffix': Setting(
+            default='darkgray',
+            desc='Color to use for the [:wave:(@user)] suffix on messages that'
+            ' have reactions attached to them.'),
+        'color_thread_suffix': Setting(
+            default='lightcyan',
+            desc='Color to use for the [thread: XXX] suffix on messages that'
+            ' have threads attached to them.'),
         'colorize_private_chats': Setting(
             default='false',
             desc='Whether to use nick-colors in DM windows.'),
@@ -3923,10 +3969,9 @@ class PluginConfig(object):
         'switch_buffer_on_join': Setting(
             default='true',
             desc='When /joining a channel, automatically switch to it as well.'),
-        'thread_suffix_color': Setting(
-            default='lightcyan',
-            desc='Color to use for the [thread: XXX] suffix on messages that'
-            ' have threads attached to them.'),
+        'thread_messages_in_channel': Setting(
+            default='false',
+            desc='When enabled shows thread messages in the parent channel.'),
         'unfurl_ignore_alt_text': Setting(
             default='false',
             desc='When displaying ("unfurling") links to channels/users/etc,'
@@ -4004,6 +4049,9 @@ class PluginConfig(object):
         default = self.default_settings.get(key).default
         return w.config_get_plugin(key) == default
 
+    get_color_buflist_muted_channels = get_string
+    get_color_reaction_suffix = get_string
+    get_color_thread_suffix = get_string
     get_debug_level = get_int
     get_external_user_suffix = get_string
     get_group_name_prefix = get_string
@@ -4013,7 +4061,6 @@ class PluginConfig(object):
     get_render_italic_as = get_string
     get_shared_name_prefix = get_string
     get_slack_timeout = get_int
-    get_thread_suffix_color = get_string
     get_unfurl_auto_link_display = get_string
 
     def get_distracting_channels(self, key):
@@ -4043,6 +4090,12 @@ class PluginConfig(object):
                     if data != "":
                         w.config_set_plugin(k, data)
             w.config_set_plugin("migrated", "true")
+
+        old_thread_color_config = w.config_get_plugin("thread_suffix_color")
+        new_thread_color_config = w.config_get_plugin("color_thread_suffix")
+        if old_thread_color_config and not new_thread_color_config:
+            w.config_set_plugin("color_thread_suffix", old_thread_color_config)
+
 
 
 # to Trace execution, add `setup_trace()` to startup
