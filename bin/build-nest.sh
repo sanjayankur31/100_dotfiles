@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015 Ankur Sinha 
+# Copyright 2018 Ankur Sinha 
 # Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# File : 
+# File : build-nest.sh
 #
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
     module load mvapich2
@@ -24,6 +24,8 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[
     export CXXFLAGS="-O2"
     INSTALL_PATH="/home/asinha/installed-software/nest-mvapich2/"
     cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH -Dwith-python:STRING=3 -Dwith-mpi:BOOL=ON  .
+    echo "Installed NEST. Installing mpi4py:"
+    pip install --target=/home/asinha/installed-software/nest-mvapich2/lib64/python3.5/site-packages/ mpi4py
 else
     export CFLAGS="-ggdb"
     export CXXFLAGS="-ggdb"
