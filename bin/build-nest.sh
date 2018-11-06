@@ -19,9 +19,10 @@
 # File : 
 #
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ $HOSTNAME =~ headnode* ]] || [[ $HOSTNAME =~ ^(node)[0-9]+ ]] ; then
+    module load mvapich2
     export CFLAGS="-O2"
     export CXXFLAGS="-O2"
-    INSTALL_PATH="/home/asinha/installed-software/nest/"
+    INSTALL_PATH="/home/asinha/installed-software/nest-mvapich2/"
     cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH -Dwith-python:STRING=3 -Dwith-mpi:BOOL=ON  .
 else
     export CFLAGS="-ggdb"
