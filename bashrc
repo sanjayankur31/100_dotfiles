@@ -35,7 +35,6 @@ if [[ $- == *i* ]] ; then
     alias rm='rm -i'
     alias lsd='ls -d */ --color=auto'
     alias lash='ls -lAsh --color=auto'
-    alias review-req-check='for i in *rpm; do echo "== $i =="; echo "Provides:"; rpm -qp --provides $i | sed "/rpmlib.*/d" ; echo  ; echo "Requires:"; rpm -qp --requires $i | sed "/rpmlib.*/d"; echo; done'
     #alias skype='LD_PRELOAD=/usr/lib/libv4l/v4l1compat.so /usr/bin/skype'
     alias egrep='egrep --color=auto'
     alias latex-clean='rm -fv *.aux *.bbl *.blg *.log *.nav *.out *.snm *.toc *.dvi *.vrb *.bcf *.run.xml *.cut *.lo*'
