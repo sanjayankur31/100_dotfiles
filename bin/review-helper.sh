@@ -32,14 +32,18 @@ downloadrpms ()
 
 rpmlint_spec_srpm()
 {
-    echo "Running rpmlint on $PACKAGENAME spec and srpm"
-    rpmlint "$HOME/rpmbuild/SPECS/$PACKAGENAME.spec" "$HOME/rpmbuild/SRPMS/$PACKAGENAME*.src.rpm"
+    echo "Running rpmlint on $PACKAGE spec and srpm"
+    echo
+    rpmlint "$HOME/rpmbuild/SPECS/$PACKAGE.spec" "$HOME/rpmbuild/SRPMS/$PACKAGE"*".src.rpm"
+    echo
 }
 
 rpmlint_rpms ()
 {
-    echo "Running rpmlint on $PACKAGENAME rpms in $HOME/rpmbuild/RPMS/"
-    rpmlint "$HOME/rpmbuild/RPMS/$PACKAGENAME*.rpm"
+    echo "Running rpmlint on $PACKAGE rpms in $HOME/rpmbuild/RPMS/"
+    echo
+    rpmlint "$HOME/rpmbuild/RPMS/$PACKAGE"*".rpm"
+    echo
 }
 
 list_reqs_provides ()
@@ -65,10 +69,10 @@ usage ()
     cat << EOF
 OPTIONS
 -d <task id>: download rpms from koji task
--l PACKAGENAME: rpmlint spec and srpm
--L PACKAGENAME: run rpmlint on spec/srpm/rpms in pwd
+-l PACKAGE: rpmlint spec and srpm
+-L PACKAGE: run rpmlint on spec/srpm/rpms in pwd
 -r list requires and provides of rpms in current directory
--u PACKAGENAME: clean and upload to fedorapeople
+-u PACKAGE: clean and upload to fedorapeople
 EOF
 }
 
