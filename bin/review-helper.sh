@@ -6,6 +6,15 @@ DESTDIR=""
 KOJI_TASK=""
 
 
+check_package ()
+{
+    if [[ -z "$PACKAGE" ]];
+    then
+        echo "A package name is necessary for use with this option. Please use -p"
+        exit -1
+    fi
+
+}
 upload ()
 {
     DESTDIR="./public_html/$PACKAGE/"
@@ -24,8 +33,10 @@ clean ()
 
 downloadrpms ()
 {
-    echo "Downloading $KOJI_TASK in $HOME/rpmbuild/RPMS/"
-    pushd "$HOME/rpmbuild/RPMS/"
+    echo "Downloading $KOJI_TASK in $HOME/rpmbuild/RPMS/$PACKAGE"
+    rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
+    mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
         koji download-task $KOJI_TASK
     popd
 }
@@ -40,17 +51,17 @@ rpmlint_spec_srpm()
 
 rpmlint_rpms ()
 {
-    echo "Running rpmlint on $PACKAGE rpms in $HOME/rpmbuild/RPMS/"
+    echo "Running rpmlint on $PACKAGE rpms in $HOME/rpmbuild/RPMS/$PACKAGE"
     echo
-    rpmlint "$HOME/rpmbuild/RPMS/$PACKAGE"*".rpm"
+    rpmlint "$HOME/rpmbuild/RPMS/$PACKAGE/"*".rpm"
     echo
 }
 
 list_reqs_provides ()
 {
-    echo "Listing requires and provies of packages in $HOME/rpmbuild/RPMS/"
-    pushd "$HOME/rpmbuild/RPMS/"
-        for i in "$PACKAGE"*rpm; do
+    echo "Listing requires and provies of packages in $HOME/rpmbuild/RPMS/$PACKAGE"
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
+        for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
             rpm -qp --provides $i | sed "/rpmlib.*/d"
@@ -63,55 +74,48 @@ list_reqs_provides ()
 
 usage ()
 {
-    echo "$0"
+    echo "$0 -p packagename -l -L -r -u -d task-id"
     echo
 
     cat << EOF
 OPTIONS
+-p PACKAGE: Required
 -d <task id>: download rpms from koji task
--l PACKAGE: rpmlint spec and srpm
--L PACKAGE: run rpmlint on spec/srpm/rpms in pwd
+-l rpmlint spec and srpm
+-L run rpmlint on spec/srpm/rpms in pwd
 -r list requires and provides of rpms in current directory
--u PACKAGE: clean and upload to fedorapeople
+-u clean and upload to fedorapeople
 EOF
 }
 
-# check for options
-if [ "$#" -ne 2 ]; then
-    usage
-    exit 0
-fi
-
 # parse options
-while getopts "rL:u:l:d:" OPTION
+while getopts "rLuld:p:" OPTION
 do
     case $OPTION in
+        p)
+            PACKAGE=$OPTARG
+            ;;
         d)
             KOJI_TASK=$OPTARG
             downloadrpms
-            exit 0
             ;;
         l)
-            PACKAGE=$OPTARG
+            check_package
             rpmlint_spec_srpm
-            exit 0
             ;;
         L)
-            PACKAGE=$OPTARG
+            check_package
             rpmlint_spec_srpm
             rpmlint_rpms
-            exit 0
             ;;
         r)
-            PACKAGE=$OPTARG
+            check_package
             list_reqs_provides
-            exit 0
             ;;
         u)
-            PACKAGE=$OPTARG
+            check_package
             clean
             upload
-            exit 0
             ;;
         ?)
             echo "Nothing to do."
