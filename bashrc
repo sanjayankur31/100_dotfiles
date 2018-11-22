@@ -55,7 +55,6 @@ if [[ $- == *i* ]] ; then
         CFLAGS=$(rpm -E %optflags); export CFLAGS
         CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
         export CUPS_USER=as14ahs
-        source /opt/nest/bin/nest_vars.sh
         ulimit -c unlimited
         alias vim='vimx --servername $(pwgen 8 1)'
         export EDITOR='gvim -v'
