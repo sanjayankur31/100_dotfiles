@@ -29,3 +29,14 @@ history.cmdline
 bin/rackup
 bin/tilt
 bin/task-web
+
+byobu/color.tmux
+byobu/datetime.tmux
+byobu/keybindings.tmux
+byobu/status
+byobu/statusrc
+byobu/tmux-session
+byobu/tmux-session-1
+byobu/profile.tmux
+byobu/windows.tmux
+
