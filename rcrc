@@ -1,0 +1,2 @@
+EXCLUDES="tags"
+UNDOTTED="bin"
