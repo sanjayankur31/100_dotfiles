@@ -1,0 +1,6 @@
+new-session -d -s byobu-default -n ncmpcpp ncmpcpp ;
+new-window -n weechat bash;
+new-window -n neomutt neomutt ;
+new-window -n t-l vit 'project!~literature' ;
+new-window -n r-l vit project~literature ;
+
