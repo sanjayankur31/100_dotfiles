@@ -1,2 +1,4 @@
 EXCLUDES="tags"
 UNDOTTED="bin"
+SYMLINK_DIRS="bin"
+COPY_ALWAYS="ssh/id_* weechat/*"
