@@ -41,6 +41,16 @@ downloadrpms ()
     popd
 }
 
+copyovermockresults ()
+{
+    echo "Copying rpms from mock result to $HOME/rpmbuild/RPMS/$PACKAGE"
+    rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
+    mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
+        cp -v /var/lib/mock/fedora-rawhide-x86_64/result/*.rpm .
+    popd
+}
+
 rpmlint_spec_srpm()
 {
     echo "Running rpmlint on $PACKAGE spec and srpm"
@@ -82,18 +92,22 @@ OPTIONS
 -p PACKAGE: Required
 -d <task id>: download rpms from koji task
 -l rpmlint spec and srpm
--L run rpmlint on spec/srpm/rpms in pwd
--r list requires and provides of rpms in current directory
+-L run rpmlint on spec/srpm/rpms
+-r list requires and provides of rpms
 -u clean and upload to fedorapeople
+-m copy mock results
 EOF
 }
 
 # parse options
-while getopts "rLuld:p:" OPTION
+while getopts "rmLuld:p:" OPTION
 do
     case $OPTION in
         p)
             PACKAGE=$OPTARG
+            ;;
+        m)
+            copyovermockresults
             ;;
         d)
             KOJI_TASK=$OPTARG
