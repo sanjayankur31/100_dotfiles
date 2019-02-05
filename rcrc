@@ -1,4 +1,4 @@
-EXCLUDES="tags"
+EXCLUDES="tags authorized_keys known_hosts *seahorse"
 UNDOTTED="bin"
 SYMLINK_DIRS="bin byobu"
-COPY_ALWAYS="ssh/id_* weechat/*"
+COPY_ALWAYS="ssh/*rsa* ssh/*pem* ssh/config weechat/*"
