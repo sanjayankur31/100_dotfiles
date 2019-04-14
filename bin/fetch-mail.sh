@@ -19,12 +19,12 @@ check ()
 
 quick ()
 {
-    offlineimap -u quiet -q -s
+    offlineimap -u quiet -q -s -c ~/Sync/99_private/mail/offlineimaprc
 }
 
 full ()
 {
-    offlineimap -u quiet -s
+    offlineimap -u quiet -s -c ~/Sync/99_private/mail/offlineimaprc
 }
 
 # parse options
