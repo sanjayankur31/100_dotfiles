@@ -41,3 +41,12 @@ sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
     /usr/bin/lacheck /usr/bin/biber /usr/bin/flake8-3 /usr/bin/perlcritic \
     /usr/bin/rstcheck texlive-epstopdf texlive-biblatex-nature \
     texlive-beamertheme-metropolis pdfpc --setopt=strict=0
+
+# Flatpaks
+echo "Installing flatpaks from Flathub"
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+flatpak install flathub com.spotify.Client
+flatpak install flathub com.uploadedlobster.peek
+flatpak install flathub org.telegram.desktop
+flatpak install flathub org.signal.Signal
