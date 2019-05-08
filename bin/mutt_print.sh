@@ -3,8 +3,8 @@
 INPUT="$1" PDIR="$HOME/Desktop/mutt_print"
 
 # check to make sure that enscript and ps2pdf are both installed
-if ! command -v enscript >/dev/null || ! command -v ps2pdf >/dev/null; then
-    echo "ERROR: both enscript and ps2pdf must be installed" 1>&2
+if ! command -v muttprint >/dev/null || ! command -v ps2pdf >/dev/null; then
+    echo "ERROR: both muttprint and ps2pdf must be installed" 1>&2
     exit 1
 fi
 
@@ -17,7 +17,16 @@ if [ ! -d "$PDIR" ]; then
     fi
 fi
 
-tmpfile="`mktemp $PDIR/mutt_XXXXXXXX.pdf`"
-enscript --font=Courier10 $INPUT -G -Email -p - 2>/dev/null | ps2pdf - $tmpfile
+timestamp=$(date +%Y%m%d%H%M)
+tmpfile="$(mktemp $PDIR/$timestamp-email-XXX.pdf)"
+muttprint | ps2pdf - $tmpfile
+
 #enscript --font=Courier10 $INPUT -G -Email -p - 2>/dev/null | ps2pdf - $tmpfile
-gnome-open $tmpfile >/dev/null 2>&1 &
+#enscript --font=Courier10 $INPUT -G -Email -p - 2>/dev/null | ps2pdf - $tmpfile
+
+if ! command -v zathura >/dev/null ; then
+    echo "Zathura not found. File saved as $tmpfile"
+    exit 3
+else
+    zathura $tmpfile && rm -f $tmpfile
+fi

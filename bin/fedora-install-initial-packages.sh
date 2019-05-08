@@ -38,8 +38,9 @@ function install_basics() {
         vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
         python3-websocket-client xsel flash-plugin deja-dup parcellite \
         anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
-        gnome-pomodoro docker podman --setopt=strict=0
-}
+        /usr/bin/ps2pdf psutils gnome-pomodoro docker \
+        podman --setopt=strict=0
+    }
 
 function install_texlive_packages() {
     # texlive bits
