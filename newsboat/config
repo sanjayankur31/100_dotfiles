@@ -1,0 +1,17 @@
+# general settings
+auto-reload yes
+max-items 50
+
+
+# unbind keys
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j next
+bind-key k prev
+bind-key J down
+bind-key K up
+
