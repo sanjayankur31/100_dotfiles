@@ -30,3 +30,6 @@ bin/rackup
 bin/tilt
 bin/task-web
 
+
+datetime.tmux
+status
