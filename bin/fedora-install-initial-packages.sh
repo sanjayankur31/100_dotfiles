@@ -39,7 +39,8 @@ function install_basics() {
         python3-websocket-client xsel flash-plugin deja-dup parcellite \
         anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
         /usr/bin/ps2pdf psutils gnome-pomodoro docker \
-        podman --setopt=strict=0 python3-unidecode open-sans-fonts
+        podman python3-unidecode open-sans-fonts  /usr/bin/xindy \
+        --setopt=strict=0
     }
 
 function install_texlive_packages() {
