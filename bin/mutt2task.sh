@@ -20,6 +20,6 @@ done
 if [ -n "$sender" ]
 then
     echo "$sender: $subject"
-    task add project:email due:1d "$sender: $subject"
+    task add project:email due:2d "$sender: $subject"
     exit 0
 fi
