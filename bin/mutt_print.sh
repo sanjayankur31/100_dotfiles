@@ -19,7 +19,9 @@ fi
 
 timestamp=$(date +%Y%m%d%H%M)
 tmpfile="$(mktemp $PDIR/$timestamp-email-XXX.pdf)"
-muttprint | ps2pdf - $tmpfile
+
+# First part replaces [U+2501] with ascii dash
+sed 's/\xe2\x94\x81/-/g' | muttprint | ps2pdf - $tmpfile
 
 #enscript --font=Courier10 $INPUT -G -Email -p - 2>/dev/null | ps2pdf - $tmpfile
 #enscript --font=Courier10 $INPUT -G -Email -p - 2>/dev/null | ps2pdf - $tmpfile
