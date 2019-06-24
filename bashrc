@@ -144,8 +144,14 @@ if [[ $- == *i* ]] ; then
         UNDER=$( tput smul )
         REVRS=$( tput rev )
 
-        export PS1="\[$FGGRN\][\u@\h \[$FGBLU\] \W\[$FGRED\]\$(__git_ps1 \(%s\))\[$FGGRN\]]\$ \[$RESET\]"
+        PS1="\[$FGGRN\][\u@\h \[$FGBLU\] \W\[$FGRED\]\$(__git_ps1 \(%s\))\[$FGGRN\]]\$ \[$RESET\]"
+
     else
-        export PS1="[\u@\h \W\$(__git_ps1 \(%s\))]\$ "
+        PS1="[\u@\h \W\$(__git_ps1 \(%s\))]\$ "
+
     fi
 fi
+
+# For virtual env in pew
+[[ -z "${VIRTUAL_ENV}" ]] || PS1="(\$(basename '$VIRTUAL_ENV'))$PS1"
+export PS1
