@@ -2,3 +2,5 @@ set selection-clipboard clipboard
 set window-title-home-tilde true
 set statusbar-home-tilde true
 set window-title-basename true
+set window-icon-document true
+set window-icon "/usr/share/icons/scalable/apps/org.pwmt.zathura.svg"
