@@ -6,7 +6,7 @@ fi
 # Cluster head node
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
     export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake/bin/:$PATH
-    export MODULEPATH=/home/asinha/Documents/02_Code/00_repos/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
+    export MODULEPATH=/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
     source activate python3
@@ -59,7 +59,7 @@ if [[ $- == *i* ]] ; then
         alias vim='vimx --servername $(pwgen 8 1)'
         export EDITOR='gvim -v'
         # image directory for research diary
-        export RDIMGDIR="/home/asinha/Documents/02_Code/00_repos/00_mine/00_research_diary/diary/2018/images/"
+        export RDIMGDIR="/home/asinha/Documents/02_Code/00_mine/00_research_diary/diary/2018/images/"
         vman() { /usr/bin/man $* | col -b | vimx -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
 
     fi

@@ -22,7 +22,7 @@
 export SSH_AUTH_SOCK=/home/asinha/.byobu/.ssh-agent
 
 echo "Updating planets"
-pushd /home/asinha/Documents/02_Code/00_repos/00_mine/planet-neuroscience
+pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscience
     git pull --recurse-submodules
     git submodule update --remote
     python venus/planet.py planet-neuroscience.ini
@@ -32,7 +32,7 @@ pushd /home/asinha/Documents/02_Code/00_repos/00_mine/planet-neuroscience
 popd
 echo "Updated neuroscience"
 
-pushd /home/asinha/Documents/02_Code/00_repos/00_mine/planet-neuroscientists
+pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscientists
     git pull --recurse-submodules
     git submodule update --remote
     python venus/planet.py planet-neuroscientists.ini

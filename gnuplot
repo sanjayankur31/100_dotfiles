@@ -2,7 +2,7 @@
 set macro
 
 # https://github.com/Gnuplotting/gnuplot-palettes
-load '/home/asinha/Documents/02_Code/00_repos/00_mine/gnuplot-palettes/moreland.pal'
+load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/moreland.pal'
 
 my_font = "OpenSans, "
 
