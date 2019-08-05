@@ -1,4 +1,0 @@
-map s=:!rw echo "Syncing with task server"; task sync<Return>
-map \cb=:! task %TASKID long rc.defaultwidth:200 | urlview<Return>
-map S=:! task start %TASKID<Return>
-map T=:! task stop %TASKID<Return>
