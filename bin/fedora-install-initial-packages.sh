@@ -32,15 +32,15 @@ function update_groups() {
 
 function install_basics() {
     # Basics
-    sudo dnf install byobu tmux htop syncthing vit task neomutt weechat ncmpcpp \
-        mpv vimiv vifm fedora-packager git-all offlineimap msmtp notmuch gnuplot \
-        /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review mpd vim-enhanced \
-        vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
-        python3-websocket-client xsel flash-plugin deja-dup parcellite \
-        anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
-        /usr/bin/ps2pdf psutils gnome-pomodoro docker \
-        podman python3-unidecode open-sans-fonts  /usr/bin/xindy \
-        --setopt=strict=0
+    sudo dnf install byobu tmux htop syncthing vit task taskopen neomutt \
+    weechat ncmpcpp mpv vimiv vifm fedora-packager git-all offlineimap msmtp \
+    notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
+    mpd vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
+    python3-websocket-client xsel flash-plugin deja-dup parcellite \
+    anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
+    /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
+    open-sans-fonts  /usr/bin/xindy \
+    --setopt=strict=0
     }
 
 function install_texlive_packages() {
