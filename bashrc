@@ -5,8 +5,8 @@ fi
 
 # Cluster head node
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
-    export PATH=/home/asinha/bin/:/home/asinha/anaconda2/bin/:/home/asinha/installed-software/cmake/bin/:$PATH
-    export MODULEPATH=/home/asinha/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
+    export PATH=$HOME/bin/:$HOME/anaconda2/bin/:$HOME/installed-software/cmake/bin/:$PATH
+    export MODULEPATH=$HOME/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
     source activate python3
@@ -51,7 +51,7 @@ if [[ $- == *i* ]] ; then
     # for all my other machines
     else
         fortune | cowsay -f vader
-        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/asinha/.local/bin:/home/asinha/bin:/home/asinha/.vim/plugged/vim-superman/bin"
+        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.vim/plugged/vim-superman/bin"
 
         # Flags
         CFLAGS=$(rpm -E %optflags); export CFLAGS
@@ -69,7 +69,7 @@ if [[ $- == *i* ]] ; then
         # image directory for research diary
         year=$(date +%G)
         year_research_diary="$year""_research_diary"
-        export RDIMGDIR="/home/asinha/Documents/02_Code/00_mine/$year_research_diary/diary/$year/images/"
+        xport RDIMGDIR="$HOME/Documents/02_Code/00_mine/$year_research_diary/diary/$year/images/"
 
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
