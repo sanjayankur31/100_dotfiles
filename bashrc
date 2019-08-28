@@ -51,7 +51,9 @@ if [[ $- == *i* ]] ; then
     # for all my other machines
     else
         fortune | cowsay -f vader
-        export PATH=$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/asinha/.local/bin:/home/asinha/bin
+        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/asinha/.local/bin:/home/asinha/bin:/home/asinha/.vim/plugged/vim-superman/bin"
+
+        # Flags
         CFLAGS=$(rpm -E %optflags); export CFLAGS
         CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
         export CUPS_USER=as14ahs
@@ -62,6 +64,8 @@ if [[ $- == *i* ]] ; then
         export RDIMGDIR="/home/asinha/Documents/02_Code/00_mine/00_research_diary/diary/2018/images/"
         vman() { /usr/bin/man $* | col -b | vimx -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
 
+        # For the vim man viewer
+        complete -o default -o nospace -F _man vman
     fi
     alias man='vman'
 
