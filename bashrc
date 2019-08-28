@@ -56,13 +56,20 @@ if [[ $- == *i* ]] ; then
         # Flags
         CFLAGS=$(rpm -E %optflags); export CFLAGS
         CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
+
+        # Printing
         export CUPS_USER=as14ahs
+
         ulimit -c unlimited
+
+        # Vim with X support
         alias vim='vimx --servername $(pwgen 8 1)'
-        export EDITOR='gvim -v'
+        export EDITOR='vim'
+
         # image directory for research diary
-        export RDIMGDIR="/home/asinha/Documents/02_Code/00_mine/00_research_diary/diary/2018/images/"
-        vman() { /usr/bin/man $* | col -b | vimx -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
+        year=$(date +%G)
+        year_research_diary="$year""_research_diary"
+        export RDIMGDIR="/home/asinha/Documents/02_Code/00_mine/$year_research_diary/diary/$year/images/"
 
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
