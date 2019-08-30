@@ -5,6 +5,8 @@ echo "We are running Fedora $REL."
 function setup_repos() {
     # Neomutt
     sudo dnf copr enable flatcap/neomutt
+    # I made a typo!
+    sudo dnf copr enable ankursinha/Takjuggler
 
     # RPMFusion and adobe
     sudo dnf install \
@@ -39,7 +41,7 @@ function install_basics() {
     python3-websocket-client xsel flash-plugin deja-dup parcellite \
     anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
-    open-sans-fonts  /usr/bin/xindy \
+    open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler \
     --setopt=strict=0
     }
 
@@ -85,7 +87,7 @@ then
 fi
 
 # parse options
-while getopts "sbtfah" OPTION
+while getopts "usbtfah" OPTION
 do
     case $OPTION in
         s)
