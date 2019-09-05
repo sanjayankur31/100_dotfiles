@@ -92,7 +92,7 @@ if [[ $- == *i* ]] ; then
 
     # For 256 colours in xterm
     if [ "$TERM" == "xterm" ] || [ "$TERM" == "screen" ] || [ "$TERM" == "screen-256color" ] || [ "$TERM" == "xterm-256color" ]; then
-        TERM=screen-256color
+        # TERM=screen-256color
         export PROMPT_COMMAND='printf "\033]0;%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
 
         # Bash prompt
