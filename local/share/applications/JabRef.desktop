@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=JabRef
+GenericName=Bibliography manager
+Icon=JabRef
+Type=Application
+Categories=Office;Science;Education
+Exec=java -jar /home/asinha/Sync/JabRef.jar
+Terminal=false
+StartupNotify=false
+Keywords=Bibliography;BibTeX;LaTeX
+X-Desktop-File-Install-Version=0.23
+Icon=/home/asinha/Sync/JabRef-icon-128.png
