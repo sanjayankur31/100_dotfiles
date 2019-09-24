@@ -2,3 +2,4 @@
 [Default Applications]
 x-scheme-handler/tg=telegramdesktop.desktop
 text/plain=gvim.desktop
+x-scheme-handler/mailto=neomutt.desktop
