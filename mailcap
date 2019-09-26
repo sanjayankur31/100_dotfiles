@@ -2,25 +2,33 @@
 ### Begin Red Hat Mailcap
 ###
 
-audio/*; /usr/bin/xdg-open %s ; copiousoutput
+# Audio files
+audio/*; /usr/bin/xdg-open '%s' ; copiousoutput
 
-image/*; /usr/bin/xdg-open %s ; copiousoutput
+# Image files
+image/*; /usr/bin/xdg-open '%s' ; copiousoutput
 
-application/msword;             libreoffice %s; copiousoutput
-application/vnd.msword;         libreoffice %s; copiousoutput
-application/excel;              libreoffice %s; copiousoutput
-application/msexcel;            libreoffice %s; copiousoutput
-application/vnd.ms-excel;       libreoffice %s; copiousoutput
-application/x-excel;            libreoffice %s; copiousoutput
-application/x-msexcel;          libreoffice %s; copiousoutput
-application/vnd.ms-powerpoint;  libreoffice %s; copiousoutput
-application/x-mspowerpoint;     libreoffice %s; copiousoutput
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; libreoffice '%s';  description="Office Open XML Spreadsheet"; nametemplate=%s.xlsxapplication/pdf; /usr/bin/xdg-open %s ; copiousoutput
-application/ppt;                libreoffice %s; copiousoutput
+# Office documents
+# Use `xdg-open` instead of `libreoffice`.
+application/msword;             xdg-open '%s'; copiousoutput
+application/vnd.msword;         xdg-open '%s'; copiousoutput
+application/excel;              xdg-open '%s'; copiousoutput
+application/msexcel;            xdg-open '%s'; copiousoutput
+application/vnd.ms-excel;       xdg-open '%s'; copiousoutput
+application/x-excel;            xdg-open '%s'; copiousoutput
+application/x-msexcel;          xdg-open '%s'; copiousoutput
+application/vnd.ms-powerpoint;  xdg-open '%s'; copiousoutput
+application/x-mspowerpoint;     xdg-open '%s'; copiousoutput
+application/ppt;                xdg-open '%s'; copiousoutput
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; xdg-open '%s'; nametemplate=%s.docx; copiousoutput
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; xdg-open '%s'; nametemplate=%s.xlsx; copiousoutput
+application/postscript;         /usr/bin/xdg-open '%s'; copiousoutput
 
-application/pdf; /usr/bin/xdg-open %s ; copiousoutput
-application/postscript ; /usr/bin/xdg-open %s ; copiousoutput
+# PDF
+application/pdf;                /usr/bin/xdg-open '%s'; copiousoutput
 
-text/html; qutebrowser %s && sleep 5 ; test=test -n "$DISPLAY"; nametemplate=%s.html; needsterminal
-# text/html; lynx -dump %s ; copiousoutput; nametemplate=%s.html
+# HTML
+# Qutebrowser if GUI exists
+text/html; qutebrowser '%s' && sleep 5 ; test=test -n "$DISPLAY" nametemplate=%s.html; needsterminal
+# Otherwise, use w3m
 text/html; w3m -I %{charset} -T text/html ; copiousoutput; nametemplate=%s.html
