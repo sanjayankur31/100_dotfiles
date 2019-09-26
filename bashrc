@@ -73,6 +73,9 @@ if [[ $- == *i* ]] ; then
 
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
+
+        # fzf on Fedora
+        source /usr/share/fzf/shell/key-bindings.bash
     fi
     alias man='vman'
 
