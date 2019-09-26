@@ -41,7 +41,7 @@ function install_basics() {
     python3-websocket-client xsel flash-plugin deja-dup parcellite \
     anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
-    open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler \
+    open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf \
     --setopt=strict=0
     }
 
