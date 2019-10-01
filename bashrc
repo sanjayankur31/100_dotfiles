@@ -44,6 +44,9 @@ if [[ $- == *i* ]] ; then
     export GIT_PS1_SHOWUPSTREAM="auto"
     export GIT_PS1_SHOWUNTRACKEDFILES=1
 
+    # Set vi mode
+    set -o vi
+
     # Host specific settings. Cluster doesn't have vimx and cowsay, the
     # flags won't apply, and the path to NEST is different too.
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
