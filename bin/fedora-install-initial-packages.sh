@@ -42,6 +42,7 @@ function install_basics() {
     anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
+    qgnomeplatform \
     --setopt=strict=0
     }
 
