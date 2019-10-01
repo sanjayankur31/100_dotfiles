@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python3
 # API is here: https://taskwarrior.org/docs/hooks.html
 import json
 import os
