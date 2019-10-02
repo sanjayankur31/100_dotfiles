@@ -11,7 +11,7 @@ check_package ()
     if [[ -z "$PACKAGE" ]];
     then
         echo "A package name is necessary for use with this option. Please use -p"
-        exit -1
+        exit 2
     fi
 
 }
@@ -36,9 +36,9 @@ downloadrpms ()
     echo "Downloading $KOJI_TASK in $HOME/rpmbuild/RPMS/$PACKAGE"
     rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
     mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
         koji download-task $KOJI_TASK
-    popd
+    popd || exit 4
 }
 
 copyovermockresults ()
@@ -46,9 +46,9 @@ copyovermockresults ()
     echo "Copying rpms from mock result to $HOME/rpmbuild/RPMS/$PACKAGE"
     rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
     mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
         cp -v /var/lib/mock/fedora-rawhide-x86_64/result/*.rpm .
-    popd
+    popd || exit 4
 }
 
 rpmlint_spec_srpm()
@@ -70,16 +70,16 @@ rpmlint_rpms ()
 list_reqs_provides ()
 {
     echo "Listing requires and provies of packages in $HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit -1
+    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
         for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
-            rpm -qp --provides $i | sed "/rpmlib.*/d"
+            rpm -qp --provides "$i" | sed "/rpmlib.*/d"
             echo  ; echo "Requires:"
-            rpm -qp --requires $i | sed "/rpmlib.*/d"
+            rpm -qp --requires "$i" | sed "/rpmlib.*/d"
             echo
         done
-    popd
+    popd || exit 4
 }
 
 usage ()
@@ -107,10 +107,12 @@ do
             PACKAGE=$OPTARG
             ;;
         m)
+            check_package
             copyovermockresults
             ;;
         d)
             KOJI_TASK=$OPTARG
+            check_package
             downloadrpms
             ;;
         l)
