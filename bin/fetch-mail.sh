@@ -19,13 +19,21 @@ check ()
 
 quick ()
 {
-    offlineimap -u quiet -q -s
+    (offlineimap -u quiet -q -s) &
+    echo "Quick sync started"
 }
 
 full ()
 {
-    offlineimap -u quiet -s
+    (offlineimap -u quiet -s) &
+    echo "Full sync started"
 }
+
+if [ $# -eq 0 ]
+then
+    echo "You did not tell me what to do. Exiting."
+    exit 0
+fi
 
 # parse options
 while getopts "qf" OPTION
@@ -42,8 +50,8 @@ do
             exit 0
             ;;
         ?)
-            echo "Nothing to do."
-            exit 1
+            echo "Nothing to do. Exiting."
+            exit 0
             ;;
     esac
 done
