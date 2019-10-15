@@ -19,8 +19,8 @@ upload ()
 {
     DESTDIR="./public_html/$PACKAGE/"
     echo "Uploading to fedorapeople.org:$DESTDIR"
-    rsync -avPh ~/rpmbuild/SPECS/"$PACKAGE.spec" fedorapeople.org:$DESTDIR
-    rsync -avPh ~/rpmbuild/SRPMS/"$PACKAGE"*src.rpm fedorapeople.org:$DESTDIR
+    rsync -avPh "$PACKAGE.spec" fedorapeople.org:$DESTDIR
+    rsync -avPh "$PACKAGE"*src.rpm fedorapeople.org:$DESTDIR
 }
 
 clean ()
@@ -33,20 +33,20 @@ clean ()
 
 downloadrpms ()
 {
-    echo "Downloading $KOJI_TASK in $HOME/rpmbuild/RPMS/$PACKAGE"
-    rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
-    mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
+    echo "Downloading $KOJI_TASK to RPMS/"
+    rm -fvr -- "RPMS"
+    mkdir -pv "RPMS"
+    pushd "RPMS" || exit 3
         koji download-task $KOJI_TASK
     popd || exit 4
 }
 
 copyovermockresults ()
 {
-    echo "Copying rpms from mock result to $HOME/rpmbuild/RPMS/$PACKAGE"
-    rm -fvr -- "$HOME/rpmbuild/RPMS/$PACKAGE"
-    mkdir -pv "$HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
+    echo "Copying rpms from mock result to RPMS/"
+    rm -fvr -- "RPMS"
+    mkdir -pv "RPMS"
+    pushd "RPMS" || exit 3
         cp -v /var/lib/mock/fedora-rawhide-x86_64/result/*.rpm .
     popd || exit 4
 }
@@ -55,22 +55,22 @@ rpmlint_spec_srpm()
 {
     echo "Running rpmlint on $PACKAGE spec and srpm"
     echo
-    rpmlint "$HOME/rpmbuild/SPECS/$PACKAGE.spec" "$HOME/rpmbuild/SRPMS/$PACKAGE"*".src.rpm"
+    rpmlint "$PACKAGE.spec" "$PACKAGE"*".src.rpm"
     echo
 }
 
 rpmlint_rpms ()
 {
-    echo "Running rpmlint on $PACKAGE rpms in $HOME/rpmbuild/RPMS/$PACKAGE"
+    echo "Running rpmlint on $PACKAGE rpms in RPMS/"
     echo
-    rpmlint "$HOME/rpmbuild/RPMS/$PACKAGE/"*".rpm"
+    rpmlint "RPMS/"*".rpm"
     echo
 }
 
 list_reqs_provides ()
 {
-    echo "Listing requires and provies of packages in $HOME/rpmbuild/RPMS/$PACKAGE"
-    pushd "$HOME/rpmbuild/RPMS/$PACKAGE" || exit 3
+    echo "Listing requires and provies of packages in RPMS"
+    pushd "RPMS" || exit 3
         for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
