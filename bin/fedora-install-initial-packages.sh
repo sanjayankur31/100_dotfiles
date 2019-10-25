@@ -39,10 +39,11 @@ function install_basics() {
     notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
     mpd vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup parcellite \
-    anka-coder-fonts-* zathura zathura-plugins-all urlscan timew \
+    anka-coder-\* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
-    qgnomeplatform \
+    qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
+    @python-science clang-devel @c-development \
     --setopt=strict=0
     }
 
