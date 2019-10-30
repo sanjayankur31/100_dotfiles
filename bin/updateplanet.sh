@@ -25,7 +25,7 @@ echo "Updating planets"
 pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscience
     git pull --recurse-submodules
     git submodule update --remote
-    python venus/planet.py planet-neuroscience.ini
+    python2 venus/planet.py planet-neuroscience.ini
     git add .
     git commit -m "Updated"
     git push
@@ -35,7 +35,7 @@ echo "Updated neuroscience"
 pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscientists
     git pull --recurse-submodules
     git submodule update --remote
-    python venus/planet.py planet-neuroscientists.ini
+    python2 venus/planet.py planet-neuroscientists.ini
     git add .
     git commit -m "Updated"
     git push
