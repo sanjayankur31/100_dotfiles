@@ -43,7 +43,7 @@ function install_basics() {
     /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
-    @python-science clang-devel @c-development w3m \
+    @python-science clang-devel @c-development w3m python3-mailmerge \
     --setopt=strict=0
     }
 
