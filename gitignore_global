@@ -2,3 +2,6 @@
 *.swo
 /tags
 cscope.out
+BUILD/
+RPMS/
+BUILDROOT/
