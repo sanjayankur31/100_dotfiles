@@ -49,9 +49,13 @@ function install_basics() {
 
 function install_texlive_packages() {
     # texlive bits
+    # some bits for muttprint
     sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
         /usr/bin/lacheck /usr/bin/biber /usr/bin/flake8-3 /usr/bin/perlcritic \
         /usr/bin/rstcheck texlive-epstopdf texlive-biblatex-nature \
+        'tex(array.sty)' 'tex(babel.sty)' 'tex(fancyhdr.sty)' 'tex(fancyvrb.sty)' \
+        'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
+        'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
         texlive-beamertheme-metropolis pdfpc --setopt=strict=0
 }
 
