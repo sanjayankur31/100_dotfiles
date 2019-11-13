@@ -28,7 +28,8 @@ pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscience
     python2 venus/planet.py planet-neuroscience.ini
     git add .
     git commit -m "Updated"
-    git push
+    git push origin master
+    git push neurofedora master
 popd
 echo "Updated neuroscience"
 
@@ -38,6 +39,7 @@ pushd /home/asinha/Documents/02_Code/00_mine/planet-neuroscientists
     python2 venus/planet.py planet-neuroscientists.ini
     git add .
     git commit -m "Updated"
-    git push
+    git push origin master
+    git push neurofedora master
 popd
 echo "Updated neuroscientists"
