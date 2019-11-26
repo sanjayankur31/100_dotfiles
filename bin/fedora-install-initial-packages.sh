@@ -44,7 +44,7 @@ function install_basics() {
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
-    qt5-qtwebengine-freeworld \
+    qt5-qtwebengine-freeworld /usr/bin/texcount \
     --setopt=strict=0
     }
 
