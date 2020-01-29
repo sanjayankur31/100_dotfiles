@@ -40,7 +40,7 @@ function install_basics() {
     mpd vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup parcellite \
     anka-coder-\* zathura zathura-plugins-all urlscan timew \
-    /usr/bin/ps2pdf psutils gnome-pomodoro docker podman python3-unidecode \
+    /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
@@ -66,10 +66,11 @@ function install_flatpaks() {
     echo "Installing flatpaks from Flathub"
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+    flatpak install flathub com.skype.Client
     flatpak install flathub com.spotify.Client
-    flatpak install flathub com.uploadedlobster.peek
     flatpak install flathub org.telegram.desktop
     flatpak install flathub org.signal.Signal
+    flatpak install flathub com.uploadedlobster.peek
 }
 
 
