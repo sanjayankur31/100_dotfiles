@@ -4,6 +4,8 @@
 PACKAGE=""
 DESTDIR=""
 KOJI_TASK=""
+MOCKREL="rawhide"
+MOCKARCH="x86_64"
 
 
 check_package ()
@@ -47,7 +49,7 @@ copyovermockresults ()
     rm -fvr -- "RPMS"
     mkdir -pv "RPMS"
     pushd "RPMS" || exit 3
-        cp -v /var/lib/mock/fedora-rawhide-x86_64/result/*.rpm .
+        cp -v /var/lib/mock/fedora-$MOCKREL-$MOCKARCH/result/*.rpm .
     popd || exit 4
 }
 
@@ -84,7 +86,7 @@ list_reqs_provides ()
 
 usage ()
 {
-    echo "$0 -p packagename -l -L -r -u -d task-id"
+    echo "$0 -p packagename -l | -L | -r | -u | -d task-id | [-f -a] -m"
     echo
 
     cat << EOF
@@ -96,15 +98,23 @@ OPTIONS
 -r list requires and provides of rpms
 -u clean and upload to fedorapeople
 -m copy mock results
+-f used before -m: fedora release being used over for mock builds (default: rawhide)
+-a used before -m: fedora arch being used over for mock builds (default: x86_64)
 EOF
 }
 
 # parse options
-while getopts "rmLuld:p:" OPTION
+while getopts "rmLuld:p:f:a:" OPTION
 do
     case $OPTION in
         p)
             PACKAGE=$OPTARG
+            ;;
+        f)
+            MOCKREL=$OPTARG
+            ;;
+        a)
+            MOCKARCH=$OPTARG
             ;;
         m)
             check_package
