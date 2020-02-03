@@ -29,6 +29,11 @@ full ()
     echo "Full sync started"
 }
 
+status ()
+{
+    pgrep -fa offlineimap
+}
+
 if [ $# -eq 0 ]
 then
     echo "You did not tell me what to do. Exiting."
@@ -36,7 +41,7 @@ then
 fi
 
 # parse options
-while getopts "qf" OPTION
+while getopts "qfs" OPTION
 do
     case $OPTION in
         q)
@@ -47,6 +52,10 @@ do
         f)
             check
             full
+            exit 0
+            ;;
+        s)
+            status
             exit 0
             ;;
         ?)
