@@ -64,13 +64,13 @@ function install_texlive_packages() {
 function install_flatpaks() {
     # Flatpaks
     echo "Installing flatpaks from Flathub"
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    flatpak install flathub com.skype.Client
-    flatpak install flathub com.spotify.Client
-    flatpak install flathub org.telegram.desktop
-    flatpak install flathub org.signal.Signal
-    flatpak install flathub com.uploadedlobster.peek
+    flatpak --user install flathub com.skype.Client
+    flatpak --user install flathub com.spotify.Client
+    flatpak --user install flathub org.telegram.desktop
+    flatpak --user install flathub org.signal.Signal
+    flatpak --user install flathub com.uploadedlobster.peek
 }
 
 
@@ -118,7 +118,6 @@ do
             exit 0
             ;;
         f)
-            setup_repos
             install_flatpaks
             exit 0
             ;;
