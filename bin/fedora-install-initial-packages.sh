@@ -14,7 +14,7 @@ function setup_repos() {
         https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$REL".noarch.rpm \
         http://linuxdownload.adobe.com/adobe-release/adobe-release-x86_64-1.0-1.noarch.rpm
 
-    sudo dnf update --refresh
+    sudo dnf update --refresh -y
 }
 
 
@@ -35,9 +35,9 @@ function update_groups() {
 function install_basics() {
     # Basics
     sudo dnf install byobu tmux htop syncthing vit task taskopen neomutt \
-    weechat ncmpcpp mpv vimiv vifm fedora-packager git-all offlineimap msmtp \
+    weechat mpv vimiv vifm fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
-    mpd vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
+    vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup parcellite \
     anka-coder-\* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
