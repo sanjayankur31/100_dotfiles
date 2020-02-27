@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# add a email from mutt to taskwarrior
 sender=""
 subject=""
 
