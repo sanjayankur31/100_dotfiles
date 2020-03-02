@@ -1,27 +1,35 @@
 [user]
-	name = Ankur Sinha (Ankur Sinha Gmail)
-	email = sanjay.ankur@gmail.com
-	signingkey = E629112D
+    name = Ankur Sinha (Ankur Sinha Gmail)
+    email = sanjay.ankur@gmail.com
+    signingkey = E629112D
 [color]
-	status = auto
-	ui = auto
+    status = auto
+    ui = auto
 [push]
-	default = tracking
+    default = tracking
 [alias]
-    lg1 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
-    lg2 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(bold white)— %an%C(reset)' --abbrev-commit
     lg = !"git lg1"
+    lg1 = !"git lg1-specific --all"
+    lgs1 = !"git lg1-specific --all --simplify-by-decoration"
+    lg2 = !"git lg2-specific --all"
+    lgs2 = !"git lg2-specific --all --simplify-by-decoration"
+    lg3 = !"git lg3-specific --all"
+    lgs3 = !"git lg3-specific --all --simplify-by-decoration"
+
+    lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+    lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+    lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 [sendemail]
-	smtpserver = smtp.gmail.com
-	smtpserverport = 587
-	smtpencryption = tls
-	smtpuser = sanjay.ankur@gmail.com
+    smtpserver = smtp.gmail.com
+    smtpserverport = 587
+    smtpencryption = tls
+    smtpuser = sanjay.ankur@gmail.com
 [core]
-	pager = less -r
-	excludesfile = /home/asinha/.gitignore_global
+    pager = less -r
+    excludesfile = /home/asinha/.gitignore_global
 [gpg]
-	program = gpg2
+    program = gpg2
 [commit]
-	gpgsign = true
+    gpgsign = true
 [gui]
-	recentrepo = /home/asinha/Documents/03_Publications/03_published/2017-CNS-abstract
+    recentrepo = /home/asinha/Documents/03_Publications/03_published/2017-CNS-abstract
