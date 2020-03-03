@@ -28,11 +28,10 @@ process_task () {
     then
         echo "$sender: $subject"
         # Add the task
-        output="$(task add project:$project due:2d "$sender: $subject")"
+        task add project:$project due:2d "$sender: $subject"
         # Start task if needed
         if [ "$start_task" = "yes" ]; then
-            taskid="$(echo "$output" | grep -Eo "[[:digit:]]+")"
-            task "$taskid" start
+            task +LATEST start
         fi
         exit 0
     fi
