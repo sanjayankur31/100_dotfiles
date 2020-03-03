@@ -54,6 +54,9 @@ def extract_tags_from(json_obj):
 
     # Truncate description to make it manageable
     description = json_obj['description']
+    # remove quotes from description
+    description = description.replace('"', '')
+
     if len(description) > 30:
         description = description[:30] + " ..."
 
