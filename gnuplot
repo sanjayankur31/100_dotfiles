@@ -1,8 +1,12 @@
 # From http://labs.guidolin.net/2010/03/how-to-create-beautiful-gnuplot-graphs.html
 set macro
 
+# Use podo by default, load others if required in script files
+# https://www.nature.com/articles/nmeth.1618
+set colorsequence podo
+
 # https://github.com/Gnuplotting/gnuplot-palettes
-load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/moreland.pal'
+# load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/moreland.pal'
 
 my_font = "OpenSans, "
 
