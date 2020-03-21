@@ -46,6 +46,11 @@ if [[ $- == *i* ]] ; then
 
     # Set vi mode
     set -o vi
+    # Enable globstar
+    if shopt -q globstar
+    then
+        shopt -s globstar
+    fi
 
     # Host specific settings. Cluster doesn't have vimx and cowsay, the
     # flags won't apply, and the path to NEST is different too.
