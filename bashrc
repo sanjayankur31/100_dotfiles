@@ -28,7 +28,14 @@ if [[ $- == *i* ]] ; then
 
     # Common settings
     # User specific aliases and functions
-    source /usr/share/git-core/contrib/completion/git-prompt.sh
+    if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]
+    then
+        source /usr/share/git-core/contrib/completion/git-prompt.sh
+        export GIT_PS1_SHOWDIRTYSTATE=1
+        export GIT_PS1_SHOWSTASHSTATE=1
+        export GIT_PS1_SHOWUPSTREAM="auto"
+        export GIT_PS1_SHOWUNTRACKEDFILES=1
+    fi
 
     #alias rm='trash-put'
     alias timestamp='date +%Y%m%d%H%M'
@@ -39,10 +46,6 @@ if [[ $- == *i* ]] ; then
     alias egrep='egrep --color=auto'
     alias latex-clean='rm -fv *.aux *.bbl *.blg *.log *.nav *.out *.snm *.toc *.dvi *.vrb *.bcf *.run.xml *.cut *.lo*'
     alias bt='echo 0 | gdb -batch-silent -ex "run" -ex "set logging overwrite on" -ex "set logging file gdb.bt" -ex "set logging on" -ex "set pagination off" -ex "handle SIG33 pass nostop noprint" -ex "echo backtrace:\n" -ex "backtrace full" -ex "echo \n\nregisters:\n" -ex "info registers" -ex "echo \n\ncurrent instructions:\n" -ex "x/16i \$pc" -ex "echo \n\nthreads backtrace:\n" -ex "thread apply all backtrace" -ex "set logging off" -ex "quit" --args'
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
 
     # Set vi mode
     set -o vi
@@ -50,6 +53,19 @@ if [[ $- == *i* ]] ; then
     if shopt -q globstar
     then
         shopt -s globstar
+    fi
+
+    # append to the history file, don't overwrite it
+    if shopt -q histappend
+    then
+        shopt -s histappend
+    fi
+
+    # check the window size after each command and, if necessary,
+    # update the values of LINES and COLUMNS.
+    if shopt -q checkwinsize
+    then
+        shopt -s checkwinsize
     fi
 
     # Host specific settings. Cluster doesn't have vimx and cowsay, the
@@ -61,9 +77,12 @@ if [[ $- == *i* ]] ; then
         fortune | cowsay -f vader
         export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.vim/plugged/vim-superman/bin"
 
-        # Flags
-        CFLAGS=$(rpm -E %optflags); export CFLAGS
-        CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
+        # Flags but only if I'm on an RPM based machine
+        if [ -x "$(command -v rpm)"  ]
+        then
+            CFLAGS=$(rpm -E %optflags); export CFLAGS
+            CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
+        fi
 
         # Printing
         export CUPS_USER=as14ahs
@@ -83,7 +102,10 @@ if [[ $- == *i* ]] ; then
         complete -o default -o nospace -F _man vman
 
         # fzf on Fedora
-        source /usr/share/fzf/shell/key-bindings.bash
+        if [ -x "$(command -v fzf)"  ]
+        then
+            source /usr/share/fzf/shell/key-bindings.bash
+        fi
     fi
     alias man='vman'
 
