@@ -1,36 +1,61 @@
 # From: https://forums.freebsd.org/threads/newsboat-rss-reader-enable-vim-key-bindings.69448/
 # general settings
-auto-reload yes
+# auto-reload yes
 max-items 50
 
 # externel browser
-browser "/usr/local/bin/w3m %u"
-macro m set browser "/usr/local/bin/mpv %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-macro l set browser "/usr/bin/qutebrowser %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
+browser "/usr/bin/qutebrowser %u"
 
 # unbind keys
-unbind-key ENTER
+unbind-key TAB
+unbind-key SPACE
 unbind-key j
 unbind-key k
 unbind-key J
 unbind-key K
+unbind-key g
+unbind-key G
+unbind-key o
+unbind-key O
+unbind-key ^V
 
-# bind keys - vim style
+# bind keys - vim/neomutt style
 bind-key j down
 bind-key k up
-bind-key l open
-bind-key h quit
+bind-key SPACE open
+bind-key J next article
+bind-key K prev article
+bind-key ^P prev-feed articlelist
+bind-key ^P prev-feed article
+bind-key ^N next-feed articlelist
+bind-key ^N next-feed article
+bind-key G end
+bind-key g home
+bind-key o sort
+bind-key O rev-sort
+bind-key ^F pagedown
+bind-key ^b pageup
+bind-key ^V open-in-browser-and-mark-read
+bind-key ^V open-in-browser
+bind-key i quit article articlelist
+bind-key i quit articlelist
 
 # solarized
 color background         default   default
-color listnormal         default   default
-color listnormal_unread  default   default
-color listfocus          black     cyan
-color listfocus_unread   black     cyan
-color info               default   black
+color listnormal         green   default   bold
+color listnormal_unread  blue   default  bold
+color listfocus          black     yellow
+color listfocus_unread   black     yellow  bold
+color info               yellow   black  bold
 color article            default   default
 
+# UI
+itemview-title-format "%N %V - Article '%T' (%u unread, %t total)"
+
 # highlights
-highlight article "^(Title):.*$" blue default
+highlight article "^Title:.*$" blue default  bold
+highlight article "^(Date|Feed):.*$" green default  bold
+highlight article "^Author:.*$" green default  bold
+highlight article "^Link:" blue default  bold
 highlight article "https?://[^ ]+" red default
 highlight article "\\[image\\ [0-9]+\\]" green default
