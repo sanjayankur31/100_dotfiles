@@ -44,8 +44,6 @@ bind-key G end
 bind-key g home
 bind-key o sort
 bind-key O rev-sort
-bind-key ^F pagedown
-bind-key ^b pageup
 bind-key ^V open-in-browser-and-mark-read
 bind-key ^V open-in-browser
 bind-key i quit all
