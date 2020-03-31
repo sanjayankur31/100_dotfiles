@@ -1,7 +1,18 @@
 # From: https://forums.freebsd.org/threads/newsboat-rss-reader-enable-vim-key-bindings.69448/
 # general settings
-# auto-reload yes
-max-items 50
+auto-reload yes
+reload-time 300
+suppress-first-reload yes
+max-items 100
+confirm-exit yes
+
+user-agent "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"
+
+# Use w3m
+html-renderer "w3m -I 'utf-8' -T text/html"
+
+# like neomutt
+swap-title-and-hints yes
 
 # externel browser
 browser "/usr/bin/qutebrowser %u"
@@ -37,8 +48,7 @@ bind-key ^F pagedown
 bind-key ^b pageup
 bind-key ^V open-in-browser-and-mark-read
 bind-key ^V open-in-browser
-bind-key i quit article articlelist
-bind-key i quit articlelist
+bind-key i quit all
 
 # solarized
 color background         default   default
