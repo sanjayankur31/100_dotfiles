@@ -5,6 +5,7 @@ reload-time 300
 suppress-first-reload yes
 max-items 100
 confirm-exit yes
+cache-file "~/Sync/newsboat/cache.db"
 
 user-agent "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"
 
