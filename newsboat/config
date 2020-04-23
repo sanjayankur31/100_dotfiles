@@ -3,7 +3,7 @@
 auto-reload yes
 reload-time 300
 suppress-first-reload yes
-max-items 100
+max-items 300
 confirm-exit yes
 cache-file "~/Sync/newsboat/cache.db"
 
