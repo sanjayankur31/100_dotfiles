@@ -46,6 +46,7 @@ function install_basics() {
     @python-science clang-devel @c-development w3m python3-mailmerge \
     qt5-qtwebengine{-freeworld,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
+    closure-compiler \
     --setopt=strict=0
     }
 
