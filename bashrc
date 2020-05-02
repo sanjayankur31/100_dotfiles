@@ -75,7 +75,7 @@ if [[ $- == *i* ]] ; then
     # for all my other machines
     else
         fortune | cowsay -f vader
-        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.vim/plugged/vim-superman/bin"
+        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.vim/plugged/vim-superman/bin:$HOME/.node_modules_global/lib/node_modules/tern/bin/"
 
         # Flags but only if I'm on an RPM based machine
         if [ -x "$(command -v rpm)"  ]
