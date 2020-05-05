@@ -7,3 +7,4 @@ RPMS/
 BUILDROOT/
 *.src.rpm
 *.rpm
+jsconfig.json
