@@ -20,10 +20,11 @@
 #
 
 export SSH_AUTH_SOCK=/home/asinha/.byobu/.ssh-agent
-REPODIR="/home/asinha/Documents/02_Code/01_others/NeuroFedora/"
+REPODIR="/home/asinha/Documents/02_Code/00_mine/NeuroFedora/"
 
 echo "Updating planets"
 pushd "$REPODIR"planet-neuroscience
+    find . -name "*.tmplc" -delete
     git pull --recurse-submodules
     git submodule update --remote
     python2 venus/planet.py planet-neuroscience.ini
@@ -35,6 +36,7 @@ popd
 echo "Updated neuroscience"
 
 pushd "$REPODIR"planet-neuroscientists
+    find . -name "*.tmplc" -delete
     git pull --recurse-submodules
     git submodule update --remote
     python2 venus/planet.py planet-neuroscientists.ini
