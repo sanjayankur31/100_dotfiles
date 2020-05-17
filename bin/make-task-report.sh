@@ -28,7 +28,7 @@ today=$(date +%Y-%m-%d)
 mkdir -pv ~/Sync/timesheets/
 
 # Update list as required
-for p in "foss" "job" "research" "ocns"
+for p in "foss" "job.herts" "job.ucl" "research" "ocns" "personal"
 do
-    /home/asinha/bin/generate-timesheets.sh -p $p | ansi2html > ~/Sync/timesheets/timesheet-$p-$today.html
+    /home/asinha/bin/generate-timesheets.sh -p $p | ansi2html -w > ~/Sync/timesheets/timesheet-$p-$today.html
 done
