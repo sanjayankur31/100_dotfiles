@@ -4,6 +4,7 @@ sender=""
 subject=""
 # default project
 project="email"
+due="2d"
 start_task=""
 
 get_info (){
@@ -28,7 +29,7 @@ process_task () {
     then
         echo "$sender: $subject"
         # Add the task
-        task add project:$project due:2d "$sender: $subject"
+        task add project:$project due:"$due" "$sender: $subject"
         # Start task if needed
         if [ "$start_task" = "yes" ]; then
             task +LATEST start
@@ -55,6 +56,9 @@ do
     case $OPTION in
         p)
             project=$OPTARG
+            ;;
+        d)
+            due=$OPTARG
             ;;
         s)
             start_task="yes"
