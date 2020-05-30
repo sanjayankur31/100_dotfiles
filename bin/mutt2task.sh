@@ -46,12 +46,13 @@ usage () {
     echo "Options:"
     echo
     echo "-p <project name>: project to add task to; default: email"
+    echo "-d <due period>: due period; default: 2d"
     echo "-s: start task after adding"
     echo "-h: print this help message and exit"
 }
 
 # parse options
-while getopts "p:sh" OPTION
+while getopts "p:d:sh" OPTION
 do
     case $OPTION in
         p)
