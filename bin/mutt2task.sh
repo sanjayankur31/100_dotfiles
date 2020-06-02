@@ -50,9 +50,10 @@ usage () {
     echo "-h: print this help message and exit"
 }
 
-if [ "$#" -le 1 ]
+if [ "$#" -lt 1 ]
 then
     echo "At least one argument is necessary. Exiting"
+    usage
     exit 1
 fi
 
