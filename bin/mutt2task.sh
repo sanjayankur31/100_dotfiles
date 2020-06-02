@@ -3,8 +3,6 @@
 sender=""
 subject=""
 # default project
-project="email"
-due="2d"
 start_task=""
 
 get_info (){
@@ -29,7 +27,8 @@ process_task () {
     then
         echo "$sender: $subject"
         # Add the task
-        task add project:$project due:"$due" "$sender: $subject"
+        # echo "Arguments: $*"
+        task add "$@" && task +LATEST annotate "$sender: $subject"
         # Start task if needed
         if [ "$start_task" = "yes" ]; then
             task +LATEST start
@@ -39,28 +38,28 @@ process_task () {
 }
 
 usage () {
-    echo "mutt2task.sh [-p] [-s]"
+    echo "mutt2task.sh <args>"
     echo
     echo "Simple script that converts a neomutt e-mail to a taskwarrior task"
+    echo "The sender and subject of the e-mail are added as an annotation"
+    echo "All arguments apart from -s and -h are passed to taskwarrior"
     echo
     echo "Options:"
     echo
-    echo "-p <project name>: project to add task to; default: email"
-    echo "-d <due period>: due period; default: 2d"
     echo "-s: start task after adding"
     echo "-h: print this help message and exit"
 }
 
+if [ "$#" -le 1 ]
+then
+    echo "At least one argument is necessary. Exiting"
+    exit 1
+fi
+
 # parse options
-while getopts "p:d:sh" OPTION
+while getopts "sh" OPTION
 do
     case $OPTION in
-        p)
-            project=$OPTARG
-            ;;
-        d)
-            due=$OPTARG
-            ;;
         s)
             start_task="yes"
             ;;
@@ -76,6 +75,7 @@ do
             ;;
     esac
 done
+shift $((OPTIND -1))
 
 get_info
-process_task
+process_task "$@"
