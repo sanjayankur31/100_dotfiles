@@ -8,3 +8,4 @@ BUILDROOT/
 *.src.rpm
 *.rpm
 jsconfig.json
+package-lock.json
