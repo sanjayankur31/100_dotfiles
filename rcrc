@@ -1,4 +1,4 @@
 EXCLUDES="tags authorized_keys known_hosts *seahorse *cache* neomuttdir environment*"
 UNDOTTED="bin"
-SYMLINK_DIRS="bin byobu dotfiles:weechat"
+SYMLINK_DIRS="bin byobu weechat"
 DOTFILES_DIRS="/home/asinha/.dotfiles /home/asinha/Sync/99_private"
