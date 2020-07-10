@@ -31,8 +31,6 @@
     program = gpg2
 [commit]
     gpgsign = true
-[gui]
-    recentrepo = /home/asinha/Documents/03_Publications/03_published/2017-CNS-abstract
 [merge]
 	tool = vimdiff
 	conflictStyle = diff3
