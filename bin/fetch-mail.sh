@@ -34,6 +34,11 @@ status ()
     pgrep -fa offlineimap
 }
 
+timestamp ()
+{
+    echo "$(date +%H%M)" > ~/Mail/status
+}
+
 if [ $# -eq 0 ]
 then
     echo "You did not tell me what to do. Exiting."
@@ -47,11 +52,13 @@ do
         q)
             check
             quick
+            timestamp
             exit 0
             ;;
         f)
             check
             full
+            timestamp
             exit 0
             ;;
         s)
