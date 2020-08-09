@@ -34,7 +34,7 @@ function update_groups() {
 
 function install_basics() {
     # Basics
-    sudo dnf install byobu tmux htop syncthing vit task taskopen neomutt \
+    sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt
     weechat mpv vimiv-qt vifm fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \

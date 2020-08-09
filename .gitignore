@@ -33,3 +33,5 @@ bin/task-web
 
 datetime.tmux
 status
+
+*lock
