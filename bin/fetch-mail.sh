@@ -9,13 +9,26 @@
 # A better script would be one that checks each remote individually and asks
 # offlineimap to work on that only, using the -a option
 
+# Do not kill existing process by default
+# Sometimes it gets hung, so we do need to kill it
+KILL_SYNC="no"
+
 check ()
 {
     pgrep -fa offlineimap -u asinha
     if [ $? -eq 0 ]
     then
-        echo "Already syncing, letting it run."
-        exit 0
+        if [ "$KILL_SYNC" == "no" ]
+        then
+            echo "Already syncing, letting it run."
+            exit 0
+        else
+            echo "Already syncing, killing as instructed."
+            while pkill -f offlineimap -u asinha
+            do
+                sleep 2;
+            done
+        fi
     fi
 }
 
@@ -48,9 +61,12 @@ then
 fi
 
 # parse options
-while getopts "qfs" OPTION
+while getopts "qfsk" OPTION
 do
     case $OPTION in
+        k)
+            KILL_SYNC="yes"
+            ;;
         q)
             check
             quick
