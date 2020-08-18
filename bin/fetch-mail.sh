@@ -11,10 +11,12 @@
 
 check ()
 {
-    while pkill offlineimap -u asinha
-    do
-        sleep 2
-    done
+    pgrep -fa offlineimap -u asinha
+    if [ $? -eq 0 ]
+    then
+        echo "Already syncing, letting it run."
+        exit 0
+    fi
 }
 
 quick ()
@@ -31,7 +33,7 @@ full ()
 
 status ()
 {
-    pgrep -fa offlineimap
+    pgrep -fa offlineimap -u asinha
 }
 
 timestamp ()
