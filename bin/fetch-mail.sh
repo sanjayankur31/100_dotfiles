@@ -5,6 +5,7 @@
 # Do not kill existing process by default
 # Sometimes it gets hung, so we do need to kill it
 KILL_SYNC="no"
+MAILDIR="$HOME/Mail"
 
 check ()
 {
@@ -44,7 +45,9 @@ status ()
 
 timestamp ()
 {
-    echo "$(date +%H%M)" > ~/Mail/status
+    echo "$(date +%H%M)" > $MAILDIR/status
+    newmails="$(find $MAILDIR -name 'new' -type d -exec ls -l '{}' \;  | sed '/total/ d' | wc -l)"
+    echo "New: $newmails" >> $MAILDIR/status
 }
 
 if [ $# -eq 0 ]
