@@ -3,12 +3,12 @@
 ###
 
 # Audio files
-audio/*; /usr/bin/xdg-open '%s' ; copiousoutput
+audio/*; xdg-open '%s' ; copiousoutput
 
 # Image files
-image/*; /usr/bin/xdg-open '%s' ; copiousoutput
+image/*; xdg-open '%s' ; copiousoutput
 
-# Office documents
+# MS Office documents
 # Use `xdg-open` instead of `libreoffice`.
 application/msword;             xdg-open '%s'; copiousoutput
 application/vnd.msword;         xdg-open '%s'; copiousoutput
@@ -20,12 +20,32 @@ application/x-msexcel;          xdg-open '%s'; copiousoutput
 application/vnd.ms-powerpoint;  xdg-open '%s'; copiousoutput
 application/x-mspowerpoint;     xdg-open '%s'; copiousoutput
 application/ppt;                xdg-open '%s'; copiousoutput
-application/vnd.openxmlformats-officedocument.wordprocessingml.document; xdg-open '%s'; nametemplate=%s.docx; copiousoutput
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; xdg-open '%s'; nametemplate=%s.xlsx; copiousoutput
-application/postscript;         /usr/bin/xdg-open '%s'; copiousoutput
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; xdg-open '%s'; copiousoutput
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; xdg-open '%s'; copiousoutput
+application/vnd.openxmlformats-officedocument.presentationml.presentation; xdg-open '%s'; copiousoutput
+
+
+# Libreoffice
+application/vnd.oasis.opendocument.text; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.text-template; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.text-web; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.text-master; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.graphics; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.graphics-template; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.presentation; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.presentation-template; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.spreadsheet; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.spreadsheet-template; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.chart; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.formula; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.database; xdg-open '%s'; copiousoutput
+application/vnd.oasis.opendocument.image; xdg-open '%s'; copiousoutput
+application/vnd.openofficeorg.extension; xdg-open '%s'; copiousoutput
+
+application/postscript;         xdg-open '%s'; copiousoutput
 
 # PDF
-application/pdf;                /usr/bin/xdg-open '%s'; copiousoutput
+application/pdf;                xdg-open '%s'; copiousoutput
 
 # HTML
 # Qutebrowser if GUI exists
