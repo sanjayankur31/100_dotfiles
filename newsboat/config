@@ -9,6 +9,9 @@ cache-file "~/Sync/newsboat/cache.db"
 
 user-agent "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"
 
+# search feeds
+prepopulate-query-feeds yes
+
 # Use w3m
 html-renderer "w3m -I 'utf-8' -T text/html"
 
@@ -68,3 +71,4 @@ highlight article "^Author:.*$" green default  bold
 highlight article "^Link:" blue default  bold
 highlight article "https?://[^ ]+" red default
 highlight article "\\[image\\ [0-9]+\\]" green default
+
