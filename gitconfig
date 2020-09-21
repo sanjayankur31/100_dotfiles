@@ -32,7 +32,9 @@
 [commit]
     gpgsign = true
 [merge]
-	tool = vimdiff
-	conflictStyle = diff3
+    tool = vimdiff
+    conflictStyle = diff3
 [mergetool]
-	prompt = false
+    prompt = false
+[pull]
+    rebase = false
