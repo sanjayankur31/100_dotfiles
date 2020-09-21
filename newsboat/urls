@@ -62,6 +62,7 @@ https://link.springer.com/search.rss?search-within=Journal&facet-journal-id=415&
 https://link.springer.com/search.rss?search-within=Journal&facet-journal-id=221&query=   "Journal"     "~Experimental Brain Research"
 https://mathematical-neuroscience.springeropen.com/articles/most-recent/rss.xml  "Journal"
 https://behavioralandbrainfunctions.biomedcentral.com/articles/most-recent/rss.xml    "Journal"
+https://www.mdpi.com/rss/journal/brainsci    "Journal"
 
 
 "query:[Search = Axon]:(title =~ \"axo\" or content =~ \"axo\")"
