@@ -9,5 +9,5 @@
 
 if [ -x "/usr/bin/notify-send" ]
 then
-    notify-send -u low -t 2000 -i gnome-pomodoro "Timew status:" "$(timew)"
+    notify-send -u low -t 2000 -i gnome-pomodoro -c "presence" -a  "Timew" "Timew" "$(timew)"
 fi
