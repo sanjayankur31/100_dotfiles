@@ -96,7 +96,7 @@ if [[ $- == *i* ]] ; then
         # image directory for research diary
         year=$(date +%G)
         year_research_diary="$year""_research_diary"
-        export RDIMGDIR="$HOME/Documents/02_Code/00_mine/$year_research_diary/diary/$year/images/"
+        export RDIMGDIR="$HOME/Documents/05_Academics/$year_research_diary/diary/$year/images/"
 
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
