@@ -5,6 +5,7 @@
 # Do not kill existing process by default
 # Sometimes it gets hung, so we do need to kill it
 KILL_SYNC="no"
+NOTIFY="no"
 MAILDIR="$HOME/Mail"
 
 check ()
@@ -49,7 +50,7 @@ timestamp ()
     newmails="$(find $MAILDIR -name 'new' -type d -exec ls -l '{}' \;  | sed '/total/ d' | wc -l)"
     echo "New: $newmails" >> $MAILDIR/status
 
-    if [ -x "/usr/bin/notify-send" ]
+    if [ -x "/usr/bin/notify-send" ] && [ "$NOTIFY" == "yes" ]
     then
         notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "$newmails new e-mails"
     fi
@@ -62,23 +63,24 @@ then
 fi
 
 # parse options
-while getopts "qfsk" OPTION
+while getopts "knqfs" OPTION
 do
     case $OPTION in
         k)
             KILL_SYNC="yes"
             ;;
+        n)
+            NOTIFY="yes"
+            ;;
         q)
             check
             quick
             timestamp
-            exit 0
             ;;
         f)
             check
             full
             timestamp
-            exit 0
             ;;
         s)
             status
