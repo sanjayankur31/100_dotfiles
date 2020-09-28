@@ -9,6 +9,7 @@ fmt="%Y-%m-%d"
 start=$(date +$fmt -d $phrase)
 end=$(date +$fmt)
 project_filter=""
+rcoptions="rc.defaultwidth=200 rc.defaultheight=120"
 
 
 function get_task_data ()
@@ -17,48 +18,48 @@ function get_task_data ()
     echo
     echo " -- Upcoming tasks - Today  -- "
     filter="$project_filter due:today"
-    /usr/bin/task $filter next
+    /usr/bin/task "$rcoptions" $filter next
 
     echo
     echo
     echo " -- Upcoming tasks - This week -- "
     filter="$project_filter due.before:eow due.after:today"
-    /usr/bin/task $filter next
+    /usr/bin/task "$rcoptions" $filter next
 
     echo
     echo
     echo " -- Overdue tasks -- "
     filter="$project_filter overdue"
-    /usr/bin/task $project_filter next
+    /usr/bin/task "$rcoptions" $project_filter next
 
     echo
     echo
     echo " -- Tasks completed from $start to $end (back $phrase) -- "
-    /usr/bin/task work_report $project_filter end.after:$start
+    /usr/bin/task "$rcoptions" work_report $project_filter end.after:$start
 
     echo
     echo
     filter="$project_filter"
     echo " -- Blocked tasks -- "
-    /usr/bin/task $filter blocked
+    /usr/bin/task "$rcoptions" $filter blocked
 
     echo
     echo
     echo " -- Blocking tasks -- "
-    /usr/bin/task $filter blocking
+    /usr/bin/task "$rcoptions" $filter blocking
 
     echo
     echo
     echo " -- Summary -- "
-    /usr/bin/task $filter summary
+    /usr/bin/task "$rcoptions" $filter summary
 
     echo
     echo
     echo " -- History -- "
-    /usr/bin/task history $filter
-    /usr/bin/task ghistory $filter
-    /usr/bin/task $filter burndown.daily
-    /usr/bin/task $filter burndown
+    /usr/bin/task "$rcoptions" history $filter
+    /usr/bin/task "$rcoptions" ghistory $filter
+    /usr/bin/task "$rcoptions" $filter burndown.daily
+    /usr/bin/task "$rcoptions" $filter burndown
 
 }
 
