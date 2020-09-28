@@ -48,6 +48,11 @@ timestamp ()
     echo "$(date +%H%M)" > $MAILDIR/status
     newmails="$(find $MAILDIR -name 'new' -type d -exec ls -l '{}' \;  | sed '/total/ d' | wc -l)"
     echo "New: $newmails" >> $MAILDIR/status
+
+    if [ -x "/usr/bin/notify-send" ]
+    then
+        notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "$newmails new e-mails"
+    fi
 }
 
 if [ $# -eq 0 ]
