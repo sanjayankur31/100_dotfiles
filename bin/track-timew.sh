@@ -19,11 +19,16 @@ clean ()
 
 report ()
 {
+    echo "*** Complete report ***"
+    timew summary "$1"
+
+    echo "*** Report by tag ***"
     for atag in "${tags[@]}"
     do
-        echo "*** Report for $atag ***"
+        echo "*** $atag ***"
         timew summary "$atag" "$1"
     done
+
 }
 
 usage ()
