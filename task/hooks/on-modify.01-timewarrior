@@ -56,12 +56,11 @@ def extract_tags_from(json_obj):
     description = json_obj['description']
     # remove quotes from description
     description = description.replace('"', '')
-
     if len(description) > 30:
         description = description[:30] + " ..."
 
     # Initialise tags
-    tags = [description]
+    tags = []
 
     if 'project' in json_obj:
         tags.append(json_obj['project'])
@@ -71,7 +70,7 @@ def extract_tags_from(json_obj):
     if 'tags' in json_obj:
         tags.extend(json_obj['tags'])
 
-    return tags
+    return tags, description
 
 
 def extract_annotation_from(json_obj):
@@ -93,14 +92,17 @@ elif ('start' not in new or 'end' in new) and 'start' in old:
     start_or_stop = 'stop'
 
 if start_or_stop:
-    tags = extract_tags_from(new)
+    tags, description = extract_tags_from(new)
 
     subprocess.call(['timew', start_or_stop] + tags + [':yes'])
+    # If new task, add description as annotation
+    if start_or_stop == "start":
+        subprocess.call(['timew', 'annotate', description])
 
 # Modifications to task other than start/stop
 elif 'start' in new and 'start' in old:
-    old_tags = extract_tags_from(old)
-    new_tags = extract_tags_from(new)
+    old_tags, description = extract_tags_from(old)
+    new_tags, description = extract_tags_from(new)
 
     if old_tags != new_tags:
         subprocess.call(['timew', 'untag', '@1'] + old_tags + [':yes'])
