@@ -1,5 +1,7 @@
 #!/bin/bash
 
+tags=("email" "job" "foss" "fedora" "ocns" "reading" "research")
+
 resume ()
 {
     timew || timew continue
@@ -15,6 +17,15 @@ clean ()
     for entry in $(timew summary :ids | grep -o '@.*' | sed -E 's/(^@[[:digit:]]+[[:space:]]+)/\1 |/' | sed -E 's/([[:digit:]]+:[[:digit:]]+:[[:digit:]]+ )/| \1/' | sed 's/|.*|//' | sed -E 's/[[:space:]]{2,}/ /' | cut -d ' ' -f 1,4 | grep -E '0:0[01]:..' | cut -d ' ' -f 1 | tr '\n' ' '); do timew delete "$entry"; done
 }
 
+report ()
+{
+    for atag in "${tags[@]}"
+    do
+        echo "*** Report for $atag ***"
+        timew summary "$atag" "$1"
+    done
+}
+
 usage ()
 {
     echo "$0: wrapper script around timewarrior to carry out common tasks"
@@ -26,6 +37,9 @@ usage ()
     echo "-r    resume tracking of most recently tracked task"
     echo "-p    pause tracking"
     echo "-c    clean up short tasks (less than 2 minutes long)"
+    echo "-w    print report for tags for this week"
+    echo "-l    print report for tags for last week"
+    echo "-m    print report for tags for month"
 }
 
 # check for options
@@ -35,7 +49,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # parse options
-while getopts "rpch" OPTION
+while getopts "rpcdwlmh" OPTION
 do
     case $OPTION in
         r)
@@ -48,6 +62,22 @@ do
             ;;
         c)
             clean
+            exit 0
+            ;;
+        d)
+            report ":day"
+            exit 0
+            ;;
+        w)
+            report ":week"
+            exit 0
+            ;;
+        l)
+            report ":lastweek"
+            exit 0
+            ;;
+        m)
+            report ":month"
             exit 0
             ;;
         h)
