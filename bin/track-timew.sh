@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tags=("email" "job" "foss" "fedora" "ocns" "reading" "research")
+tags=("email" "job" "foss" "fedora" "ocns" "reading" "research" "ucl")
 
 resume ()
 {
