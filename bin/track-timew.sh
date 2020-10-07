@@ -37,6 +37,7 @@ usage ()
     echo "-r    resume tracking of most recently tracked task"
     echo "-p    pause tracking"
     echo "-c    clean up short tasks (less than 2 minutes long)"
+    echo "-d    print report for tags for current day"
     echo "-w    print report for tags for this week"
     echo "-l    print report for tags for last week"
     echo "-m    print report for tags for month"
