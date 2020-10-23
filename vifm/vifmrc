@@ -177,7 +177,7 @@ command! reload :write | restart
 " uncommenting one of lines below will result in ignoring 'vi[x]cmd' option
 " for unknown file types.
 " For *nix:
-filetype * gnome-open
+filetype * gio open
 " For OS X:
 " filetype * open
 " For Windows:
