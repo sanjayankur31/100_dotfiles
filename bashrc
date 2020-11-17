@@ -93,11 +93,6 @@ if [[ $- == *i* ]] ; then
         alias vim='vimx --servername $(pwgen 8 1)'
         export EDITOR='vim'
 
-        # image directory for research diary
-        year=$(date +%G)
-        year_research_diary="$year""_research_diary"
-        export RDIMGDIR="$HOME/Documents/05_Academics/$year_research_diary/diary/$year/images/"
-
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
 
