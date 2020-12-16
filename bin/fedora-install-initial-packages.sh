@@ -6,7 +6,7 @@ function setup_repos() {
     # Neomutt
     sudo dnf copr enable flatcap/neomutt
     # I made a typo!
-    sudo dnf copr enable ankursinha/Takjuggler
+    sudo dnf copr enable ankursinha/rubygem-taskjuggler
 
     # RPMFusion and adobe
     sudo dnf install \
