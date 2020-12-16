@@ -34,11 +34,11 @@ function update_groups() {
 
 function install_basics() {
     # Basics
-    sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt
+    sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt \
     weechat mpv vimiv-qt vifm fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
-    python3-websocket-client xsel flash-plugin deja-dup parcellite \
+    python3-websocket-client xsel flash-plugin deja-dup \
     anka-coder-\* zathura zathura-plugins-all urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
@@ -48,6 +48,8 @@ function install_basics() {
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler \
     --setopt=strict=0
+
+    # parcellite
     }
 
 function install_texlive_packages() {
