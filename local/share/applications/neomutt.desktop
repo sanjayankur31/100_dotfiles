@@ -2,7 +2,7 @@
 Type=Application
 Name=Neomutt
 Icon=evolution
-Exec=neomutt %u
+Exec=/home/asinha/bin/neomutt-compose-wrapper.sh %u
 Terminal=true
 StartupNotify=true
 Categories=Office;Email;Internet;
