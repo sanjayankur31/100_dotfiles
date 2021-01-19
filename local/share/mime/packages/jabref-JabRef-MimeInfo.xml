@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="text/x-bibtex">
+    <comment>BibTeX File</comment>
+    <glob pattern="*.bib"></glob>
+    <glob pattern="*.ris"></glob>
+  </mime-type>
+</mime-info>
