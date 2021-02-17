@@ -49,7 +49,7 @@ function install_basics() {
     qt5-qtwebengine{-freeworld,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler \
-    python3-peewee libolm-python3 \
+    python3-peewee libolm-python3 python3-jedi \
     --setopt=strict=0
 
     # parcellite
