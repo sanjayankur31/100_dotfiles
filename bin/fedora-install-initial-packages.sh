@@ -7,6 +7,8 @@ function setup_repos() {
     sudo dnf copr enable flatcap/neomutt
     # I made a typo!
     sudo dnf copr enable ankursinha/rubygem-taskjuggler
+    # universal ctags
+    dnf copr enable jgoguen/universal-ctags
 
     # RPMFusion and adobe
     sudo dnf install \
@@ -36,7 +38,7 @@ function install_basics() {
     # Basics
     sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt \
     weechat mpv vimiv-qt vifm fedora-packager git-all offlineimap msmtp \
-    notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope ctags fedora-review \
+    notmuch gnuplot /usr/bin/ag aria2 qutebrowser cscope universal-ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup \
     anka-coder-\* zathura zathura-plugins-all urlscan timew \
