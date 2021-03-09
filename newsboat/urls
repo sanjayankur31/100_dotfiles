@@ -63,6 +63,7 @@ https://link.springer.com/search.rss?search-within=Journal&facet-journal-id=221&
 https://mathematical-neuroscience.springeropen.com/articles/most-recent/rss.xml  "Journal"
 https://behavioralandbrainfunctions.biomedcentral.com/articles/most-recent/rss.xml    "Journal"
 https://www.mdpi.com/rss/journal/brainsci    "Journal"
+https://f1000research.com/published/rss     "Journal"
 
 
 "query:[Search = Axon]:(title =~ \"axo\" or content =~ \"axo\")"
@@ -85,3 +86,4 @@ https://www.mdpi.com/rss/journal/brainsci    "Journal"
 "query:[Search = Purkinje]:(title =~ \"purkinje\" or content =~ \"purkinje\")"
 "query:[Search = Recurrent NN]:(title =~ \"recurrent\" or content =~ \"recurrent\")"
 "query:[Search = Theory]:(title =~ \"manifold\" or content =~ \"manifold\" or title =~ \"dimension\" or content =~ \"dimension\" or title =~ \"chao\" or content =~ \"chao\" or title =~ \"dynamical\" or content =~ \"dynamical\")"
+"query:[Search = Software]:(title =~ \"software\" or content =~ \"software\" or title =~ \"open source\" or content =~ \"open source\")"
