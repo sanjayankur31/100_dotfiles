@@ -104,8 +104,6 @@ if [[ $- == *i* ]] ; then
             source /usr/share/fzf/shell/key-bindings.bash
         fi
 
-        # kerberos for Fedora
-        export QTWEBENGINE_CHROMIUM_FLAGS="--auth-server-whitelist=*.fedoraproject.org"
     fi
     alias man='vman'
 
