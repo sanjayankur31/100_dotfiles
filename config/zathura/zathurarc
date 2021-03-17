@@ -5,3 +5,4 @@ set window-title-basename true
 set window-icon-document true
 set window-icon "/usr/share/icons/scalable/apps/org.pwmt.zathura.svg"
 set default-fg "#000000"
+map <C-a> feedkeys ":exec evince %<Return>"
