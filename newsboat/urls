@@ -65,6 +65,7 @@ https://behavioralandbrainfunctions.biomedcentral.com/articles/most-recent/rss.x
 https://www.mdpi.com/rss/journal/brainsci    "Journal"
 https://f1000research.com/published/rss     "Journal"
 
+https://www.disabled-world.com/rss.xml  "Non-science"
 
 "query:[Search = Axon]:(title =~ \"axo\" or content =~ \"axo\")"
 "query:[Search = Cerebellum]:(title =~ \"cerebel\" or content =~ \"cerebel\")"
