@@ -78,7 +78,7 @@ function install_flatpaks() {
     flatpak --user install flathub org.telegram.desktop
     flatpak --user install flathub org.signal.Signal
     flatpak --user install flathub com.uploadedlobster.peek
-    flatpak --user install flathub org.jabref.jabref
+    flatpak --user install flathub com.jgraph.drawio.desktop
 }
 
 
