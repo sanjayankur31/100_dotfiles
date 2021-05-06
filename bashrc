@@ -102,6 +102,9 @@ if [[ $- == *i* ]] ; then
         if [ -x "$(command -v fzf)"  ]
         then
             source /usr/share/fzf/shell/key-bindings.bash
+            # To not have to use gio open each time, from:
+            # https://unix.stackexchange.com/a/518900/30628
+            bind -x '"\C-o": file="$(fzf --height 40% --reverse --prompt="Open file>")" && [ -f "$file" ] &&  gio open "$file"'
         fi
 
     fi
