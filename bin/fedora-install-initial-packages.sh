@@ -48,7 +48,7 @@ function install_basics() {
     @python-science clang-devel @c-development w3m python3-mailmerge \
     qt5-qtwebengine{-freeworld,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
-    closure-compiler \
+    closure-compiler wofi \
     python3-peewee libolm-python3 python3-jedi \
     --setopt=strict=0
 
