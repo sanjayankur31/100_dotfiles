@@ -50,6 +50,7 @@ function install_basics() {
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler wofi fd-find \
     python3-peewee libolm-python3 python3-jedi \
+    trash-cli \
     --setopt=strict=0
 
     # parcellite
