@@ -48,8 +48,8 @@ function install_basics() {
     @python-science clang-devel @c-development w3m python3-mailmerge \
     qt5-qtwebengine{-freeworld,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
-    closure-compiler wofi fd-find \
-    python3-peewee libolm-python3 python3-jedi \
+    closure-compiler wofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
+    python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli \
     --setopt=strict=0
 
@@ -60,8 +60,7 @@ function install_texlive_packages() {
     # texlive bits
     # some bits for muttprint
     sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
-        /usr/bin/lacheck /usr/bin/biber /usr/bin/flake8-3 /usr/bin/perlcritic \
-        /usr/bin/rstcheck texlive-epstopdf texlive-biblatex-nature \
+        /usr/bin/lacheck /usr/bin/biber texlive-epstopdf texlive-biblatex-nature \
         'tex(array.sty)' 'tex(babel.sty)' 'tex(fancyhdr.sty)' 'tex(fancyvrb.sty)' \
         'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
         'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
