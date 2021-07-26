@@ -35,3 +35,11 @@ datetime.tmux
 status
 
 *lock
+
+bin/erb
+bin/fetch
+bin/gli
+bin/pakman
+bin/pluto
+bin/racc
+

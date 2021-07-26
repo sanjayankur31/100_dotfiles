@@ -24,25 +24,11 @@ REPODIR="/home/asinha/Documents/02_Code/00_mine/NeuroFedora/"
 
 echo "Updating planets"
 pushd "$REPODIR"planet-neuroscience
-    find . -name "*.tmplc" -delete
-    git pull --recurse-submodules
-    git submodule update --remote
-    python2 venus/planet.py planet-neuroscience.ini
-    git add .
-    git commit -m "Updated"
-    git push origin master
-    git push neurofedora master
+    ./update.sh
 popd
 echo "Updated neuroscience"
 
 pushd "$REPODIR"planet-neuroscientists
-    find . -name "*.tmplc" -delete
-    git pull --recurse-submodules
-    git submodule update --remote
-    python2 venus/planet.py planet-neuroscientists.ini
-    git add .
-    git commit -m "Updated"
-    git push origin master
-    git push neurofedora master
+    ./update.sh
 popd
 echo "Updated neuroscientists"
