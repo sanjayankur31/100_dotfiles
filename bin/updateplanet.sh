@@ -24,11 +24,11 @@ REPODIR="/home/asinha/Documents/02_Code/00_mine/NeuroFedora/"
 
 echo "Updating planets"
 pushd "$REPODIR"planet-neuroscience
-    ./update.sh
+    ./update.sh -l
 popd
 echo "Updated neuroscience"
 
 pushd "$REPODIR"planet-neuroscientists
-    ./update.sh
+    ./update.sh -l
 popd
 echo "Updated neuroscientists"
