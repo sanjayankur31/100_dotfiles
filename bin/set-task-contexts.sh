@@ -9,5 +9,4 @@
 # Needs to be run once at the start of the day
 
 echo "task context work" | at 0930
-echo "task context volunteering" | at 1700
-echo "task context none"  | at 1800
+echo "task context none"  | at 1700
