@@ -16,15 +16,29 @@ fi
 if [[ $- == *i* ]] ; then
     # SSH agent - hostname based, why not?
     SSH_ENV="$HOME/.ssh/environment.""$(hostname)"
-    # If no SSH agent found, run this function
+
+    # gnome-keyring should be started on logging in on gnome.
+    # it should set the SSH_AUTH_LOCK environment variable when it runs.
+    # If gnome-keyring is not running (if not logged in via gdm), check for an
+    # ssh-agent and start a new one if it does not exist
     function start_ssh_agent {
-        echo "Initialising new SSH agent..."
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-        echo succeeded
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add;
+    myid="$(id -u)"
+    if ! ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
+    then
+        if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null && [ -x "$(command -v ssh-agent)" ]
+        then
+            /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+            chmod 600 "${SSH_ENV}"
+            . "${SSH_ENV}" > /dev/null
+            /usr/bin/ssh-add;
+        else
+            echo "Could not start any SSH agent"
+        fi
+    else
+        echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" > "${SSH_ENV}"
+    fi
     }
+    start_ssh_agent
 
     # Common settings
     # User specific aliases and functions
@@ -114,17 +128,6 @@ if [[ $- == *i* ]] ; then
 
     fi
     alias man='vman'
-
-    # Source SSH settings, if applicable
-    if [ -f "${SSH_ENV}" ]; then
-        . "${SSH_ENV}" > /dev/null
-        #ps ${SSH_AGENT_PID} doesn't work under cywgin
-        ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-            start_ssh_agent;
-        }
-    else
-        start_ssh_agent;
-    fi
 
     # for gpg agent
     GPG_TTY="$(tty)"; export GPG_TTY
