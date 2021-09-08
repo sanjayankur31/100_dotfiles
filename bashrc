@@ -65,6 +65,8 @@ if [[ $- == *i* ]] ; then
     alias bt='echo 0 | gdb -batch-silent -ex "run" -ex "set logging overwrite on" -ex "set logging file gdb.bt" -ex "set logging on" -ex "set pagination off" -ex "handle SIG33 pass nostop noprint" -ex "echo backtrace:\n" -ex "backtrace full" -ex "echo \n\nregisters:\n" -ex "info registers" -ex "echo \n\ncurrent instructions:\n" -ex "x/16i \$pc" -ex "echo \n\nthreads backtrace:\n" -ex "thread apply all backtrace" -ex "set logging off" -ex "quit" --args'
     alias vit-tl="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda'"
     alias vit-rl='vit project:research.lit.next'
+    alias vit-ticklers='vit tags:tickler'
+    alias vit-agenda='vit project~agenda'
 
     # Set vi mode
     set -o vi
