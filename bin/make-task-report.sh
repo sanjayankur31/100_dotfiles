@@ -25,12 +25,12 @@
 
 today=$(date +%Y-%m-%d)
 
-mkdir -pv ~/Sync/timesheets/
+mkdir -pv ~/Sync/taskreports/
 
 # Update list as required
 for p in "foss" "job.ucl" "research" "ocns" "personal"
 do
-    /home/asinha/bin/generate-timesheets.sh -p $p | ansi2html -w > ~/Sync/timesheets/timesheet-$p-$today.html
+    /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
 done
 # Generate combined report for everything
-/home/asinha/bin/generate-timesheets.sh -a | ansi2html -w > ~/Sync/timesheets/timesheet-all-$today.html
+/home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html

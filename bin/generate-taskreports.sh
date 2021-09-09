@@ -2,7 +2,7 @@
 
 # Copyright 2020 Ankur Sinha
 # Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
-# File : generate-timesheets.sh
+# File : generate-taskreports.sh
 
 fmt="%Y-%m-%d"
 phrase_last_week="1-weeks-ago"
@@ -74,13 +74,13 @@ function get_task_data ()
 }
 
 usage () {
-    echo "generate-timesheets.sh [-p] [-h]"
+    echo "generate-taskreports.sh [-p] [-h]"
     echo
-    echo "Script generates a timesheet from taskwarrior output"
+    echo "Script generates a taskreport from taskwarrior output"
     echo
     echo "Options:"
     echo
-    echo "-p <project name>: project to generate timesheet for"
+    echo "-p <project name>: project to generate taskreport for"
     echo "-a generate combined time sheet including all projects"
     echo "-h: print this help message and exit"
 }
