@@ -4,9 +4,11 @@
 # Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 # File : generate-timesheets.sh
 
-phrase="1-weeks-ago"
 fmt="%Y-%m-%d"
-start=$(date +$fmt -d $phrase)
+phrase_last_week="1-weeks-ago"
+start_last_week=$(date +$fmt -d $phrase_last_week)
+phrase_last_year="1-years-ago"
+start_last_year=$(date +$fmt -d $phrase_last_year)
 end=$(date +$fmt)
 project_filter=""
 rcoptions="rc.defaultwidth=200 rc.defaultheight=120"
@@ -34,8 +36,8 @@ function get_task_data ()
 
     echo
     echo
-    echo " -- Tasks completed from $start to $end (back $phrase) -- "
-    /usr/bin/task "$rcoptions" work_report $project_filter end.after:$start
+    echo " -- Tasks completed from $start_last_week to $end (back $phrase_last_week) -- "
+    /usr/bin/task "$rcoptions" work_report $project_filter end.after:$start_last_week
 
     echo
     echo
@@ -55,7 +57,8 @@ function get_task_data ()
 
     echo
     echo
-    echo " -- History -- "
+    filter="$project_filter entry.after:$start_last_year"
+    echo " -- History (since $start_last_year)-- "
     /usr/bin/task "$rcoptions" history $filter
     /usr/bin/task "$rcoptions" ghistory $filter
     /usr/bin/task "$rcoptions" $filter burndown.daily
