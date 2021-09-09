@@ -32,3 +32,5 @@ for p in "foss" "job.ucl" "research" "ocns" "personal"
 do
     /home/asinha/bin/generate-timesheets.sh -p $p | ansi2html -w > ~/Sync/timesheets/timesheet-$p-$today.html
 done
+# Generate combined report for everything
+/home/asinha/bin/generate-timesheets.sh -a | ansi2html -w > ~/Sync/timesheets/timesheet-all-$today.html
