@@ -81,6 +81,7 @@ usage () {
     echo "Options:"
     echo
     echo "-p <project name>: project to generate timesheet for"
+    echo "-a generate combined time sheet including all projects"
     echo "-h: print this help message and exit"
 }
 
@@ -93,12 +94,15 @@ then
 fi
 
 # parse options
-while getopts "p:h" OPTION
+while getopts "ap:h" OPTION
 do
     case $OPTION in
         p)
-            project_filter="project:$OPTARG"
+            project_filter="project~$OPTARG"
             get_task_data
+            exit 0
+            ;;
+        a)  get_task_data
             exit 0
             ;;
         h)
