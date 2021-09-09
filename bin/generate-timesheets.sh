@@ -16,6 +16,10 @@ rcoptions="rc.defaultwidth=150 rc.defaultheight=120"
 
 function get_task_data ()
 {
+    current_context="$(task context | grep "yes" | cut -d " " -f1)"
+    # Unset context
+    /usr/bin/task context none
+
     echo " (generated at $(date))"
     echo
     echo " -- Upcoming tasks - Today  -- "
@@ -64,6 +68,9 @@ function get_task_data ()
     /usr/bin/task "$rcoptions" $filter burndown.daily
     /usr/bin/task "$rcoptions" $filter burndown
 
+
+    # Reset context
+    /usr/bin/task context "${current_context}"
 }
 
 usage () {
