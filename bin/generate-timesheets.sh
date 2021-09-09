@@ -11,7 +11,7 @@ phrase_last_year="1-years-ago"
 start_last_year=$(date +$fmt -d $phrase_last_year)
 end=$(date +$fmt)
 project_filter=""
-rcoptions="rc.defaultwidth=200 rc.defaultheight=120"
+rcoptions="rc.defaultwidth=150 rc.defaultheight=120"
 
 
 function get_task_data ()
