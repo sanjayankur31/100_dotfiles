@@ -34,3 +34,24 @@ do
 done
 # Generate combined report for everything
 /home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html
+
+# Time sheets
+# Can be split out into a different file perhaps
+echo > ~/Sync/taskreports/timesheet-$today.html
+for p in "foss" "job" "research" "ocns" "personal"
+do
+    echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary :week "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+done
+echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
+/usr/bin/timew summary :week | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
+echo >> ~/Sync/taskreports/timesheet-$today.html
+echo >> ~/Sync/taskreports/timesheet-$today.html
+for p in "foss" "job" "research" "ocns" "personal"
+do
+    echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary :month "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+done
+echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
+/usr/bin/timew summary :month | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
