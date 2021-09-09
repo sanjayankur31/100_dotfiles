@@ -19,20 +19,20 @@ function get_task_data ()
     echo " (generated at $(date))"
     echo
     echo " -- Upcoming tasks - Today  -- "
-    filter="$project_filter due:today"
-    /usr/bin/task "$rcoptions" $filter next
+    filter="$project_filter due:eod"
+    /usr/bin/task "$rcoptions" $filter list
 
     echo
     echo
     echo " -- Upcoming tasks - This week -- "
     filter="$project_filter due.before:eow due.after:today"
-    /usr/bin/task "$rcoptions" $filter next
+    /usr/bin/task "$rcoptions" $filter list
 
     echo
     echo
     echo " -- Overdue tasks -- "
-    filter="$project_filter overdue"
-    /usr/bin/task "$rcoptions" $project_filter next
+    filter="$project_filter"
+    /usr/bin/task "$rcoptions" $project_filter overdue
 
     echo
     echo
