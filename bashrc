@@ -16,20 +16,15 @@ fi
 # it should set the SSH_AUTH_LOCK environment variable when it runs.
 # If gnome-keyring is not running (if not logged in via gdm), check for an
 # ssh-agent and start a new one if it does not exist
-SSH_ENV="$HOME/.ssh/environment.""$(hostname)"
 function start_ssh_agent {
 myid="$(id -u)"
 if ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
 then
-    echo "SSH_AUTH_SOCK=/run/user/${myid}/keyring/ssh" > "${SSH_ENV}"
     export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
 else
     if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null && [ -x "$(command -v ssh-agent)" ]
     then
-        /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add;
+        eval `$(command -v ssh-agent) -s`
     else
         echo "Could not start any SSH agent"
     fi
@@ -40,18 +35,6 @@ fi
 if shopt -q login_shell && ! [ -z ${SSH_CLIENT+x} ]
 then
     start_ssh_agent
-fi
-
-# gnome-keyring won't set our env file, so we just make sure our env file holds
-# the right value each time we log in
-if shopt -q login_shell
-then
-    if [ -z ${SSH_AUTH_SOCK+x} ]
-    then
-        echo "" > "${SSH_ENV}"
-    else
-        echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" > "${SSH_ENV}"
-    fi
 fi
 
 # Only when it is an interactive shell, not a login shell
