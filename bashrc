@@ -12,8 +12,9 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || 
     source activate python3
 fi
 
-# Only when it is an interactive shell, not a login shell
-if [[ $- == *i* ]] ; then
+# Only in login shells
+if shopt -q login_shell
+then
     # SSH agent - hostname based, why not?
     SSH_ENV="$HOME/.ssh/environment.""$(hostname)"
 
@@ -23,8 +24,11 @@ if [[ $- == *i* ]] ; then
     # ssh-agent and start a new one if it does not exist
     function start_ssh_agent {
     myid="$(id -u)"
-    if ! ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
+    if ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
     then
+        echo "SSH_AUTH_SOCK=/run/user/${myid}/keyring/ssh" > "${SSH_ENV}"
+        export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
+    else
         if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null && [ -x "$(command -v ssh-agent)" ]
         then
             /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
@@ -34,11 +38,13 @@ if [[ $- == *i* ]] ; then
         else
             echo "Could not start any SSH agent"
         fi
-    else
-        echo "SSH_AUTH_SOCK=${SSH_AUTH_SOCK}" > "${SSH_ENV}"
     fi
     }
-    start_ssh_agent
+    #start_ssh_agent
+fi
+
+# Only when it is an interactive shell, not a login shell
+if [[ $- == *i* ]] ; then
 
     # Common settings
     # User specific aliases and functions
