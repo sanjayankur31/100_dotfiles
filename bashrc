@@ -40,7 +40,7 @@ then
         fi
     fi
     }
-    #start_ssh_agent
+    start_ssh_agent
 fi
 
 # Only when it is an interactive shell, not a login shell
