@@ -25,10 +25,33 @@
 
 today=$(date +%Y-%m-%d)
 
-mkdir -pv ~/Sync/timesheets/
+mkdir -pv ~/Sync/taskreports/
 
 # Update list as required
 for p in "foss" "job.ucl" "research" "ocns" "personal"
 do
-    /home/asinha/bin/generate-timesheets.sh -p $p | ansi2html -w > ~/Sync/timesheets/timesheet-$p-$today.html
+    /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
 done
+# Generate combined report for everything
+/home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html
+
+# Time sheets
+# Can be split out into a different file perhaps
+echo > ~/Sync/taskreports/timesheet-$today.html
+for p in "foss" "job" "research" "ocns" "personal"
+do
+    echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary :week "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+done
+echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
+/usr/bin/timew summary :week | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
+echo >> ~/Sync/taskreports/timesheet-$today.html
+echo >> ~/Sync/taskreports/timesheet-$today.html
+for p in "foss" "job" "research" "ocns" "personal"
+do
+    echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary :month "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+done
+echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
+/usr/bin/timew summary :month | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
