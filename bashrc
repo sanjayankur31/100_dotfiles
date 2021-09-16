@@ -40,6 +40,9 @@ fi
 # Only when it is an interactive shell, not a login shell
 if [[ $- == *i* ]] ; then
 
+    # For qutebrowser
+    export QT_QPA_PLATFORM=xcb
+
     # Common settings
     # User specific aliases and functions
     if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]
