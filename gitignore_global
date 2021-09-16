@@ -1,6 +1,6 @@
 *.swp
 *.swo
-/tags
+tags
 cscope.out
 BUILD/
 RPMS/
