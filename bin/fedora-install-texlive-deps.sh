@@ -9,9 +9,9 @@ REQUIREPACKAGES=""
 USEPACKAGES=""
 
 function fetchdeps() {
-    REQUIREPACKAGES=$(grep -rhiI "requirepackage" * 2>/dev/null | sed -e "s|^.*\\\RequirePackage.*{|tex(|" -e "s|}.*$|\.sty)|" | uniq -u | tr '\n' ' ')
+    REQUIREPACKAGES=$(grep -rhiI "requirepackage" *.tex *.cls *.sty 2>/dev/null | sed -e "s|^.*\\\RequirePackage.*{|tex(|" -e "s|}.*$|\.sty)|" | uniq -u | tr '\n' ' ')
     REQUIREPACKAGES=${REQUIREPACKAGES}
-    USEPACKAGES=$(grep -rhiI "usepackage" * 2>/dev/null | sed -e "s|^.*\\\usepackage.*{|tex(|" -e "s|}.*$|\.sty)|" | uniq -u | tr '\n' ' ')
+    USEPACKAGES=$(grep -rhiI "usepackage" *.tex *.cls *.sty 2>/dev/null | sed -e "s|^.*\\\usepackage.*{|tex(|" -e "s|}.*$|\.sty)|" | uniq -u | tr '\n' ' ')
     USEPACKAGES=${USEPACKAGES}
 
     echo "Following packages detected: $REQUIREPACKAGES $USEPACKAGES"
