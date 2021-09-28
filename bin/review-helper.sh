@@ -76,9 +76,9 @@ list_reqs_provides ()
         for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
-            rpm -qp --provides "$i" | sed "/rpmlib.*/d"
-            echo  ; echo "Requires:"
-            rpm -qp --requires "$i" | sed "/rpmlib.*/d"
+            rpm -qp --provides --recommends "$i" | sed "/rpmlib.*/d"
+            echo  ; echo "Requires/Recommends:"
+            rpm -qp --requires --recommends "$i" | sed "/rpmlib.*/d"
             echo
         done
     popd || exit 4
