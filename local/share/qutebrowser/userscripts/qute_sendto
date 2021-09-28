@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Behavior:
+#   Userscript for qutebrowser which opens a tab on another machine by running
+#   a simple ssh command.
+
+#   Example:
+#       :spawn --userscript sendto
+#
+#   To enable passing along extra args, I suggest using a mapping like:
+#       :bind <somekey> set-cmd-text -s :spawn --userscript taskadd
+#
+msg="$(ssh -X workstation qutebrowser --nowindow --target auto $QUTE_URL)"
+
+if [[ $? == 0 ]]; then
+    echo "message-info '$QUTE_URL opened'" > "$QUTE_FIFO"
+else
+    echo "message-error 'Opening $QUTE_URL failed'" > "$QUTE_FIFO"
+fi
