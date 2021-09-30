@@ -10,10 +10,10 @@
 #   To enable passing along extra args, I suggest using a mapping like:
 #       :bind <somekey> set-cmd-text -s :spawn --userscript taskadd
 #
-msg="$(ssh -X workstation qutebrowser --nowindow --target auto $QUTE_URL)"
+msg="$(ssh -X $1 qutebrowser --nowindow --target auto $QUTE_URL)"
 
 if [[ $? == 0 ]]; then
-    echo "message-info '$QUTE_URL opened'" > "$QUTE_FIFO"
+    echo "message-info '$QUTE_URL opened' on $1" > "$QUTE_FIFO"
 else
-    echo "message-error 'Opening $QUTE_URL failed'" > "$QUTE_FIFO"
+    echo "message-error 'Opening $QUTE_URL on $1 failed'" > "$QUTE_FIFO"
 fi
