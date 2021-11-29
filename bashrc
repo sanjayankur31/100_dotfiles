@@ -95,11 +95,18 @@ if [[ $- == *i* ]] ; then
     # Host specific settings. Cluster doesn't have vimx and cowsay, the
     # flags won't apply, and the path to NEST is different too.
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
-        vman() { /usr/bin/man $* | col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -c 'nmap q :q<cr>' -; }
+        # set all options here in case my vim config isn't on the system
+        vman() {
+            /usr/bin/man -w "$@" && /usr/bin/man "$@" | col -b | vim  -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'set ft=man' -c 'nmap q :q<cr>' -; 
+            }
     # for all my other machines
     else
+        # these are repeated in vimrc
+        vman() {
+            /usr/bin/man -w "$@" > /dev/null 2>&1 && /usr/bin/man "$@" | col -bx | vim  -c 'set ft=man' -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'IndentLinesDisable' -c 'nmap q :q<cr>' -;
+        }
         fortune | cowsay -f vader
-        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.vim/plugged/vim-superman/bin:$HOME/.node_modules_global/lib/node_modules/tern/bin/"
+        export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.node_modules_global/lib/node_modules/tern/bin/"
 
         # Flags but only if I'm on an RPM based machine
         if [ -x "$(command -v rpm)"  ]
