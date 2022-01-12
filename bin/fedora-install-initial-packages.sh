@@ -2,25 +2,28 @@
 REL="$(rpm -E %fedora)"
 echo "We are running Fedora $REL."
 
-function setup_repos() {
+setup_repos() {
     # Neomutt
     sudo dnf copr enable flatcap/neomutt
-    # I made a typo!
+    # taskjuggler
     sudo dnf copr enable ankursinha/rubygem-taskjuggler
-    # universal ctags
-    dnf copr enable jgoguen/universal-ctags
+    # NeuroFedora
+    sudo dnf copr enable @neurofedora/neurofedora-extra
 
-    # RPMFusion and adobe
+    # RPMFusion
     sudo dnf install \
         https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-"$REL".noarch.rpm \
         https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$REL".noarch.rpm \
-        http://linuxdownload.adobe.com/adobe-release/adobe-release-x86_64-1.0-1.noarch.rpm
 
-    sudo dnf update --refresh -y
+    sudo dnf update --refresh
 }
 
+install_adobe () {
+    sudo dnf install http://linuxdownload.adobe.com/adobe-release/adobe-release-x86_64-1.0-1.noarch.rpm
+    sudo dnf install flash-plugin
+}
 
-function update_groups() {
+update_groups() {
     sudo dnf group upgrade --with-optional Multimedia
 
     # Music and multimedia
@@ -34,11 +37,11 @@ function update_groups() {
 
 }
 
-function install_basics() {
+install_basics() {
     # Basics
     sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt \
     weechat mpv vimiv-qt vifm fedora-packager git-all offlineimap msmtp \
-    notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope universal-ctags fedora-review \
+    notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup \
     anka-coder-\* zathura zathura-plugins-all urlscan timew \
@@ -56,7 +59,7 @@ function install_basics() {
     # parcellite
     }
 
-function install_texlive_packages() {
+install_texlive_packages() {
     # texlive bits
     # some bits for muttprint
     sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
@@ -68,7 +71,7 @@ function install_texlive_packages() {
 }
 
 
-function install_flatpaks() {
+install_flatpaks() {
     # Flatpaks
     echo "Installing flatpaks from Flathub"
     flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -81,11 +84,17 @@ function install_flatpaks() {
     flatpak --user install flathub com.jgraph.drawio.desktop
 }
 
+install_nvidia() {
+    echo "Installing Nvidia drivers"
+    sudo dnf install akmod-nvidia
+    sudo dnf install xorg-x11-drv-nvidia-cuda
+}
 
-function usage() {
-    echo "$0: Install required Texlive packages for a LaTeX project on Fedora"
+
+usage() {
+    echo "$0: Install packages and software"
     echo
-    echo "Usage: $0 [-sitfa]"
+    echo "Usage: $0 [-subtfanFh]"
     echo
     echo "-s: set up DNF repos"
     echo "-u: update groups: implies -s"
@@ -93,6 +102,8 @@ function usage() {
     echo "-t: install TeXlive packages: implies -s"
     echo "-f: install flatpaks from flathub: also sets up flathub"
     echo "-a: do all of the above"
+    echo "-n: install nvidia driver"
+    echo "-F: install Flash plugin"
     echo "-h: print this usage text and exit"
 }
 
@@ -103,7 +114,7 @@ then
 fi
 
 # parse options
-while getopts "usbtfah" OPTION
+while getopts "usbtfahnF" OPTION
 do
     case $OPTION in
         s)
@@ -129,13 +140,22 @@ do
             install_flatpaks
             exit 0
             ;;
+        n)
+            setup_repos
+            install_nvidia
+            exit 0
+            ;;
         a)
             setup_repos
             update_groups
             install_basics
             install_texlive_packages
             install_flatpaks
-            exit 1
+            exit 0
+            ;;
+        F)
+            install_adobe
+            exit 0
             ;;
         h)
             usage
