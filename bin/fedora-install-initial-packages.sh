@@ -53,7 +53,8 @@ install_basics() {
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler wofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
-    trash-cli \
+    trash-cli gnome-tweak-tool evolution bash-completion \
+    gnome-extensions-app cmake npm \
     --setopt=strict=0
 
     # parcellite
@@ -86,6 +87,7 @@ install_flatpaks() {
 
 install_nvidia() {
     echo "Installing Nvidia drivers"
+    echo "Do remember to disable secure boot"
     sudo dnf install akmod-nvidia
     sudo dnf install xorg-x11-drv-nvidia-cuda
 }
