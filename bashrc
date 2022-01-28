@@ -103,7 +103,7 @@ if [[ $- == *i* ]] ; then
     else
         # these are repeated in vimrc
         vman() {
-            /usr/bin/man -w "$@" > /dev/null 2>&1 && /usr/bin/man "$@" | col -bx | vim  -c 'set ft=man' -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'IndentLinesDisable' -c 'nmap q :q<cr>' -;
+            /usr/bin/man -w "$@" > /dev/null 2>&1 && { /usr/bin/man "$@" | col -bx | vim  -c 'set ft=man' -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'IndentLinesDisable' -c 'nmap q :q<cr>' -; } || { echo "No man page found for $@" ; echo "Related man pages:" ; apropos "$@" ; }
         }
         fortune | cowsay -f vader
         export PATH="$PATH:/usr/lib64/ccache:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$HOME/.local/bin:$HOME/bin:$HOME/.node_modules_global/lib/node_modules/tern/bin/"
