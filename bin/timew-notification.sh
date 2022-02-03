@@ -9,5 +9,5 @@
 
 if [ -x "/usr/bin/notify-send" ]
 then
-    notify-send -t 1000 -i gnome-pomodoro -a  "Timew" "Timew" "$(timew)"
+    notify-send -t 1000 -i gnome-pomodoro -a  "Timew" "Timew" "$(timew > /dev/null 2>&1 && timew | grep -E 'Tracking|Total' | sed -e 's/Tracking //' -e 's/  Total/: /' )"
 fi
