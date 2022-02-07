@@ -28,7 +28,7 @@ today=$(date +%Y-%m-%d)
 mkdir -pv ~/Sync/taskreports/
 
 # Update list as required
-for p in "foss" "job.ucl" "research" "ocns" "personal"
+for p in "foss" "job.ucl" "research" "personal"
 do
     /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
 done
@@ -38,7 +38,7 @@ done
 # Time sheets
 # Can be split out into a different file perhaps
 echo > ~/Sync/taskreports/timesheet-$today.html
-for p in "foss" "job" "research" "ocns" "personal"
+for p in "foss" "job" "research" "personal"
 do
     echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
     /usr/bin/timew summary :week "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
@@ -48,7 +48,7 @@ echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
 
 echo >> ~/Sync/taskreports/timesheet-$today.html
 echo >> ~/Sync/taskreports/timesheet-$today.html
-for p in "foss" "job" "research" "ocns" "personal"
+for p in "foss" "job" "research" "personal"
 do
     echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
     /usr/bin/timew summary :month "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
