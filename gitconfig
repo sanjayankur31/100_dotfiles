@@ -27,6 +27,7 @@
 [core]
     pager = less -r
     excludesfile = /home/asinha/.gitignore_global
+    editor = vim
 [gpg]
     program = gpg2
 [commit]
@@ -39,4 +40,4 @@
 [pull]
     rebase = false
 [init]
-	defaultBranch = main
+    defaultBranch = main
