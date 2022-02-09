@@ -8,6 +8,17 @@ audio/*; xdg-open '%s' ; copiousoutput
 # Image files
 image/*; xdg-open '%s' ; copiousoutput
 
+# compressed files
+application/zip; xdg-open '%s'; copiousoutput
+# deprecated but still sometimes in use
+application/x-zip-compressed; xdg-open '%s'; copiousoutput
+application/zip-compressed; xdg-open '%s'; copiousoutput
+application/gzip; xdg-open '%s'; copiousoutput
+application/x-gzip; xdg-open '%s'; copiousoutput
+application/x-bzip; xdg-open '%s'; copiousoutput
+application/x-bzip2; xdg-open '%s'; copiousoutput
+application/x-7z-compressed; xdg-open '%s'; copiousoutput
+
 # MS Office documents
 # Use `xdg-open` instead of `libreoffice`.
 application/msword;             xdg-open '%s'; copiousoutput
