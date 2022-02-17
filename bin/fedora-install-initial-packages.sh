@@ -54,7 +54,7 @@ install_basics() {
     closure-compiler wofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
-    gnome-extensions-app cmake npm \
+    gnome-extensions-app cmake npm newsboat \
     --setopt=strict=0
 
     # parcellite
