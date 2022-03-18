@@ -5,9 +5,16 @@
 # File : start OSBv2 deployment
 
 # depends on how you install it
-CLOUD_HARNESS_DIR="~/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness/"
+CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness"
 CLOUD_HARNESS_BRANCH="master"
 SKAFFOLD="skaffold-linux-amd64"
+
+# Py version
+# Cloud harness doesn't always work on newer versions
+PY_VERSION="python3.7"
+# if not, specify location of virtualenv here
+# I run this from the OSBv2 repo, so I create my venv there
+VENV_DIR=".venv"
 
 if ! command -v helm >/dev/null || ! command -v $SKAFFOLD >/dev/null || !  command -v harness-deployment  >/dev/null ; then
     echo "helm, skaffold, and cloud-harness are required but were not found."
@@ -48,7 +55,23 @@ notify_fail () {
 
 function update_cloud_harness() {
     echo "Updating cloud harness"
-    pushd ${CLOUD_HARNESS_DIR} && git checkout develop && git pull && popd
+    pushd "$CLOUD_HARNESS_DIR" && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
+}
+
+function activate_venv() {
+    if [ -f "${VENV_DIR}/bin/activate" ]
+    then
+        source "${VENV_DIR}/bin/activate"
+    else
+        echo "No virtual environment found at ${VENV_DIR}. Creating"
+        ${PY_VERSION} -m venv "${VENV_DIR}"
+    fi
+}
+
+# don't actually need this because when the script exists, the environment is
+# lost anyway
+function deactivate_venv() {
+    deactivate
 }
 
 function print_versions() {
@@ -94,16 +117,21 @@ while getopts "vdu:h" OPTION
 do
     case $OPTION in
         v)
+            activate_venv
             print_versions
+            deactivate_venv
             exit 0
             ;;
         d)
+            activate_venv
             deploy
             exit 0
             ;;
         u)
             CLOUD_HARNESS_BRANCH=${OPTARG}
+            activate_venv
             update_cloud_harness
+            deactivate_venv
             exit 0
             ;;
         h)
