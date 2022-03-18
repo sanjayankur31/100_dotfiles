@@ -6,6 +6,7 @@
 
 # depends on how you install it
 CLOUD_HARNESS_DIR="~/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness/"
+CLOUD_HARNESS_BRANCH="master"
 SKAFFOLD="skaffold-linux-amd64"
 
 if ! command -v helm >/dev/null || ! command -v $SKAFFOLD >/dev/null || !  command -v harness-deployment  >/dev/null ; then
@@ -32,7 +33,7 @@ deploy () {
     # your e-mail address, and then use `-e ankur` to use these values.
     harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i osb-portal || notify_fail "Failed: harness-deployment"
     echo "-> running skaffold"
-    $SKAFFOLD dev || notify_fail "Failed: skaffold"
+    $SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
 }
 
 notify_fail () {
@@ -45,11 +46,16 @@ notify_fail () {
     exit 1
 }
 
+function update_cloud_harness() {
+    echo "Updating cloud harness"
+    pushd ${CLOUD_HARNESS_DIR} && git checkout develop && git pull && popd
+}
+
 function print_versions() {
     echo "** docker **"
     docker version
     echo "\n** minikube **"
-    minikube veresion
+    minikube version
     echo "\n** cloud harness **"
     pushd "${CLOUD_HARNESS_DIR}" && git log --oneline | head -1 && popd
     echo "\n** helm **"
@@ -72,6 +78,7 @@ usage () {
     echo
     echo "-d: deploy"
     echo "-v: print version information"
+    echo "-u branch: use (and update) provided cloud_harness branch (default: master)"
     echo "-h: print this and exit"
 }
 
@@ -83,7 +90,7 @@ fi
 
 
 # parse options
-while getopts "vd" OPTION
+while getopts "vdu:h" OPTION
 do
     case $OPTION in
         v)
@@ -92,6 +99,11 @@ do
             ;;
         d)
             deploy
+            exit 0
+            ;;
+        u)
+            CLOUD_HARNESS_BRANCH=${OPTARG}
+            update_cloud_harness
             exit 0
             ;;
         h)
