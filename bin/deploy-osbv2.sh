@@ -16,12 +16,12 @@ PY_VERSION="python3.7"
 # I run this from the OSBv2 repo, so I create my venv there
 VENV_DIR=".venv"
 
-if ! command -v helm >/dev/null || ! command -v $SKAFFOLD >/dev/null || !  command -v harness-deployment  >/dev/null ; then
-    echo "helm, skaffold, and cloud-harness are required but were not found."
-    exit 1
-fi
-
 deploy () {
+    if ! command -v helm >/dev/null || ! command -v $SKAFFOLD >/dev/null || !  command -v harness-deployment  >/dev/null ; then
+        echo "helm, skaffold, and cloud-harness are required but were not found."
+        exit 1
+    fi
+
     echo "-> deploying"
     echo "-> checking (and starting) docker daemon"
     systemctl is-active docker --quiet || sudo systemctl start docker.service
@@ -34,13 +34,18 @@ deploy () {
     echo "-> setting up minikube docker env"
     eval $(minikube docker-env) || notify_fail "Failed: env setup"
     echo "-> harnessing deployment"
+    harness_deployment
+    echo "-> running skaffold"
+    $SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
+}
+
+function harness_deployment() {
     # `-e local` does not build nwbexplorer/netpyne
     # use -e dev for that, but that will send e-mails to Filippo and Zoraan
     # suggested: create a new file in deploy/values-ankur.yaml where you use
     # your e-mail address, and then use `-e ankur` to use these values.
     harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i osb-portal || notify_fail "Failed: harness-deployment"
-    echo "-> running skaffold"
-    $SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
+    #harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i workspaces || notify_fail "Failed: harness-deployment"
 }
 
 notify_fail () {
@@ -55,6 +60,8 @@ notify_fail () {
 
 function update_cloud_harness() {
     echo "Updating cloud harness"
+    CLOUD_HARNESS_PACKAGES=$(pip list | grep cloud | tr -s " " | cut -d " " -f1 | tr '\n' ' ')
+    pip uninstall ${CLOUD_HARNESS_PACKAGES} -y
     pushd "$CLOUD_HARNESS_DIR" && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
 }
 
@@ -100,6 +107,7 @@ usage () {
     echo "USAGE $0 -[dv]"
     echo
     echo "-d: deploy"
+    echo "-b: run `harness-deployment`: required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
     echo "-u branch: use (and update) provided cloud_harness branch (default: master)"
     echo "-h: print this and exit"
@@ -113,12 +121,18 @@ fi
 
 
 # parse options
-while getopts "vdu:h" OPTION
+while getopts "vdu:hb" OPTION
 do
     case $OPTION in
         v)
             activate_venv
             print_versions
+            deactivate_venv
+            exit 0
+            ;;
+        b)
+            activate_venv
+            harness_deployment
             deactivate_venv
             exit 0
             ;;
