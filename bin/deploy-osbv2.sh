@@ -107,7 +107,7 @@ usage () {
     echo "USAGE $0 -[dv]"
     echo
     echo "-d: deploy"
-    echo "-b: run `harness-deployment`: required when you have made changes and want to refresh the deployment"
+    echo "-b: run 'harness-deployment': required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
     echo "-u branch: use (and update) provided cloud_harness branch (default: master)"
     echo "-h: print this and exit"
