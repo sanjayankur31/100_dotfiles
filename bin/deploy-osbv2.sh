@@ -110,6 +110,7 @@ usage () {
     echo "-b: run 'harness-deployment': required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
     echo "-u branch: use (and update) provided cloud_harness branch (default: master)"
+    echo "-c: clean up minikube and docker: sometimes needed with an outdated cache"
     echo "-h: print this and exit"
 }
 
@@ -121,7 +122,7 @@ fi
 
 
 # parse options
-while getopts "vdu:hb" OPTION
+while getopts "vdu:hbc" OPTION
 do
     case $OPTION in
         v)
@@ -139,6 +140,10 @@ do
         d)
             activate_venv
             deploy
+            exit 0
+            ;;
+        c)
+            clean
             exit 0
             ;;
         u)
