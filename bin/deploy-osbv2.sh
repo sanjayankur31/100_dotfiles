@@ -122,7 +122,7 @@ fi
 
 
 # parse options
-while getopts "vdu:hbc" OPTION
+while getopts ":vdu:hbc" OPTION
 do
     case $OPTION in
         v)
