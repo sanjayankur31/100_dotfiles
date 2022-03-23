@@ -6,7 +6,8 @@
 
 # depends on how you install it
 CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness"
-CLOUD_HARNESS_BRANCH="master"
+CLOUD_HARNESS_DEFAULT="release/1.0.0"
+CLOUD_HARNESS_BRANCH=""
 SKAFFOLD="skaffold-linux-amd64"
 
 # Py version
@@ -109,7 +110,7 @@ usage () {
     echo "-d: deploy"
     echo "-b: run 'harness-deployment': required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
-    echo "-u branch: use (and update) provided cloud_harness branch (default: master)"
+    echo "-u branch: use (and update) provided cloud_harness branch (default: $CLOUD_HARNESS_DEFAULT)"
     echo "-c: clean up minikube and docker: sometimes needed with an outdated cache"
     echo "-h: print this and exit"
 }
@@ -147,7 +148,7 @@ do
             exit 0
             ;;
         u)
-            CLOUD_HARNESS_BRANCH=${OPTARG}
+            CLOUD_HARNESS_BRANCH="${OPTARG:-$CLOUD_HARNESS_DEFAULT}"
             activate_venv
             update_cloud_harness
             deactivate_venv
