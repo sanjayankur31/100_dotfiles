@@ -72,7 +72,7 @@ function activate_venv() {
         source "${VENV_DIR}/bin/activate"
     else
         echo "No virtual environment found at ${VENV_DIR}. Creating"
-        ${PY_VERSION} -m venv "${VENV_DIR}"
+        ${PY_VERSION} -m venv "${VENV_DIR}" && source "${VENV_DIR}/bin/activate"
     fi
 }
 
