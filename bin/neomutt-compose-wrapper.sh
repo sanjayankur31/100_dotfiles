@@ -7,6 +7,7 @@
 # Wrapper around neomutt to let me pick a mailbox when clicking on neomutt
 # links
 
+MAILBOX="no"
 NEOMUTT_CONFDIR="~/Sync/99_private/neomuttdir/"
 echo "Mailbox to use?"
 echo "1: gmail"
@@ -37,7 +38,15 @@ case $MAILBOX_ID in
     6)
         MAILBOX="herts-student"
         ;;
+    *)
+        echo "Invalid option selected."
+        ;;
 esac
-# Change mailbox before composing
-echo "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc"
-neomutt -e "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc" "$@"
+if [ "no" != "$MAILBOX" ]
+then
+    # Change mailbox before composing
+    echo "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc"
+    neomutt -e "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc" "$@"
+else
+    sleep 1s
+fi
