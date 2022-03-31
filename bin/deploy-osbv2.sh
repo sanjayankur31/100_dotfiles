@@ -8,14 +8,15 @@
 CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness"
 CLOUD_HARNESS_DEFAULT="release/1.0.0"
 CLOUD_HARNESS_BRANCH=""
-SKAFFOLD="skaffold-linux-amd64"
+SKAFFOLD="skaffold"
 
 # Py version
 # Cloud harness doesn't always work on newer versions
-PY_VERSION="python3.7"
+PY_VERSION="python3.9"
 # if not, specify location of virtualenv here
 # I run this from the OSBv2 repo, so I create my venv there
-VENV_DIR=".venv"
+OSB_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/OSBv2/"
+VENV_DIR="${OSB_DIR}/.venv"
 
 deploy () {
     if ! command -v helm >/dev/null || ! command -v $SKAFFOLD >/dev/null || !  command -v harness-deployment  >/dev/null ; then
@@ -27,7 +28,7 @@ deploy () {
     echo "-> checking (and starting) docker daemon"
     systemctl is-active docker --quiet || sudo systemctl start docker.service
     echo "-> starting minkube"
-    minikube start --memory="8000mb" --cpus=6 --disk-size="50000mb" --kubernetes-version=v1.21.2 --driver=docker || notify_fail "Failed: minikube start"
+    minikube start --memory="10000mb" --cpus=8 --disk-size="60000mb" --kubernetes-version=v1.21.2 --driver=docker || notify_fail "Failed: minikube start"
     echo "-> enabling ingress addon"
     minikube addons enable ingress || notify_fail "Failed: ingress add on"
     echo "-> setting up osblocal namespace"
@@ -37,7 +38,8 @@ deploy () {
     echo "-> harnessing deployment"
     harness_deployment
     echo "-> running skaffold"
-    $SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
+    #$SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
+    $SKAFFOLD dev || notify_fail "Failed: skaffold"
 }
 
 function harness_deployment() {
@@ -100,6 +102,7 @@ function print_versions() {
 clean () {
     echo "-> Cleaning up all images."
     docker image prune --all
+    $SKAFFOLD delete
     minikube stop
     minikube delete
 }
