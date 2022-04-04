@@ -47,8 +47,10 @@ function harness_deployment() {
     # use -e dev for that, but that will send e-mails to Filippo and Zoraan
     # suggested: create a new file in deploy/values-ankur.yaml where you use
     # your e-mail address, and then use `-e ankur` to use these values.
-    harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i osb-portal || notify_fail "Failed: harness-deployment"
+    pushd $OSB_DIR
+        harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i osb-portal || notify_fail "Failed: harness-deployment"
     #harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i workspaces || notify_fail "Failed: harness-deployment"
+    popd
 }
 
 notify_fail () {
@@ -64,8 +66,8 @@ notify_fail () {
 function update_cloud_harness() {
     echo "Updating cloud harness"
     CLOUD_HARNESS_PACKAGES=$(pip list | grep cloud | tr -s " " | cut -d " " -f1 | tr '\n' ' ')
-    pip uninstall ${CLOUD_HARNESS_PACKAGES} -y
-    pushd "$CLOUD_HARNESS_DIR" && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
+    pip uninstall ${CLOUD_HARNESS_PACKAGES} -y || echo "No cloud harness packages installed"
+    pushd "$CLOUD_HARNESS_DIR" && git clean -dfx && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
 }
 
 function activate_venv() {
