@@ -49,7 +49,6 @@ bind-key g home
 bind-key o sort
 bind-key O rev-sort
 bind-key ^V open-in-browser-and-mark-read
-bind-key ^V open-in-browser
 bind-key i quit all
 
 # solarized
