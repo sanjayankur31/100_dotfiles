@@ -1,0 +1,11 @@
+# ~/.ticker.yaml
+show-summary: true
+show-tags: true
+show-fundamentals: true
+show-separator: true
+show-holdings: true
+interval: 5
+currency: GBP
+currency-summary-only: false
+watchlist:
+  - ^FTSE
