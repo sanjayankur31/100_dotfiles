@@ -9,44 +9,43 @@
 
 MAILBOX="no"
 NEOMUTT_CONFDIR="~/Sync/99_private/neomuttdir/"
-echo "Mailbox to use?"
-echo "1: gmail"
-echo "2: ucl"
-echo "3: hotmail"
-echo "4: yahoo"
-echo "5: herts"
-echo "6: herts-student"
-echo -n "> "
-read MAILBOX_ID
+while [ "no" == "$MAILBOX" ]; do
+    echo "Mailbox to use?"
+    echo "1: gmail"
+    echo "2: ucl"
+    echo "3: hotmail"
+    echo "4: yahoo"
+    echo "q: quit"
+    echo -n "> "
+    read MAILBOX_ID
 
-case $MAILBOX_ID in
-    1)
-        MAILBOX="gmail"
-        ;;
-    2)
-        MAILBOX="ucl"
-        ;;
-    3)
-        MAILBOX="hotmail"
-        ;;
-    4)
-        MAILBOX="yahoo"
-        ;;
-    5)
-        MAILBOX="herts"
-        ;;
-    6)
-        MAILBOX="herts-student"
-        ;;
-    *)
-        echo "Invalid option selected."
-        ;;
-esac
-if [ "no" != "$MAILBOX" ]
-then
-    # Change mailbox before composing
-    echo "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc"
-    neomutt -e "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc" "$@"
-else
-    sleep 1s
-fi
+    case $MAILBOX_ID in
+        1)
+            MAILBOX="gmail"
+            break
+            ;;
+        2)
+            MAILBOX="ucl"
+            break
+            ;;
+        3)
+            MAILBOX="hotmail"
+            break
+            ;;
+        4)
+            MAILBOX="yahoo"
+            break
+            ;;
+        q)
+            exit 0
+            ;;
+        *)
+            echo "Invalid option selected."
+            echo
+            ;;
+    esac
+done
+
+# Change mailbox before composing
+echo "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc"
+neomutt -e "source $NEOMUTT_CONFDIR/$MAILBOX.neomuttrc" "$@"
