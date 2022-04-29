@@ -104,6 +104,7 @@ function print_versions() {
 clean () {
     echo "-> Cleaning up all images."
     docker image prune --all
+    docker builder prune --all
     $SKAFFOLD delete
     minikube stop
     minikube delete
