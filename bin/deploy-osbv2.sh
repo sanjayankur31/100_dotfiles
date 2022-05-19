@@ -24,22 +24,24 @@ deploy () {
         exit 1
     fi
 
-    echo "-> deploying"
-    echo "-> checking (and starting) docker daemon"
-    systemctl is-active docker --quiet || sudo systemctl start docker.service
-    echo "-> starting minkube"
-    minikube start --memory="10000mb" --cpus=8 --disk-size="60000mb" --kubernetes-version=v1.21.2 --driver=docker || notify_fail "Failed: minikube start"
-    echo "-> enabling ingress addon"
-    minikube addons enable ingress || notify_fail "Failed: ingress add on"
-    echo "-> setting up osblocal namespace"
-    kubectl get ns osblocal || kubectl create ns osblocal || notify_fail "Failed: ns set up"
-    echo "-> setting up minikube docker env"
-    eval $(minikube docker-env) || notify_fail "Failed: env setup"
-    echo "-> harnessing deployment"
-    harness_deployment
-    echo "-> running skaffold"
-    #$SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
-    $SKAFFOLD dev || notify_fail "Failed: skaffold"
+    pushd $OSB_DIR
+        echo "-> deploying"
+        echo "-> checking (and starting) docker daemon"
+        systemctl is-active docker --quiet || sudo systemctl start docker.service
+        echo "-> starting minkube"
+        minikube start --memory="10000mb" --cpus=8 --disk-size="60000mb" --kubernetes-version=v1.21.2 --driver=docker || notify_fail "Failed: minikube start"
+        echo "-> enabling ingress addon"
+        minikube addons enable ingress || notify_fail "Failed: ingress add on"
+        echo "-> setting up osblocal namespace"
+        kubectl get ns osblocal || kubectl create ns osblocal || notify_fail "Failed: ns set up"
+        echo "-> setting up minikube docker env"
+        eval $(minikube docker-env) || notify_fail "Failed: env setup"
+        echo "-> harnessing deployment"
+        harness_deployment
+        echo "-> running skaffold"
+        #$SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
+        $SKAFFOLD dev || notify_fail "Failed: skaffold"
+    popd
 }
 
 function harness_deployment() {
