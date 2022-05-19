@@ -10,6 +10,10 @@ CLOUD_HARNESS_DEFAULT="release/1.0.0"
 CLOUD_HARNESS_BRANCH=""
 SKAFFOLD="skaffold"
 
+# Application to deploy
+DEPLOYMENT_APP=""
+DEFAULT_DEPLOYMENT_APP="osb-local"
+
 # Py version
 # Cloud harness doesn't always work on newer versions
 PY_VERSION="python3.9"
@@ -50,7 +54,7 @@ function harness_deployment() {
     # suggested: create a new file in deploy/values-ankur.yaml where you use
     # your e-mail address, and then use `-e ankur` to use these values.
     pushd $OSB_DIR
-        harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i osb-portal || notify_fail "Failed: harness-deployment"
+        harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i $DEPLOYMENT_APP || notify_fail "Failed: harness-deployment"
     #harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i workspaces || notify_fail "Failed: harness-deployment"
     popd
 }
@@ -116,9 +120,11 @@ usage () {
     echo "USAGE $0 -[dv]"
     echo
     echo "-d: deploy"
+    echo "-D: deploy <app>"
     echo "-b: run 'harness-deployment': required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
-    echo "-u branch: use (and update) provided cloud_harness branch (default: $CLOUD_HARNESS_DEFAULT)"
+    echo "-u branch: update and install provided cloud_harness branch $CLOUD_HARNESS_DEFAULT"
+    echo "-U branch: update and install specified cloud_harness branch ($CLOUD_HARNESS_DEFAULT)"
     echo "-c: clean up minikube and docker: sometimes needed with an outdated cache"
     echo "-h: print this and exit"
 }
@@ -131,7 +137,7 @@ fi
 
 
 # parse options
-while getopts ":vdu:hbc" OPTION
+while getopts ":vdD:uU:hbc" OPTION
 do
     case $OPTION in
         v)
@@ -147,6 +153,13 @@ do
             exit 0
             ;;
         d)
+            DEPLOYMENT_APP="${DEFAULT_DEPLOYMENT_APP}"
+            activate_venv
+            deploy
+            exit 0
+            ;;
+        D)
+            DEPLOYMENT_APP="${OPTARG}"
             activate_venv
             deploy
             exit 0
@@ -156,7 +169,14 @@ do
             exit 0
             ;;
         u)
-            CLOUD_HARNESS_BRANCH="${OPTARG:-$CLOUD_HARNESS_DEFAULT}"
+            CLOUD_HARNESS_BRANCH="${CLOUD_HARNESS_DEFAULT}"
+            activate_venv
+            update_cloud_harness
+            deactivate_venv
+            exit 0
+            ;;
+        U)
+            CLOUD_HARNESS_BRANCH="${OPTARG}"
             activate_venv
             update_cloud_harness
             deactivate_venv
