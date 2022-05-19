@@ -42,3 +42,5 @@ bin/pakman
 bin/pluto
 bin/racc
 
+.user.lock.*
+.userRootModFile.*

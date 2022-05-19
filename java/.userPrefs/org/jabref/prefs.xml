@@ -16,7 +16,7 @@
   <entry key="autoCompFirstNameMode" value="BOTH"/>
   <entry key="autoCompLF" value="false"/>
   <entry key="autoComplete" value="false"/>
-  <entry key="autoCompleteFields" value="related;entryset;author;title;crossref;editor;journal;publisher;keywords"/>
+  <entry key="autoCompleteFields" value="entryset;keywords;publisher;crossref;author;title;related;journal;editor"/>
   <entry key="autoOpenForm" value="true"/>
   <entry key="autoResizeMode" value="true"/>
   <entry key="autoSyncSpecialFieldsToKeywords" value="true"/>
@@ -70,7 +70,7 @@
   <entry key="externalFileTypes" value=""/>
   <entry key="externalJournalLists" value=""/>
   <entry key="extraFileColumns" value="true"/>
-  <entry key="fetcherCustomKeyNames" value="SAO/NASA ADS;ScienceDirect;Springer;IEEEXplore"/>
+  <entry key="fetcherCustomKeyNames" value="IEEEXplore;ScienceDirect;SAO/NASA ADS;Springer"/>
   <entry key="fetcherCustomKeyUses" value="false;false;false;false"/>
   <entry key="fetcherCustomKeys" value=";;;"/>
   <entry key="fileBrowserCommand" value=""/>
@@ -94,14 +94,14 @@
   <entry key="localAutoSave" value="false"/>
   <entry key="lyxpipe" value="/home/asinha/.lyx/lyxpipe"/>
   <entry key="mainFontSize" value="9"/>
-  <entry key="mainTableColumnNames" value="groups;files;linked_id;field:entrytype;field:author/editor;field:title;field:year;field:journal/booktitle;field:bibtexkey;special:readstatus;special:relevance;special:qualityassured;special:priority"/>
+  <entry key="mainTableColumnNames" value="groups;files;linked_id;field:entrytype;field:author/editor;field:title;field:year;field:journal/booktitle;field:bibtexkey;special:readstatus;special:relevance;special:qualityassured;special:priority;special:ranking"/>
   <entry key="mainTableColumnSortOrder" value=""/>
-  <entry key="mainTableColumnSortTypes" value="ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;DESCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING"/>
-  <entry key="mainTableColumnWidths" value="28.0;28.0;28.0;248.85362541899488;248.85362541899488;248.85362541899488;101.92953325290557;250.74942015662185;393.8819228474572;28.0;28.0;28.0;28.0"/>
-  <entry key="mainWindowPosX" value="0.0"/>
-  <entry key="mainWindowPosY" value="32.0"/>
+  <entry key="mainTableColumnSortTypes" value="ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;DESCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING;ASCENDING"/>
+  <entry key="mainTableColumnWidths" value="28.0;28.0;28.0;237.93392394455478;237.93392394455478;434.93392394455475;106.0636784168539;256.76450775781547;153.97358565899498;28.0;28.0;28.0;28.0;80.0"/>
+  <entry key="mainWindowPosX" value="1920.0"/>
+  <entry key="mainWindowPosY" value="0.0"/>
   <entry key="mainWindowSizeX" value="1920.0"/>
-  <entry key="mainWindowSizeY" value="1048.0"/>
+  <entry key="mainWindowSizeY" value="1080.0"/>
   <entry key="memoryStickMode" value="false"/>
   <entry key="mergeEntriesDiffMode" value="WORD"/>
   <entry key="nameFormatterFormats" value=""/>
@@ -142,7 +142,7 @@
   <entry key="showRecommendations" value="true"/>
   <entry key="sidePaneComponentNames" value=""/>
   <entry key="sidePaneComponentPreferredPositions" value=""/>
-  <entry key="sidePaneWidthFX" value="0.115625"/>
+  <entry key="sidePaneWidthFX" value="0.11145833333333334"/>
   <entry key="specialFieldsEnabled" value="true"/>
   <entry key="texmakerPath" value="texmaker"/>
   <entry key="timeStampField" value="timestamp"/>
@@ -170,5 +170,5 @@
   <entry key="winEdtPath" value="WinEdt"/>
   <entry key="windowMaximised" value="true"/>
   <entry key="workingDirectory" value="/home/asinha/Documents/03_Publications/01_drafts/2021-neuroml"/>
-  <entry key="xmpPrivacyFilters" value="timestamp;pdf;note;owner;review;keywords"/>
+  <entry key="xmpPrivacyFilters" value="note;keywords;owner;timestamp;review;pdf"/>
 </map>
