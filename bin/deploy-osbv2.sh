@@ -12,7 +12,7 @@ SKAFFOLD="skaffold"
 
 # Application to deploy
 DEPLOYMENT_APP=""
-DEFAULT_DEPLOYMENT_APP="osb-local"
+DEFAULT_DEPLOYMENT_APP="osb-portal"
 
 # Py version
 # Cloud harness doesn't always work on newer versions
