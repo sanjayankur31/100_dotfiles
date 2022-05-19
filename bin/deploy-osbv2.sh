@@ -122,6 +122,7 @@ usage () {
     echo "-d: deploy"
     echo "-D: deploy <app>"
     echo "-b: run 'harness-deployment': required when you have made changes and want to refresh the deployment"
+    echo "-B: run 'harness-deployment <app>': required when you have made changes and want to refresh the deployment"
     echo "-v: print version information"
     echo "-u branch: update and install provided cloud_harness branch $CLOUD_HARNESS_DEFAULT"
     echo "-U branch: update and install specified cloud_harness branch ($CLOUD_HARNESS_DEFAULT)"
@@ -137,7 +138,7 @@ fi
 
 
 # parse options
-while getopts ":vdD:uU:hbc" OPTION
+while getopts ":vdD:uU:hbB:c" OPTION
 do
     case $OPTION in
         v)
@@ -147,6 +148,13 @@ do
             exit 0
             ;;
         b)
+            activate_venv
+            harness_deployment
+            deactivate_venv
+            exit 0
+            ;;
+        B)
+            DEPLOYMENT_APP="${OPTARG}"
             activate_venv
             harness_deployment
             deactivate_venv
