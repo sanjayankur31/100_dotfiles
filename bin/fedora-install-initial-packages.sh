@@ -51,7 +51,7 @@ install_basics() {
     @python-science clang-devel @c-development w3m python3-mailmerge \
     qt5-qtwebengine{-freeworld,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
-    closure-compiler wofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
+    closure-compiler wofi rofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
