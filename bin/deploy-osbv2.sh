@@ -148,6 +148,7 @@ do
             exit 0
             ;;
         b)
+            DEPLOYMENT_APP="${DEFAULT_DEPLOYMENT_APP}"
             activate_venv
             harness_deployment
             deactivate_venv
