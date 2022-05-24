@@ -108,12 +108,16 @@ function print_versions() {
 }
 
 clean () {
-    echo "-> Cleaning up all images."
-    docker image prune --all
-    docker builder prune --all
-    $SKAFFOLD delete
-    minikube stop
-    minikube delete
+    pushd $OSB_DIR
+        echo "-> Cleaning up all images."
+        docker image prune --all
+        docker builder prune --all
+        $SKAFFOLD delete
+        minikube stop
+        minikube delete
+        docker image prune --all
+        docker builder prune --all
+    popd
 }
 
 usage () {
