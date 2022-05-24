@@ -70,6 +70,7 @@ if [[ $- == *i* ]] ; then
     alias vit-rl='vit project:research.lit.next'
     alias vit-ticklers='vit tags:tickler'
     alias vit-agenda='vit project~agenda'
+    alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
 
     # Set vi mode
     set -o vi
