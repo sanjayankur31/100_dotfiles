@@ -1,9 +1,0 @@
-#!/bin/bash
-# If in hints mode, and text is selected, look that up
-# Otherwise, look up whatever is in the clipboard
-if [ ! -z "$QUTE_SELECTED_TEXT" ]
-then
-    echo "open -t --related !oed $QUTE_SELECTED_TEXT" >> "$QUTE_FIFO"
-else
-    echo "open -t --related !oed {clipboard}" >> "$QUTE_FIFO"
-fi
