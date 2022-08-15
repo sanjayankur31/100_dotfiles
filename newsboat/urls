@@ -66,8 +66,7 @@ https://behavioralandbrainfunctions.biomedcentral.com/articles/most-recent/rss.x
 https://www.mdpi.com/rss/journal/brainsci    "Journal"
 https://f1000research.com/published/rss     "Journal"
 https://joss.theoj.org/papers/published.atom "Journal"
-
-https://www.disabled-world.com/rss.xml  "Non-science"
+https://www.annualreviews.org/action/showFeed?ui=45mu4&mi=3fndc3&ai=s2&jc=neuro&type=etoc&feed=atom "Journal"
 
 "query:[Search = Axon]:(title =~ \"axo\" or content =~ \"axo\")"
 "query:[Search = Cerebellum]:(title =~ \"cerebel\" or content =~ \"cerebel\")"
@@ -93,3 +92,6 @@ https://www.disabled-world.com/rss.xml  "Non-science"
 "query:[Search = Recurrent NN]:(title =~ \"recurrent\" or content =~ \"recurrent\")"
 "query:[Search = Theory]:(title =~ \"manifold\" or content =~ \"manifold\" or title =~ \"(chaos|chaotic)\" or content =~ \"(chaos|chaotic)\" or title =~ \"dynamical\" or content =~ \"dynamical\")"
 "query:[Search = Software]:(title =~ \"software\" or content =~ \"software\" or title =~ \"open source\" or content =~ \"open source\")"
+
+
+"query:[Authors]: (author =~ \"moullet|guigon\")"
