@@ -94,4 +94,4 @@ https://www.annualreviews.org/action/showFeed?ui=45mu4&mi=3fndc3&ai=s2&jc=neuro&
 "query:[Search = Software]:(title =~ \"software\" or content =~ \"software\" or title =~ \"open source\" or content =~ \"open source\")"
 
 
-"query:[Authors]: (author =~ \"moullet|guigon|gleeson|shadmehr|angus silver|a.silver|diesmann|sprekeler|van albada|idan.segev|nowotny|steuber|metzner\")"
+"query:[Authors]: (author =~ \"moullet|guigon|gleeson|shadmehr|angus silver|a.silver|diesmann|sprekeler|van albada|idan.segev|nowotny|steuber|metzner|prinz|crook|blackwell\")"
