@@ -5,6 +5,6 @@ Icon=evolution
 Exec=/home/asinha/bin/neomutt-compose-wrapper.sh %u
 Terminal=true
 StartupNotify=true
-Categories=Office;Email;Internet;
+Categories=Office;Email;X-Internet;
 X-Desktop-File-Install-Version=0.23
 Comment=A text mode mail user agent
