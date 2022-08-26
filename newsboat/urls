@@ -86,7 +86,7 @@ https://www.annualreviews.org/action/showFeed?ui=45mu4&mi=3fndc3&ai=s2&jc=neuro&
 "query:[Search = Motor cortex]:(title =~ \"motor cortex\" or content =~ \"motor cortex\")"
 "query:[Search = Neuron]:(title =~ \"neuron\" or content =~ \"neuron\")"
 "query:[Search = Synaptic Plasticity]:(title =~ \"synaptic plasticity\" or content =~ \"synaptic plasticity\")"
-"query:[Search = Structural Plasticity]:(title =~ \"structural plasticity\" or content =~ \"structural plasticity\" or content =~ \"spinogenesis" or content =~ \"spine (dynamics|formation)\")"
+"query:[Search = Structural Plasticity]:(title =~ \"structural plasticity\" or content =~ \"structural plasticity\" or content =~ \"spinogenesis\" or content =~ \"spine (dynamics|formation)\")"
 "query:[Search = Deafferentation]:(title =~ \"deafferent\" or content =~ \"deafferent\")"
 "query:[Search = Purkinje]:(title =~ \"purkinje\" or content =~ \"purkinje\")"
 "query:[Search = Recurrent NN]:(title =~ \"recurrent\" or content =~ \"recurrent\")"
@@ -94,4 +94,4 @@ https://www.annualreviews.org/action/showFeed?ui=45mu4&mi=3fndc3&ai=s2&jc=neuro&
 "query:[Search = Software]:(title =~ \"software\" or content =~ \"software\" or title =~ \"open source\" or content =~ \"open source\")"
 
 
-"query:[Authors]: (author =~ \"moullet|guigon|gleeson|shadmehr|angus silver|a.silver|diesmann|sprekeler|van albada|idan.segev|nowotny|steuber|metzner|prinz|crook|blackwell|keck|hausser\")"
+"query:[Authors]: (author =~ \"moullet|guigon|gleeson|shadmehr|angus silver|a.silver|diesmann|sprekeler|van albada|idan.segev|t.nowotny|thomas.nowotny|v.steuber|volker.steuber|metzner|a.prinz|astrid.prinz|sharon.crook|s.crook|a.blackwell|keck|tara.keck|t.keck|hausser|diesmann|zenke|zeldenrust|abigail.person|a.person\")"
