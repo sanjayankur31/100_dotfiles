@@ -18,11 +18,6 @@ setup_repos() {
     sudo dnf update --refresh
 }
 
-install_adobe () {
-    sudo dnf install http://linuxdownload.adobe.com/adobe-release/adobe-release-x86_64-1.0-1.noarch.rpm
-    sudo dnf install flash-plugin
-}
-
 update_groups() {
     sudo dnf group upgrade --with-optional Multimedia
 
@@ -55,7 +50,7 @@ install_basics() {
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
-    python3-msal \
+    python3-msal psi-notify \
     --setopt=strict=0
 
     # parcellite
@@ -93,6 +88,16 @@ install_nvidia() {
     sudo dnf install xorg-x11-drv-nvidia-cuda
 }
 
+enable_services () {
+    echo "Starting/enabling syncthing"
+    systemctl --user start syncthing.service
+    systemctl --user enable syncthing.service
+
+    echo "Starting/enabling psi-notify"
+    systemctl --user start psi-notify.service
+    systemctl --user enable psi-notify.service
+}
+
 
 usage() {
     echo "$0: Install packages and software"
@@ -127,11 +132,13 @@ do
         u)
             setup_repos
             update_groups
+            enable_services
             exit 0
             ;;
         b)
             setup_repos
             install_basics
+            enable_services
             exit 0
             ;;
         t)
@@ -154,10 +161,11 @@ do
             install_basics
             install_texlive_packages
             install_flatpaks
+            enable_services
             exit 0
             ;;
-        F)
-            install_adobe
+        e)
+            enable_services
             exit 0
             ;;
         h)
