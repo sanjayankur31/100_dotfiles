@@ -1,6 +1,8 @@
 *.swp
 *.swo
 tags
+tags.lock
+tags.temp
 cscope.out
 BUILD/
 RPMS/
