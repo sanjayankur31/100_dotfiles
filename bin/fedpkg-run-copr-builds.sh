@@ -2,7 +2,7 @@
 
 # Copyright 2022 Ankur Sinha
 # Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
-# File : fedora-run-copr-builds.sh
+# File : fedpkg-run-copr-builds.sh
 #
 # Run copr builds for a specified list of packages. Useful when one wants to
 # test rebuilding a bunch of dependencies when updating packages
@@ -19,5 +19,5 @@ COPR_PROJECT=""
 
 while read pkg ; do
     echo "Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
-    pushd "$pkg" && git clean -dfx && git pull --rebase && git checkout "${FEDORA_BRANCH}" && fedpkg srpm && copr-cli build  "${NOWAIT:+ --nowait}" "${COPR_PROJECT}" *.src.rpm && popd
+    pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build  "${NOWAIT:+ --nowait}" "${COPR_PROJECT}" && popd
 done < "${PACKAGE_LIST_FILE}"
