@@ -50,7 +50,7 @@ install_basics() {
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
-    python3-msal psi-notify \
+    python3-msal psi-notify gcolor3 \
     --setopt=strict=0
 
     # parcellite
