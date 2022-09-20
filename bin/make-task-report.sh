@@ -44,7 +44,7 @@ function timesheets() {
     # Time sheets
     # Can be split out into a different file perhaps
     echo > ~/Sync/taskreports/timesheet-$today.html
-    for p in "foss" "job" "research" "personal"
+    for p in "foss" "job" "research" "personal" "volunteering" "career-development"
     do
         echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
         /usr/bin/timew summary "${week_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
@@ -61,6 +61,17 @@ function timesheets() {
     done
     echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
     /usr/bin/timew summary "${month_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+}
+
+usage () {
+    echo "make-task-report.sh [-t] [-h]"
+    echo
+    echo "Script generates a task and time sheet reports"
+    echo
+    echo "Options:"
+    echo
+    echo "-t <date>: date to use as 'todays' for time sheets: if not supplied, use today's date"
+    echo "-h: print this help message and exit"
 }
 
 # parse options
