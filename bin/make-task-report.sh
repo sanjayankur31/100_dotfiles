@@ -23,35 +23,68 @@
 
 #!/bin/bash
 
-today=$(date +%Y-%m-%d)
-
 mkdir -pv ~/Sync/taskreports/
 
-# Update list as required
-for p in "foss" "job.ucl" "research" "personal"
-do
-    /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
-done
-# Generate combined report for everything
-/home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html
+function taskreports() {
+    # Update list as required
+    for p in "foss" "job.ucl" "research" "personal"
+    do
+        /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
+    done
+    # Generate combined report for everything
+    /home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html
 
-# Time sheets
-# Can be split out into a different file perhaps
-echo > ~/Sync/taskreports/timesheet-$today.html
-for p in "foss" "job" "research" "personal"
-do
-    echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew summary :week "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
-done
-echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
-/usr/bin/timew summary :week | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+}
 
-echo >> ~/Sync/taskreports/timesheet-$today.html
-echo >> ~/Sync/taskreports/timesheet-$today.html
-for p in "foss" "job" "research" "personal"
+function timesheets() {
+    echo "Generating time sheets ending ${today}"
+    week_start=$(date +%Y-%m-%d -d "${today} - 1 week")
+    month_start=$(date +%Y-%m-%d -d "${today} - 1 month")
+
+    # Time sheets
+    # Can be split out into a different file perhaps
+    echo > ~/Sync/taskreports/timesheet-$today.html
+    for p in "foss" "job" "research" "personal"
+    do
+        echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+        /usr/bin/timew summary "${week_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    done
+    echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary "${week_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
+    echo >> ~/Sync/taskreports/timesheet-$today.html
+    echo >> ~/Sync/taskreports/timesheet-$today.html
+    for p in "foss" "job" "research" "personal"
+    do
+        echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
+        /usr/bin/timew summary "${month_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    done
+    echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew summary "${month_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+}
+
+# parse options
+while getopts "t:h" OPTION
 do
-    echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew summary :month "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    case $OPTION in
+        t)
+            todayinput="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        ?)
+            echo "Nothing to do."
+            usage
+            exit 1
+            ;;
+    esac
 done
-echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
-/usr/bin/timew summary :month | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
+
+# if no date is provided, assume today
+todaysdate=$(date +%Y-%m-%d -d "today")
+today=${todayinput:-$todaysdate}
+taskreports
+timesheets
