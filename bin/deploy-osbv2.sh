@@ -54,7 +54,7 @@ function harness_deployment() {
     # suggested: create a new file in deploy/values-ankur.yaml where you use
     # your e-mail address, and then use `-e ankur` to use these values.
     pushd $OSB_DIR
-        harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i $DEPLOYMENT_APP || notify_fail "Failed: harness-deployment"
+        harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -dtls -m build -e local -i $DEPLOYMENT_APP || notify_fail "Failed: harness-deployment"
     #harness-deployment ../cloud-harness . -l  -n osblocal -d osb.local -u -dtls -m build -e local -i workspaces || notify_fail "Failed: harness-deployment"
     popd
 }

@@ -12,12 +12,17 @@
 
 PACKAGE_LIST_FILE="packages.txt"
 FEDORA_BRANCH="rawhide"
-COPR_PROJECT=""
+COPR_PROJECT="python-nibabel-4x"
 # uncomment to wait for each build, for example a chain build where each
 # package must wait for the previous one to build
 # NOWAIT="yep"
 
 while read pkg ; do
-    echo "Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
-    pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build  "${NOWAIT:+ --nowait}" "${COPR_PROJECT}" && popd
+    if ! [ -d "$pkg" ]
+    then
+        echo "> Checking out ${pkg}"
+        fedpkg co "$pkg"
+    fi
+    echo "> Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
+    pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build --nowait "${COPR_PROJECT}" && popd
 done < "${PACKAGE_LIST_FILE}"
