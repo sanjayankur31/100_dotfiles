@@ -70,6 +70,7 @@ if [[ $- == *i* ]] ; then
     # add an hour to include tasks that are due at eod or eoww
     alias vit-tl-today="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eod+1h'"
     alias vit-tl-week="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eow+1h'"
+    alias vit-tl-month="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eom+1h'"
     alias vit-rl='vit project:research.lit.next'
     alias vit-ticklers='vit tags:tickler'
     alias vit-agenda='vit project~agenda'
