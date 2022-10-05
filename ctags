@@ -3,3 +3,4 @@
 --exclude=.git
 --exclude=build
 --exclude=".venv*"
+--exclude=nml.py
