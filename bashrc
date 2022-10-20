@@ -69,8 +69,12 @@ if [[ $- == *i* ]] ; then
     alias vit-tl="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda'"
     # add an hour to include tasks that are due at eod or eoww
     alias vit-tl-today="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eod+1h'"
-    alias vit-tl-week="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eow+1h'"
-    alias vit-tl-month="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eom+1h'"
+    alias vit-tl-this-week="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eow+1h'"
+    alias vit-tl-this-month="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' 'due.before:eom+1h'"
+    alias vit-tl-in-a-week="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' due.before:$(date +%Y-%m-%d --date '1 week + 1 day')"
+    alias vit-tl-in-a-month="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' due.before:$(date +%Y-%m-%d --date '1 month + 1 day')"
+    alias vit-tl-in-six-months="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' due.before:$(date +%Y-%m-%d --date '6 month + 1 day')"
+    alias vit-tl-in-a-year="vit 'project!~research.lit' 'tags!~tickler' 'project!~agenda' due.before:$(date +%Y-%m-%d --date '1 year + 1 day')"
     alias vit-rl='vit project:research.lit.next'
     alias vit-ticklers='vit tags:tickler'
     alias vit-agenda='vit project~agenda'
