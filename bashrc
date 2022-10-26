@@ -80,6 +80,15 @@ if [[ $- == *i* ]] ; then
     alias vit-agenda='vit project~agenda'
     alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
 
+
+    # create new session, and ensure first window runs in a separate systemd
+    # scope
+    byobu-new-session ()
+    {
+        byobu new -s $1 systemd-run --user --scope bash
+    }
+
+
     # Set vi mode
     set -o vi
     # Enable globstar
