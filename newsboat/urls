@@ -67,6 +67,7 @@ https://www.mdpi.com/rss/journal/brainsci    "Journal"
 https://f1000research.com/published/rss     "Journal"
 https://joss.theoj.org/papers/published.atom "Journal"
 https://www.annualreviews.org/action/showFeed?ui=45mu4&mi=3fndc3&ai=s2&jc=neuro&type=etoc&feed=atom "Journal"
+https://rss.sciencedirect.com/publication/science/10538119 "Journal" "~NeuroImage"
 
 "query:[Search = Axon]:(title =~ \"axo\" or content =~ \"axo\")"
 "query:[Search = Cerebellum]:(title =~ \"cerebel\" or content =~ \"cerebel\")"
