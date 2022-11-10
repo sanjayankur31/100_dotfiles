@@ -72,7 +72,25 @@ rpmlint_rpms ()
 list_reqs_provides ()
 {
     echo "Listing requires and provies of packages in RPMS"
-    pushd "RPMS" || exit 3
+
+    result_dir="results_${PACKAGE}"
+    newest_version=""
+    rpm_dir=""
+    overall_dir=""
+    if [ -d "${result_dir}" ]
+    then
+        newest_version=$(ls -v ${result_dir}/ | tail -1)
+        rpm_dir="$(ls -v $result_dir/$newest_version/ | tail -1)"
+        overall_dir="$result_dir/$newest_version/$rpm_dir"
+    elif [ -d "RPMS" ]
+    then
+        overall_dir="$result_dir/$newest_version/$rpm_dir"
+    else
+        echo "Could not figure out what directory rpms are in. Exiting"
+    fi
+
+    echo "Processing RPMs in $overall_dir"
+    pushd "$overall_dir" 2>&1 > /dev/null || exit 3
         for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
