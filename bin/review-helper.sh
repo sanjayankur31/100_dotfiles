@@ -6,6 +6,7 @@ DESTDIR=""
 KOJI_TASK=""
 MOCKREL="rawhide"
 MOCKARCH="x86_64"
+RPMS_DIR=""
 
 
 check_package ()
@@ -36,7 +37,7 @@ clean ()
 downloadrpms ()
 {
     echo "Downloading $KOJI_TASK to RPMS/"
-    rm -fvr -- "RPMS"
+    rm -fvr -- "RPMS" "results_${PACKAGE}"
     mkdir -pv "RPMS"
     pushd "RPMS" || exit 3
         koji download-task $KOJI_TASK
@@ -46,7 +47,7 @@ downloadrpms ()
 copyovermockresults ()
 {
     echo "Copying rpms from mock result to RPMS/"
-    rm -fvr -- "RPMS"
+    rm -fvr -- "RPMS" "results_${PACKAGE}"
     mkdir -pv "RPMS"
     pushd "RPMS" || exit 3
         cp -v /var/lib/mock/fedora-$MOCKREL-$MOCKARCH/result/*.rpm .
@@ -63,34 +64,38 @@ rpmlint_spec_srpm()
 
 rpmlint_rpms ()
 {
-    echo "Running rpmlint on $PACKAGE rpms in RPMS/"
+    get_RPMs_dir
+    echo "Running rpmlint on $PACKAGE rpms in ${RPMS_DIR}/"
     echo
-    rpmlint "RPMS/"*".rpm"
+    rpmlint "${RPMS_DIR}/*.rpm"
     echo
+}
+
+get_RPMs_dir ()
+{
+    result_dir="results_${PACKAGE}"
+    newest_version=""
+    rpm_dir=""
+    if [ -d "${result_dir}" ]
+    then
+        newest_version=$(ls -v ${result_dir}/ | tail -1)
+        rpm_dir="$(ls -v $result_dir/$newest_version/ | tail -1)"
+        RPMS_DIR="$result_dir/$newest_version/$rpm_dir"
+    elif [ -d "RPMS" ]
+    then
+        RPMS_DIR="$result_dir/$newest_version/$rpm_dir"
+    else
+        echo "Could not figure out what directory rpms are in. Exiting"
+    fi
+    echo "Processing RPMs in $RPMS_DIR"
+
 }
 
 list_reqs_provides ()
 {
     echo "Listing requires and provies of packages in RPMS"
-
-    result_dir="results_${PACKAGE}"
-    newest_version=""
-    rpm_dir=""
-    overall_dir=""
-    if [ -d "${result_dir}" ]
-    then
-        newest_version=$(ls -v ${result_dir}/ | tail -1)
-        rpm_dir="$(ls -v $result_dir/$newest_version/ | tail -1)"
-        overall_dir="$result_dir/$newest_version/$rpm_dir"
-    elif [ -d "RPMS" ]
-    then
-        overall_dir="$result_dir/$newest_version/$rpm_dir"
-    else
-        echo "Could not figure out what directory rpms are in. Exiting"
-    fi
-
-    echo "Processing RPMs in $overall_dir"
-    pushd "$overall_dir" 2>&1 > /dev/null || exit 3
+    get_RPMs_dir
+    pushd "$RPMS_DIR" 2>&1 > /dev/null || exit 3
         for i in *rpm; do
             echo "== $i =="
             echo "Provides:"
