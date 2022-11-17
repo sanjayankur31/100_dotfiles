@@ -19,8 +19,14 @@ notification ()
 
 TAGS=$(timew | grep -E 'Tracking' | sed -E 's/^.*Tracking[[:space:]]+//')
 TIME=$(timew | grep -E 'Total' | sed -E 's/^.*Total[[:space:]]+//')
+
 # Only print the first five letters of tag string: the idea is just to remind one of what the current task is
-echo "TW: ${TIME} ${TAGS:0:5}..."
+# https://askubuntu.com/questions/184495/why-byobu-custom-status-notification-code-fail-to-show-in-color
+
+if [ "" != "$TIME" ]
+then
+    echo "#[fg=white,bg=green]${TIME} ${TAGS:0:5}...#[default]"
+fi
 
 while getopts "n" OPTION
 do
