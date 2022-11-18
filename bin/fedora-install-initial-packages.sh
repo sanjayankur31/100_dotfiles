@@ -3,8 +3,6 @@ REL="$(rpm -E %fedora)"
 echo "We are running Fedora $REL."
 
 setup_repos() {
-    # Neomutt
-    sudo dnf copr enable flatcap/neomutt
     # taskjuggler
     sudo dnf copr enable ankursinha/rubygem-taskjuggler
     # NeuroFedora
