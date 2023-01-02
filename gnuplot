@@ -16,7 +16,7 @@ my_ps = "1.2"
 
 # define the font for the terminal
 set term qt enhanced font my_font
-set term pngcairo font my_font
+#set term pngcairo font my_font
 
 # set default point size
 set pointsize my_ps
