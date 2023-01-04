@@ -94,6 +94,11 @@ enable_services () {
     echo "Starting/enabling psi-notify"
     systemctl --user start psi-notify.service
     systemctl --user enable psi-notify.service
+
+    # https://askubuntu.com/questions/340809/how-can-i-adjust-the-default-passphrase-caching-duration-for-gpg-pgp-ssh-keys/358514#358514
+    echo "Configuring gnome-keyring to forget gpg passphrases after 7200 seconds"
+    gsettings set org.gnome.crypto.cache gpg-cache-method "idle"
+    gsettings set org.gnome.crypto.cache gpg-cache-ttl "7200"
 }
 
 
