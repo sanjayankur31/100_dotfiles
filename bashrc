@@ -102,6 +102,9 @@ if [[ $- == *i* ]] ; then
     vit-agenda () {
         'vit project~agenda'
     }
+    vit-next () {
+        task 'project!~research.lit' 'tags!~tickler' 'project!~agenda' limit:1
+    }
 
     alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
 
