@@ -103,7 +103,16 @@ if [[ $- == *i* ]] ; then
         'vit project~agenda'
     }
     vit-next () {
-        task 'project!~research.lit' 'tags!~tickler' 'project!~agenda' limit:1
+        echo "Active tasks:"
+        echo
+        task active
+        echo
+        echo
+        echo "Next ${1:-2} tasks:"
+        echo
+        task 'project!~research.lit' 'tags!~tickler' 'project!~agenda' limit:"${1:-2}"
+        echo
+        echo
     }
 
     alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
