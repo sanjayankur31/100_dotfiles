@@ -68,31 +68,31 @@ if [[ $- == *i* ]] ; then
     alias bt='echo 0 | gdb -batch-silent -ex "run" -ex "set logging overwrite on" -ex "set logging file gdb.bt" -ex "set logging on" -ex "set pagination off" -ex "handle SIG33 pass nostop noprint" -ex "echo backtrace:\n" -ex "backtrace full" -ex "echo \n\nregisters:\n" -ex "info registers" -ex "echo \n\ncurrent instructions:\n" -ex "x/16i \$pc" -ex "echo \n\nthreads backtrace:\n" -ex "thread apply all backtrace" -ex "set logging off" -ex "quit" --args'
     #
     # vit related functions, instead of aliases
-    VIT_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
+    TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
     vit-tl ()
     {
-        vit ${VIT_FILTERS}
+        vit ${TASK_FILTERS}
     }
     vit-tl-today () {
-        vit ${VIT_FILTERS} 'due.by:eod'
+        vit ${TASK_FILTERS} 'due.by:eod'
     }
     vit-tl-this-week () {
-        vit ${VIT_FILTERS} 'due.by:eow'
+        vit ${TASK_FILTERS} 'due.by:eow'
     }
     vit-tl-this-month () {
-        vit ${VIT_FILTERS} 'due.by:eom'
+        vit ${TASK_FILTERS} 'due.by:eom'
     }
     vit-tl-in-a-week () {
-        vit ${VIT_FILTERS} due.by:$(date +%Y-%m-%d --date '1 week')
+        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 week')
     }
     vit-tl-in-a-month () {
-        vit ${VIT_FILTERS} due.by:$(date +%Y-%m-%d --date '1 month')
+        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 month')
     }
     vit-tl-in-six-months () {
-        vit ${VIT_FILTERS} due.by:$(date +%Y-%m-%d --date '6 month')
+        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '6 month')
     }
     vit-tl-in-a-year () {
-        vit ${VIT_FILTERS} due.by:$(date +%Y-%m-%d --date '1 year')
+        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 year')
     }
     vit-rl () {
         vit 'project:research.lit'
@@ -111,7 +111,7 @@ if [[ $- == *i* ]] ; then
         echo
         echo "Next ${1:-2} tasks:"
         echo
-        task 'project!~research.lit' 'tags!~tickler' 'project!~agenda' limit:"${1:-2}"
+        task ${TASK_FILTERS} limit:"${1:-2}"
         echo
         echo
     }
