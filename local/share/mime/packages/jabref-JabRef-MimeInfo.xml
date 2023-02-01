@@ -3,6 +3,7 @@
   <mime-type type="text/x-bibtex">
     <comment>BibTeX File</comment>
     <glob pattern="*.bib"></glob>
+    <glob pattern="*.bibtex"></glob>
     <glob pattern="*.ris"></glob>
   </mime-type>
 </mime-info>
