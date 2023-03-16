@@ -49,6 +49,7 @@ install_basics() {
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 \
+    rpmfusion-packager \
     --setopt=strict=0
 
     # parcellite
