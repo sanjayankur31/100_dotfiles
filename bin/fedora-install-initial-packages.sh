@@ -72,12 +72,13 @@ install_flatpaks() {
     echo "Installing flatpaks from Flathub"
     flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-    flatpak --user install flathub com.skype.Client
+    #flatpak --user install flathub com.skype.Client
+    #flatpak --user install flathub com.uploadedlobster.peek
+    #flatpak --user install flathub com.jgraph.drawio.desktop
+
     flatpak --user install flathub com.spotify.Client
     flatpak --user install flathub org.telegram.desktop
     flatpak --user install flathub org.signal.Signal
-    flatpak --user install flathub com.uploadedlobster.peek
-    flatpak --user install flathub com.jgraph.drawio.desktop
 }
 
 install_nvidia() {
