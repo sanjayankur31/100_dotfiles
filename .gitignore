@@ -44,3 +44,5 @@ bin/racc
 
 .user.lock.*
 .userRootModFile.*
+
+prefs.xml
