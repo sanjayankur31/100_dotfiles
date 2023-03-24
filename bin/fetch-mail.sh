@@ -2,46 +2,55 @@
 # sync offlineimap
 # Ref: https://hobo.house/2015/09/09/take-control-of-your-email-with-mutt-offlineimap-notmuch/
 
-# Do not kill existing process by default
-# Sometimes it gets hung, so we do need to kill it
-KILL_SYNC="no"
 NOTIFY="no"
 MAILDIR="$HOME/Mail"
+processinfo=""
 
-check ()
+kill_if_running ()
 {
-    pgrep -fa offlineimap -u asinha
-    if [ $? -eq 0 ]
+    status
+    if [ -n "$processinfo" ]
     then
-        if [ "$KILL_SYNC" == "no" ]
-        then
-            echo "Already syncing, letting it run."
-            exit 0
-        else
-            echo "Already syncing, killing as instructed."
-            while pkill -f offlineimap -u asinha
-            do
-                sleep 2;
-            done
-        fi
+        echo "Killing offlineimap as instructed."
+        while pkill -f offlineimap -u asinha
+        do
+            sleep 2;
+        done
+    else
+        echo "Offlineimap not running"
     fi
 }
 
 quick ()
 {
-    (offlineimap -u quiet -q -s) &
-    echo "Quick sync started"
+    status
+    if [ -z "$processinfo" ]
+    then
+        (offlineimap -u quiet -q -s) &
+        echo "Quick sync started"
+    fi
 }
 
 full ()
 {
-    (offlineimap -u quiet -s) &
-    echo "Full sync started"
+    status
+    if [ -z "$processinfo" ]
+    then
+        (offlineimap -u quiet -s) &
+        echo "Full sync started"
+    fi
 }
 
 status ()
 {
-    pgrep -fa offlineimap -u asinha
+    processinfo="$(pgrep -fa offlineimap -u asinha)"
+    if [ $? -eq 0 ]
+    then
+        res_pid="${processinfo%% *}"
+        echo "Sync is running with pid ${res_pid}, started: $(ps -p $res_pid -o lstart= )"
+    else
+        echo "Sync is not running"
+    fi
 }
 
 timestamp ()
@@ -56,6 +65,20 @@ timestamp ()
     fi
 }
 
+usage () {
+    echo "Usage: $0 [-k] [-n] [-qfs]"
+    echo "Sync wrapper around offlineimap"
+    echo
+    echo "Options:"
+    echo "-n: send notification using notify-send"
+    echo "-s: check status"
+    echo "-q: quick sync"
+    echo "-Q: quick sync; kill existing instance"
+    echo "-f: full sync"
+    echo "-F: full sync; kill existing instance"
+    echo "-k: kill existing instance"
+}
+
 if [ $# -eq 0 ]
 then
     echo "You did not tell me what to do. Exiting."
@@ -63,22 +86,31 @@ then
 fi
 
 # parse options
-while getopts "knqfs" OPTION
+while getopts "knqfQFsh" OPTION
 do
     case $OPTION in
         k)
-            KILL_SYNC="yes"
+            kill_if_running
+            exit 0
             ;;
         n)
             NOTIFY="yes"
             ;;
         q)
-            check
+            quick
+            timestamp
+            ;;
+        Q)
+            kill_if_running
             quick
             timestamp
             ;;
         f)
-            check
+            full
+            timestamp
+            ;;
+        F)
+            kill_if_running
             full
             timestamp
             ;;
@@ -86,8 +118,13 @@ do
             status
             exit 0
             ;;
+        h)
+            usage
+            exit 0
+            ;;
         ?)
             echo "Nothing to do. Exiting."
+            usage
             exit 0
             ;;
     esac
