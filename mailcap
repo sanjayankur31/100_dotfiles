@@ -8,6 +8,9 @@ audio/*; xdg-open '%s' ; copiousoutput
 # Image files
 image/*; xdg-open '%s' ; copiousoutput
 
+# Video files
+video/*; xdg-open '%s' ; copiousoutput
+
 # compressed files
 application/zip; xdg-open '%s'; copiousoutput
 # deprecated but still sometimes in use
