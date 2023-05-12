@@ -79,6 +79,7 @@ install_flatpaks() {
     flatpak --user install flathub com.spotify.Client
     flatpak --user install flathub org.telegram.desktop
     flatpak --user install flathub org.signal.Signal
+    flatpak --user install flathub org.hdfgroup.HDFView
 }
 
 install_nvidia() {
