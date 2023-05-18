@@ -61,7 +61,7 @@ status ()
     fi
 }
 
-archive () {
+archive_stats () {
     cp $MAILDIR/status $MAILDIR/status.old || true
 }
 
@@ -102,6 +102,11 @@ notify_echo ()
     echo "neomutt: $NEWMAILS ($INCMAILS) new e-mails"
 }
 
+notify_tmux ()
+{
+    calculate_new
+    echo "#[fg=white,bg=blue]${NEWMAILS} ($INCMAILS)#[default]"
+}
 notify ()
 {
     calculate_new
@@ -118,6 +123,7 @@ usage () {
     echo "Options:"
     echo "-k: kill existing instance"
     echo "-n: send notification using notify-send"
+    echo "-N: echo notification for use in tmux"
     echo "-q: quick sync"
     echo "-f: full sync"
     echo "-Q: quick sync; kill existing instance"
@@ -127,43 +133,44 @@ usage () {
     echo "-h: print help and exit"
 }
 
-if [ $# -eq 0 ]
-then
-    echo "You did not tell me what to do. Exiting."
-    exit 0
-fi
-
 # parse options
 while getopts "knqfQFsth" OPTION
 do
     case $OPTION in
         k)
             KILL="yes"
-            exit 0
             ;;
         n)
             NOTIFY="yes"
             ;;
+        N)
+            NOTIFY="tmux"
+            ;;
         t)
+            ARCHIVE="yes"
             TIMESTAMP="yes"
             ;;
         q)
+            ARCHIVE="yes"
             STATUS="yes"
             QUICK="yes"
             TIMESTAMP="yes"
             ;;
         Q)
+            ARCHIVE="yes"
             STATUS="yes"
             KILL="yes"
             QUICK="yes"
             TIMESTAMP="yes"
             ;;
         f)
+            ARCHIVE="yes"
             STATUS="yes"
             FULL="yes"
             TIMESTAMP="yes"
             ;;
         F)
+            ARCHIVE="yes"
             STATUS="yes"
             KILL="yes"
             FULL="yes"
@@ -184,8 +191,11 @@ do
     esac
 done
 
-# always archive stats
-archive
+
+if [ "yes" == "$ARCHIVE" ]
+then
+    archive_stats
+fi
 
 if [ "yes" == "$KILL" ]
 then
@@ -200,7 +210,6 @@ then
     full
 fi
 
-# Always timestamp
 if [ "yes" == "$TIMESTAMP" ]
 then
     timestamp
@@ -214,6 +223,9 @@ fi
 if [ "yes" == "$NOTIFY" ]
 then
     notify
+elif [ "tmux" == "$NOTIFY" ]
+then
+    notify_tmux
 else
     notify_echo
 fi
