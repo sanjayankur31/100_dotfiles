@@ -2,9 +2,17 @@
 # sync offlineimap
 # Ref: https://hobo.house/2015/09/09/take-control-of-your-email-with-mutt-offlineimap-notmuch/
 
+VERSION="1.0"
 NOTIFY="no"
 MAILDIR="$HOME/Mail"
 processinfo=""
+FULL="no"
+QUICK="no"
+KILL="no"
+TIMESTAMP="no"
+NEWMAILS=0
+OLDMAILS=0
+INCMAILS=0
 
 kill_if_running ()
 {
@@ -53,30 +61,70 @@ status ()
     fi
 }
 
+archive () {
+    cp $MAILDIR/status $MAILDIR/status.old || true
+}
+
 timestamp ()
 {
-    echo "$(date +%H%M)" > $MAILDIR/status
-    newmails="$(find $MAILDIR -name 'new' -type d -exec ls -l '{}' \;  | sed '/total/ d' | wc -l)"
-    echo "New: $newmails" >> $MAILDIR/status
+    # wait for process to finish if it is running
+    while pgrep -fa offlineimap -u asinha 2>&1 > /dev/null
+    do
+        sleep 2
+    done
 
-    if [ -x "/usr/bin/notify-send" ] && [ "$NOTIFY" == "yes" ]
+    echo "$(date +%H%M)" > $MAILDIR/status
+    NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | wc -l)"
+    echo "$NEWMAILS" >> $MAILDIR/status
+}
+
+calculate_new ()
+{
+    NEWMAILS="$(tail -n 1 $MAILDIR/status)"
+    OLDMAILS="0"
+
+    if [ -f "$MAILDIR/status.old" ]
     then
-        notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "$newmails new e-mails"
+        OLDMAILS="$(tail -n 1 $MAILDIR/status.old)"
+    fi
+
+    INCMAILS="$((NEWMAILS - OLDMAILS))"
+
+    if [ 0 -ge $INCMAILS ]
+    then
+        INCMAILS=0
+    fi
+}
+
+notify_echo ()
+{
+    calculate_new
+    echo "neomutt: $NEWMAILS ($INCMAILS) new e-mails"
+}
+
+notify ()
+{
+    calculate_new
+    if [ -x "/usr/bin/notify-send" ]
+    then
+        notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "$NEWMAILS ($INCMAILS) new e-mails"
     fi
 }
 
 usage () {
-    echo "Usage: $0 [-k] [-n] [-qfs]"
-    echo "Sync wrapper around offlineimap"
+    echo "Usage: $0 [-knqfQFsth]"
+    echo "Sync wrapper around offlineimap (v$VERSION)"
     echo
     echo "Options:"
-    echo "-n: send notification using notify-send"
-    echo "-s: check status"
-    echo "-q: quick sync"
-    echo "-Q: quick sync; kill existing instance"
-    echo "-f: full sync"
-    echo "-F: full sync; kill existing instance"
     echo "-k: kill existing instance"
+    echo "-n: send notification using notify-send"
+    echo "-q: quick sync"
+    echo "-f: full sync"
+    echo "-Q: quick sync; kill existing instance"
+    echo "-F: full sync; kill existing instance"
+    echo "-s: check status"
+    echo "-t: update status file"
+    echo "-h: print help and exit"
 }
 
 if [ $# -eq 0 ]
@@ -86,37 +134,43 @@ then
 fi
 
 # parse options
-while getopts "knqfQFsh" OPTION
+while getopts "knqfQFsth" OPTION
 do
     case $OPTION in
         k)
-            kill_if_running
+            KILL="yes"
             exit 0
             ;;
         n)
             NOTIFY="yes"
             ;;
+        t)
+            TIMESTAMP="yes"
+            ;;
         q)
-            quick
-            timestamp
+            STATUS="yes"
+            QUICK="yes"
+            TIMESTAMP="yes"
             ;;
         Q)
-            kill_if_running
-            quick
-            timestamp
+            STATUS="yes"
+            KILL="yes"
+            QUICK="yes"
+            TIMESTAMP="yes"
             ;;
         f)
-            full
-            timestamp
+            STATUS="yes"
+            FULL="yes"
+            TIMESTAMP="yes"
             ;;
         F)
-            kill_if_running
-            full
-            timestamp
+            STATUS="yes"
+            KILL="yes"
+            FULL="yes"
+            TIMESTAMP="yes"
             ;;
         s)
-            status
-            exit 0
+            STATUS="yes"
             ;;
         h)
             usage
@@ -129,3 +183,39 @@ do
             ;;
     esac
 done
+
+# always archive stats
+archive
+
+if [ "yes" == "$KILL" ]
+then
+    kill_if_running
+fi
+
+if [ "yes" == "$QUICK" ]
+then
+    quick
+elif [ "yes" == "$FULL" ]
+then
+    full
+fi
+
+# Always timestamp
+if [ "yes" == "$TIMESTAMP" ]
+then
+    timestamp
+fi
+
+if [ "yes" == "$STATUS" ]
+then
+    status
+fi
+
+if [ "yes" == "$NOTIFY" ]
+then
+    notify
+else
+    notify_echo
+fi
+
+exit 0
