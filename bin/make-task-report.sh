@@ -44,23 +44,34 @@ function timesheets() {
     # Time sheets
     # Can be split out into a different file perhaps
     echo > ~/Sync/taskreports/timesheet-$today.html
+    echo " -- Week: totals --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew report totals.py :week | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
+    echo >> ~/Sync/taskreports/timesheet-$today.html
     for p in "foss" "job" "research" "personal" "volunteering" "career-development"
     do
         echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
         /usr/bin/timew summary "${week_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
     done
+
     echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
     /usr/bin/timew summary "${week_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
 
     echo >> ~/Sync/taskreports/timesheet-$today.html
+    echo >> ~/Sync/taskreports/timesheet-$today.html
+    echo " -- Month: totals --" >> ~/Sync/taskreports/timesheet-$today.html
+    /usr/bin/timew report totals.py :month | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
     echo >> ~/Sync/taskreports/timesheet-$today.html
     for p in "foss" "job" "research" "personal"
     do
         echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
         /usr/bin/timew summary "${month_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
     done
+
     echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
     /usr/bin/timew summary "${month_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+
 }
 
 usage () {

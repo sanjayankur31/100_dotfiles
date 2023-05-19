@@ -22,26 +22,39 @@ function get_task_data ()
 
     echo " (generated at $(date))"
     echo
-    echo " -- Upcoming tasks - Today  -- "
-    filter="$project_filter due:eod"
-    /usr/bin/task "$rcoptions" $filter list
-
-    echo
-    echo
-    echo " -- Upcoming tasks - This week -- "
-    filter="$project_filter due.before:eow due.after:today"
-    /usr/bin/task "$rcoptions" $filter list
-
-    echo
-    echo
     echo " -- Overdue tasks -- "
     filter="$project_filter"
     /usr/bin/task "$rcoptions" $project_filter overdue
 
     echo
     echo
+    echo " -- Upcoming tasks - Today  -- "
+    filter="$project_filter due:eod"
+    /usr/bin/task "$rcoptions" $filter list
+
+    echo
+    echo
+    echo " -- Upcoming tasks - 1 week -- "
+    filter="$project_filter due.by:$(date +%Y-%m-%d --date '1 week')"
+    /usr/bin/task "$rcoptions" $filter list
+
+    echo
+    echo
+    echo " -- Upcoming tasks - 1 month -- "
+    filter="$project_filter due.by:$(date +%Y-%m-%d --date '1 month')"
+    /usr/bin/task "$rcoptions" $filter list
+
+    echo
+    echo
+    echo " -- Upcoming tasks - 6 months -- "
+    filter="$project_filter due.by:$(date +%Y-%m-%d --date '6 month')"
+    /usr/bin/task "$rcoptions" $filter list
+
+    echo
+    echo
     echo " -- Tasks completed from $start_last_week to $end (back $phrase_last_week) -- "
-    /usr/bin/task "$rcoptions" work_report $project_filter end.after:$start_last_week
+    filter="$project_filter end.after:$start_last_week"
+    /usr/bin/task "$rcoptions" $filter completed
 
     echo
     echo
