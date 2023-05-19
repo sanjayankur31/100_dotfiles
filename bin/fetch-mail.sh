@@ -74,7 +74,7 @@ timestamp ()
     done
 
     echo "$(date +%H%M)" > $MAILDIR/status
-    NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | wc -l)"
+    NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | sed -e '/\/Deleted/ d' -e '/\/Trash/ d' -e '/\/Bin/ d' | wc -l)"
     echo "$NEWMAILS" >> $MAILDIR/status
 }
 
