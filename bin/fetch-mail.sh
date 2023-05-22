@@ -21,7 +21,7 @@ kill_if_running ()
     if [ -n "$processinfo" ]
     then
         echo "Killing offlineimap as instructed."
-        while pkill -f offlineimap -u asinha
+        while pkill -f offlineimap -u $USER
         do
             sleep 2;
         done
@@ -52,7 +52,7 @@ full ()
 
 status ()
 {
-    processinfo="$(pgrep -fa offlineimap -u asinha)"
+    processinfo="$(pgrep -fa offlineimap -u $USER)"
     if [ $? -eq 0 ]
     then
         res_pid="${processinfo%% *}"
@@ -69,14 +69,16 @@ archive_stats () {
 timestamp ()
 {
     # wait for process to finish if it is running
-    while pgrep -fa offlineimap -u asinha 2>&1 > /dev/null
-    do
-        sleep 2
-    done
+    processinfo="$(pgrep -fa offlineimap -u $USER)"
+    if [ $? -eq 0 ]
+    then
+        res_pid="${processinfo%% *}"
+        wait "${res_pid}"
 
-    echo "$(date +%H%M)" > $MAILDIR/status
-    NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | sed -e '/\/Deleted/ d' -e '/\/Trash/ d' -e '/\/Bin/ d' | wc -l)"
-    echo "$NEWMAILS" >> $MAILDIR/status
+        echo "$(date +%H%M)" > $MAILDIR/status
+        NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | sed -e '/\/Deleted/ d' -e '/\/Trash/ d' -e '/\/Bin/ d' | wc -l)"
+        echo "$NEWMAILS" >> $MAILDIR/status
+    fi
 }
 
 calculate_new ()
