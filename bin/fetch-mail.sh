@@ -13,6 +13,7 @@ TIMESTAMP="no"
 NEWMAILS=0
 OLDMAILS=0
 INCMAILS=0
+LASTSYNC=""
 
 kill_if_running ()
 {
@@ -80,6 +81,7 @@ timestamp ()
 
 calculate_new ()
 {
+    LASTSYNC="$(head -n 1 $MAILDIR/status)"
     NEWMAILS="$(tail -n 1 $MAILDIR/status)"
     OLDMAILS="0"
 
@@ -99,7 +101,7 @@ calculate_new ()
 notify_echo ()
 {
     calculate_new
-    echo "neomutt: $NEWMAILS ($INCMAILS) new e-mails"
+    echo "neomutt: At $LASTSYNC: $NEWMAILS ($INCMAILS) new e-mails"
 }
 
 notify_tmux ()
@@ -112,7 +114,7 @@ notify ()
     calculate_new
     if [ -x "/usr/bin/notify-send" ]
     then
-        notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "$NEWMAILS ($INCMAILS) new e-mails"
+        notify-send -t -1 -i evolution -c "email.arrived" -a  "Neomutt " "Neomutt" "At $LASTSYNC: $NEWMAILS ($INCMAILS) new e-mails"
     fi
 }
 
