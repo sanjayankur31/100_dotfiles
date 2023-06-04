@@ -69,16 +69,14 @@ archive_stats () {
 timestamp ()
 {
     # wait for process to finish if it is running
-    processinfo="$(pgrep -fa offlineimap -u $USER)"
-    if [ $? -eq 0 ]
-    then
-        res_pid="${processinfo%% *}"
-        wait "${res_pid}"
+    while pgrep -fa offlineimap -u $USER 2>&1 > /dev/null
+    do
+        sleep 2
+    done
 
-        echo "$(date +%H%M)" > $MAILDIR/status
-        NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | sed -e '/\/Deleted/ d' -e '/\/Trash/ d' -e '/\/Bin/ d' | wc -l)"
-        echo "$NEWMAILS" >> $MAILDIR/status
-    fi
+    echo "$(date +%H%M)" > $MAILDIR/status
+    NEWMAILS="$(find $MAILDIR -path "*/new/*" -type f  | sed -e '/\/Deleted/ d' -e '/\/Trash/ d' -e '/\/Bin/ d' | wc -l)"
+    echo "$NEWMAILS" >> $MAILDIR/status
 }
 
 calculate_new ()
