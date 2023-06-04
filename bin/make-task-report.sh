@@ -22,55 +22,58 @@
 #
 
 #!/bin/bash
+#
 
-mkdir -pv ~/Sync/taskreports/
+OUTPUTDIR="${HOME}/Sync/taskreports/"
+
+mkdir -pv ${OUTPUTDIR}/
 
 function taskreports() {
     # Update list as required
     for p in "foss" "job.ucl" "research" "personal"
     do
-        /home/asinha/bin/generate-taskreports.sh -p $p | ansi2html -w > ~/Sync/taskreports/taskreport-$p-$today.html
+        ${HOME}/bin/generate-taskreports.sh -p $p | ansi2html -w > ${OUTPUTDIR}/taskreport-$p-$enddate.html
     done
     # Generate combined report for everything
-    /home/asinha/bin/generate-taskreports.sh -a | ansi2html -w > ~/Sync/taskreports/taskreport-all-$today.html
+    ${HOME}/bin/generate-taskreports.sh -a | ansi2html -w > ${OUTPUTDIR}/taskreport-all-$enddate.html
 
 }
 
 function timesheets() {
-    echo "Generating time sheets ending ${today}"
-    week_start=$(date +%Y-%m-%d -d "${today} - 1 week")
-    month_start=$(date +%Y-%m-%d -d "${today} - 1 month")
+    echo "Generating time sheets ending ${enddate}"
+    week_start=$(date +%Y-%m-%d -d "${enddate} - 1 week")
+    month_start=$(date +%Y-%m-%d -d "${enddate} - 1 month")
 
     # Time sheets
     # Can be split out into a different file perhaps
-    echo > ~/Sync/taskreports/timesheet-$today.html
-    echo " -- Week: totals --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew report totals.py :week | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    echo > ${OUTPUTDIR}/timesheet-$enddate.html
+    echo " -- Week: totals --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+    /usr/bin/timew report totals.py :week | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
 
-    echo >> ~/Sync/taskreports/timesheet-$today.html
+    echo >> ${OUTPUTDIR}/timesheet-$enddate.html
     for p in "foss" "job" "research" "personal" "volunteering" "career-development"
     do
-        echo " -- Week: $p --" >> ~/Sync/taskreports/timesheet-$today.html
-        /usr/bin/timew summary "${week_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+        echo " -- Week: $p --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+        /usr/bin/timew summary "${week_start}" - "${endtimestamp}" "$p" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
     done
 
-    echo " -- Week: all --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew summary "${week_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    echo " -- Week: all --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+    /usr/bin/timew summary "${week_start}" - "${endtimestamp}" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
 
-    echo >> ~/Sync/taskreports/timesheet-$today.html
-    echo >> ~/Sync/taskreports/timesheet-$today.html
-    echo " -- Month: totals --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew report totals.py :month | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    echo >> ${OUTPUTDIR}/timesheet-$enddate.html
+    echo >> ${OUTPUTDIR}/timesheet-$enddate.html
+    echo " -- Month: totals --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+    /usr/bin/timew report totals.py :month | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
 
-    echo >> ~/Sync/taskreports/timesheet-$today.html
+    echo >> ${OUTPUTDIR}/timesheet-$enddate.html
     for p in "foss" "job" "research" "personal"
     do
-        echo " -- Month: $p --" >> ~/Sync/taskreports/timesheet-$today.html
-        /usr/bin/timew summary "${month_start}" - "${today}" "$p" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+        echo " -- Month: $p --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+        /usr/bin/timew summary "${month_start}" - "${endtimestamp}" "$p" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
     done
 
-    echo " -- Month: all --" >> ~/Sync/taskreports/timesheet-$today.html
-    /usr/bin/timew summary "${month_start}" - "${today}" | ansi2html -w >> ~/Sync/taskreports/timesheet-$today.html
+    echo " -- Month: all --" >> ${OUTPUTDIR}/timesheet-$enddate.html
+    /usr/bin/timew summary "${month_start}" - "${endtimestamp}" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$enddate.html
 
 }
 
@@ -81,7 +84,7 @@ usage () {
     echo
     echo "Options:"
     echo
-    echo "-t <date>: date to use as 'todays' for time sheets: if not supplied, use today's date"
+    echo "-t <date>: date to use as end date/time for time sheets: if not supplied, use today's date and current time"
     echo "-h: print this help message and exit"
 }
 
@@ -90,7 +93,7 @@ while getopts "t:h" OPTION
 do
     case $OPTION in
         t)
-            todayinput="$OPTARG"
+            enddateinput="$OPTARG"
             ;;
         h)
             usage
@@ -105,8 +108,10 @@ do
 done
 
 
-# if no date is provided, assume today
-todaysdate=$(date +%Y-%m-%d -d "today")
-today=${todayinput:-$todaysdate}
+# if no date is provided, assume today/now
+enddatedefault=$(date +%Y-%m-%d -d "enddate")
+nowtime=$(date +%Y-%m-%dT%H:%M)
+enddate=${enddateinput:-$enddatedefault}
+endtimestamp=${enddateinput:-$nowtime}
 taskreports
 timesheets
