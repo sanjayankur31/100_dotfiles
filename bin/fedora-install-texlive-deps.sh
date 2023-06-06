@@ -16,10 +16,18 @@
 REQUIREPACKAGES=""
 USEPACKAGES=""
 
+# steps:
+# - enable multiline grepping
+# - look for all strings with requirepackage[..]{..}
+# - extract only the {...}
+# - split any {package,package} into {package}{package}
+# - filter out any empties: {}
+# - extract only [0-9A-Za-z-_] (some options can have {,} etc. in them)
+# - replace "{" with "tex(" and "}" with  ".sty)"
 function fetchdeps() {
-    REQUIREPACKAGES=$(grep -rhiI "requirepackage" *.tex *.cls *.sty 2>/dev/null | grep -oE "\{.*\}" | sed -e 's/,/}{/g' | sed -e "s/{/tex(/g" -e "s/}/.sty) /g" | tr '\n' ' ')
+    REQUIREPACKAGES=$(grep -rhiIPzo "requirepackage(\[.*\])*{.*}" *.tex *.cls *.sty 2>/dev/null | grep -Pzo "\{.*?\}" | sed -e 's/,/}{/g' | grep -Pzo "\{[0-9A-Za-z-_]+\}" | sed -e "s/{/tex(/g" -e "s/}/.sty) /g" | tr '\n' ' ' | tr -d '\0')
     REQUIREPACKAGES=${REQUIREPACKAGES}
-    USEPACKAGES=$(grep -rhiI "usepackage" *.tex *.cls *.sty 2>/dev/null | grep -oE "\{.*\}" | sed -e 's/,/}{/g' | sed -e "s/{/tex(/g" -e "s/}/.sty) /g" | tr '\n' ' ')
+    USEPACKAGES=$(grep -rhiIPzo "usepackage(\[.*\])*{.*}" *.tex *.cls *.sty 2>/dev/null | grep -Pzo "\{.*?\}" |  sed -e 's/,/}{/g' |  grep -Pzo "\{[0-9A-Za-z-_]+\}" | sed -e "s/{/tex(/g" -e "s/}/.sty) /g" | tr '\n' ' ' | tr -d '\0')
     USEPACKAGES=${USEPACKAGES}
 
     echo "Following packages detected: $REQUIREPACKAGES $USEPACKAGES"
@@ -33,7 +41,7 @@ function installdeps() {
 function usage() {
     echo "$0: Install required Texlive packages for a LaTeX project on Fedora"
     echo
-    echo "Usage: $0 [-di]"
+    echo "Usage: $0 [-dih]"
     echo
     echo "-d: dry run, only print required packages"
     echo "-i: also attempt to install packages"
