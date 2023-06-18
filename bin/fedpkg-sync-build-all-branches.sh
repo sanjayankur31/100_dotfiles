@@ -15,7 +15,8 @@ run () {
     if [ "" == "${branches}" ]
     then
         echo "No branches suplied. Exiting"
-        usageexit -1
+        usage
+        exit -1
     fi
 
     echo "Updating repo and rebasing"
