@@ -16,24 +16,22 @@ IMPACT_CHECKED="No"
 
 if ! command -v fedrq &> /dev/null
 then
-    echo "fedrq not found. Please install fedrq:"
-    echo "sudo dnf install fedrq"
+    echo ">> fedrq not found. Please install fedrq:"
+    echo ">> sudo dnf install fedrq"
     exit -1
 fi
 
 if ! command -v fedpkg &> /dev/null
 then
-    echo "fedpkg not found! Exiting."
+    echo ">> fedpkg not found! Exiting."
     exit -1
 fi
 
 impact_check () {
     for branch in $branches
     do
-        echo "Working on branch: ${branch}"
-
-        echo "Checking update impact using fedrq"
-        echo "The following packages will be affected. Please ensure that they do not break as a result of this update:"
+        echo ">> Checking update impact using fedrq for ${branch}"
+        echo ">> The following packages will be affected. Please ensure that they do not break as a result of this update:"
         fedrq whatrequires-src -b "${branch}" -F breakdown "${PACKAGE_NAME}"
 done
 }
@@ -41,40 +39,40 @@ done
 run () {
     if [ "" == "${branches}" ]
     then
-        echo "No branches suplied. Exiting"
+        echo ">> No branches suplied. Exiting"
         usage
         exit -1
     fi
 
-    echo "Updating repo and rebasing"
+    echo ">> Updating repo and rebasing"
     git checkout rawhide
     git pull --rebase
 
     for branch in $branches
     do
-        echo "Working on branch: ${branch}"
+        echo ">> Working on branch: ${branch}"
 
         if [ "No" == "${IMPACT_CHECKED}" ]
 then
             impact_check
-            echo "Do you wish to proceed with the update for ${branch}?"
+            echo ">> Do you wish to proceed with the update for ${branch}?"
             select yn in "Yes" "No"; do
                 case $yn in
                     Yes ) break;;
-                    No ) echo "Not proceeding with update for ${branch}"; continue 2;;
+                    No ) echo ">> Not proceeding with update for ${branch}"; continue 2;;
                 esac
             done
         else
-            echo "SKIPPING IMPACT CHECK"
-            echo "Please ensure that you have ALREADY checked the impact of this package on dependencies"
+            echo ">> SKIPPING IMPACT CHECK"
+            echo ">> Please ensure that you have ALREADY checked the impact of this package on dependencies"
         fi
 
         if  [ "meh" == "${UPDATE_NOTE}" ]
         then
-            echo "Merging and building"
+            echo ">> Merging and building"
             fedpkg switch-branch "$branch" && git pull && git merge rawhide && git push && fedpkg build || exit -1
         else
-            echo "Merging, building, creating update"
+            echo ">> Merging, building, creating update"
             fedpkg switch-branch "$branch" && git pull && git merge rawhide && git push && fedpkg build && fedpkg update --type "${TYPE}" --notes "${UPDATE_NOTE}" || exit -1
     fi
     done
