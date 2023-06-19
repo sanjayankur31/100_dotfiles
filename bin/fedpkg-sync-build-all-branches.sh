@@ -26,6 +26,19 @@ run () {
     for branch in $branches
     do
         echo "Working on branch: ${branch}"
+
+        echo "Checking update impact using fedrq"
+        echo "The following packages will be affected. Please ensure that they do not break as a result of this update:"
+        fedrq whatrequires-src -b "${branch}" -F breakdown "${PACKAGE_NAME}"
+
+        echo "Do you wish to proceed with the update for ${branch}?"
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) break;;
+                No ) echo "Not proceeding with update for ${branch}"; continue 2;;
+            esac
+        done
+
         if  [ "meh" == "${UPDATE_NOTE}" ]
         then
             echo "Merging and building"
