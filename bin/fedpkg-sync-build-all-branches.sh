@@ -10,6 +10,20 @@
 branches=""
 UPDATE_NOTE="meh"
 TYPE="bugfix"
+PACKAGE_NAME="$(basename *.spec .spec)"
+
+if ! command -v fedrq &> /dev/null
+then
+    echo "fedrq not found. Please install fedrq:"
+    echo "sudo dnf install fedrq"
+    exit -1
+fi
+
+if ! command -v fedpkg &> /dev/null
+then
+    echo "fedpkg not found! Exiting."
+    exit -1
+fi
 
 run () {
     if [ "" == "${branches}" ]
