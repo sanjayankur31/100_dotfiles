@@ -11,6 +11,8 @@ branches=""
 UPDATE_NOTE="meh"
 TYPE="bugfix"
 PACKAGE_NAME="$(basename *.spec .spec)"
+IMPACT_CHECK="No"
+IMPACT_CHECKED="No"
 
 if ! command -v fedrq &> /dev/null
 then
@@ -24,6 +26,17 @@ then
     echo "fedpkg not found! Exiting."
     exit -1
 fi
+
+impact_check () {
+    for branch in $branches
+    do
+        echo "Working on branch: ${branch}"
+
+        echo "Checking update impact using fedrq"
+        echo "The following packages will be affected. Please ensure that they do not break as a result of this update:"
+        fedrq whatrequires-src -b "${branch}" -F breakdown "${PACKAGE_NAME}"
+done
+}
 
 run () {
     if [ "" == "${branches}" ]
@@ -41,17 +54,20 @@ run () {
     do
         echo "Working on branch: ${branch}"
 
-        echo "Checking update impact using fedrq"
-        echo "The following packages will be affected. Please ensure that they do not break as a result of this update:"
-        fedrq whatrequires-src -b "${branch}" -F breakdown "${PACKAGE_NAME}"
-
-        echo "Do you wish to proceed with the update for ${branch}?"
-        select yn in "Yes" "No"; do
-            case $yn in
-                Yes ) break;;
-                No ) echo "Not proceeding with update for ${branch}"; continue 2;;
-            esac
-        done
+        if [ "No" == "${IMPACT_CHECKED}" ]
+then
+            impact_check
+            echo "Do you wish to proceed with the update for ${branch}?"
+            select yn in "Yes" "No"; do
+                case $yn in
+                    Yes ) break;;
+                    No ) echo "Not proceeding with update for ${branch}"; continue 2;;
+                esac
+            done
+        else
+            echo "SKIPPING IMPACT CHECK"
+            echo "Please ensure that you have ALREADY checked the impact of this package on dependencies"
+        fi
 
         if  [ "meh" == "${UPDATE_NOTE}" ]
         then
@@ -66,11 +82,13 @@ run () {
 
 usage () {
     echo "Usage: "
-    echo "$0 [-ut] <branches to sync with rawhide>"
+    echo "$0 [-utI][-i] <branches to sync with rawhide>"
     echo
     echo "Options:"
+    echo "-i only run impact check"
     echo "-u <update note>"
     echo "-t <update type>: see 'fedpkg update -h' for valid options"
+    echo "-I skip impact check (because you've done this already)"
     echo
     echo "Positional parameters:"
     echo "<branches to sync with rawhide>"
@@ -85,7 +103,7 @@ fi
 
 # parse options
 # https://stackoverflow.com/questions/11742996/is-mixing-getopts-with-positional-parameters-possible
-while getopts "u:t:h" OPTION
+while getopts "Iiu:t:h" OPTION
 do
     case $OPTION in
         u)
@@ -93,6 +111,12 @@ do
             ;;
         t)
             TYPE="$OPTARG"
+            ;;
+        i)
+            IMPACT_CHECK="Yes"
+            ;;
+        I)
+            IMPACT_CHECKED="Yes"
             ;;
         h)
             usage
@@ -103,4 +127,9 @@ done
 
 shift $(($OPTIND - 1))
 branches="$@"
+if [ "Yes" == "${IMPACT_CHECK}" ]
+then
+    impact_check
+    exit 0
+fi
 run
