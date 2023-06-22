@@ -1,5 +1,6 @@
 *.swp
 *.swo
+*.swn
 tags
 tags.lock
 tags.temp
