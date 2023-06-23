@@ -32,7 +32,7 @@ impact_check () {
     do
         echo ">> Checking update impact using fedrq for ${branch}"
         echo ">> The following packages will be affected. Please ensure that they do not break as a result of this update:"
-        fedrq whatrequires-src -b "${branch}" -F breakdown "${PACKAGE_NAME}"
+        fedrq whatrequires-src -b "${branch}" -F breakdown -X "${PACKAGE_NAME}"
 done
 }
 
