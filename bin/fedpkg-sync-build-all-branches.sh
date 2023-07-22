@@ -28,12 +28,9 @@ then
 fi
 
 impact_check () {
-    for branch in $branches
-    do
-        echo ">> Checking update impact using fedrq for ${branch}"
-        echo ">> The following packages will be affected. Please ensure that they do not break as a result of this update:"
-        fedrq whatrequires-src -b "${branch}" -F breakdown -X "${PACKAGE_NAME}"
-done
+    echo ">> Checking update impact using fedrq for ${branch}"
+    echo ">> The following packages will be affected. Please ensure that they do not break as a result of this update:"
+    fedrq whatrequires-src -b "${branch}" -F breakdown -X "${PACKAGE_NAME}"
 }
 
 run () {
@@ -127,7 +124,10 @@ shift $(($OPTIND - 1))
 branches="$@"
 if [ "Yes" == "${IMPACT_CHECK}" ]
 then
-    impact_check
+    for branch in $branches
+    do
+        impact_check
+    done
     exit 0
 fi
 run
