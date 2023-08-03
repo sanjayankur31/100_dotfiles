@@ -63,7 +63,8 @@ install_texlive_packages() {
         'tex(array.sty)' 'tex(babel.sty)' 'tex(fancyhdr.sty)' 'tex(fancyvrb.sty)' \
         'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
         'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
-        texlive-beamertheme-metropolis pdfpc xdotool /usr/bin/latexindent --setopt=strict=0
+        texlive-beamertheme-metropolis pdfpc xdotool /usr/bin/latexindent \
+        fedtex --setopt=strict=0
 }
 
 
