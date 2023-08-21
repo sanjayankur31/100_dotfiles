@@ -10,6 +10,7 @@ SPELLFILE="en.utf-8.add"
 SPELLDIR="$HOME"/.vim/spell
 
 pushd "$SPELLDIR" || exit -1
+    cp ${SPELLFILE} ${SPELLFILE}.backup
     sed -i -e '/^=+$/ d' -e '/^>+$/ d' -e '/^<+$/ d' "$SPELLFILE"
     sort -h "$SPELLFILE" | uniq > "$SPELLFILE.new"
     mv "$SPELLFILE.new" "$SPELLFILE" -v
