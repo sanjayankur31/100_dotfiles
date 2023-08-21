@@ -1,4 +1,4 @@
 EXCLUDES="tags authorized_keys known_hosts *seahorse *_cache* neomuttdir environment*"
 UNDOTTED="bin"
-SYMLINK_DIRS="bin byobu weechat timewarrior ssh java newsboat"
+SYMLINK_DIRS="bin byobu weechat timewarrior ssh java newsboat spell"
 DOTFILES_DIRS="/home/asinha/.dotfiles /home/asinha/Sync/99_private"
