@@ -8,7 +8,7 @@
 #
 #
 
-if ls *.spec 2&>1 > /dev/null
+if ls *.spec > /dev/null 2>&1
 then
     PACKAGE_NAME="$(basename *.spec .spec)"
     echo "Working on package ${PACKAGE_NAME}"
