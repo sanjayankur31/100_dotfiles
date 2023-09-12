@@ -6,11 +6,20 @@
 #
 # Just a shortcut so I don't have to write the for loop each time myself.
 #
+#
+
+if ls *.spec 2&>1 > /dev/null
+then
+    PACKAGE_NAME="$(basename *.spec .spec)"
+    echo "Working on package ${PACKAGE_NAME}"
+else
+    echo "Could not find a spec file in this folder. Exiting"
+    exit 1
+fi
 
 branches=""
 UPDATE_NOTE="meh"
 TYPE="bugfix"
-PACKAGE_NAME="$(basename *.spec .spec)"
 IMPACT_CHECK="No"
 IMPACT_CHECKED="No"
 
