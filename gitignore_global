@@ -16,3 +16,5 @@ package-lock.json
 .ycm_extra_conf.py
 *.bib.sav.tmp
 4913
+
+__pycache__/
