@@ -33,7 +33,7 @@ update_groups() {
 install_basics() {
     # Basics
     sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt \
-    weechat mpv vimiv-qt vifm fedora-packager git-all offlineimap msmtp \
+    weechat mpv vimiv-qt fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup \
@@ -42,14 +42,14 @@ install_basics() {
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
-    qt5-qtwebengine{-freeworld,-devtools} \
+    qt6-qtwebengine{,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler wofi rofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 \
-    rpmfusion-packager \
+    rpmfusion-packager fedrq \
     --setopt=strict=0
 
     # parcellite
