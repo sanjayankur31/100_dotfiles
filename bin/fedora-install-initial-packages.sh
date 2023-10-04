@@ -42,7 +42,7 @@ install_basics() {
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
-    qt6-qtwebengine{,-devtools} \
+    evolution-ews qt6-qtwebengine{,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
     closure-compiler wofi rofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
     python3-peewee libolm-python3 python3-jedi /usr/bin/flake8 /usr/bin/perlcritic \
