@@ -1,4 +1,4 @@
-EXCLUDES="tags authorized_keys known_hosts *seahorse *_cache* neomuttdir environment*"
+EXCLUDES="tags authorized_keys known_hosts *seahorse *_cache* neomuttdir environment* crontab"
 UNDOTTED="bin"
 SYMLINK_DIRS="bin byobu weechat timewarrior ssh java newsboat spell qutebrowser"
 DOTFILES_DIRS="/home/asinha/.dotfiles /home/asinha/Sync/99_private"
