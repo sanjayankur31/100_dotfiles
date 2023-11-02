@@ -83,16 +83,16 @@ if [[ $- == *i* ]] ; then
         vit ${TASK_FILTERS} 'due.by:eom'
     }
     vit-tl-in-a-week () {
-        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 week')
+        vit ${TASK_FILTERS} 'due.by:1w'
     }
     vit-tl-in-a-month () {
-        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 month')
+        vit ${TASK_FILTERS} 'due.by:1m'
     }
     vit-tl-in-six-months () {
-        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '6 month')
+        vit ${TASK_FILTERS} 'due.by:6m'
     }
     vit-tl-in-a-year () {
-        vit ${TASK_FILTERS} due.by:$(date +%Y-%m-%d --date '1 year')
+        vit ${TASK_FILTERS} 'due.by:1y'
     }
     vit-rl () {
         vit 'project:research.lit'
