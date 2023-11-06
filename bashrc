@@ -139,6 +139,23 @@ if [[ $- == *i* ]] ; then
         shopt -s checkwinsize
     fi
 
+    # add fzf based command that uses pushd instead of cd
+    # ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash
+    # use Alt P
+    __fzf_pushd__() {
+      local cmd opts dir
+      cmd="${FZF_ALT_P_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+        -o -type d -print 2> /dev/null | command cut -b3-"}"
+      opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_ALT_P_OPTS-} +m"
+      dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir"
+    }
+
+    # ALT-P - pushd into the selected directory
+    bind -m emacs-standard '"\ep": " \C-b\C-k \C-u`__fzf_pushd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
+    bind -m vi-command '"\ep": "\C-z\ep\C-z"'
+    bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
+
+
     # Host specific settings. Cluster doesn't have vimx and cowsay, the
     # flags won't apply, and the path to NEST is different too.
     if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
