@@ -109,7 +109,7 @@ done
 
 
 # if no date is provided, assume today/now
-enddatedefault=$(date +%Y-%m-%d -d "enddate")
+enddatedefault=$(date +%Y-%m-%d -d "now")
 nowtime=$(date +%Y-%m-%dT%H:%M)
 enddate=${enddateinput:-$enddatedefault}
 endtimestamp=${enddateinput:-$nowtime}
