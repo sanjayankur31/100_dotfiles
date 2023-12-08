@@ -8,7 +8,7 @@ set colorsequence podo
 # https://github.com/Gnuplotting/gnuplot-palettes
 # load '/home/asinha/Documents/02_Code/00_mine/gnuplot-palettes/moreland.pal'
 
-my_font = "OpenSans, "
+my_font = "Roboto, "
 
 my_line_width = "2"
 my_axis_width = "1.5"
