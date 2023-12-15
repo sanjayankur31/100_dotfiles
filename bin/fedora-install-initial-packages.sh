@@ -28,6 +28,11 @@ update_groups() {
     # Fusion appstream data
     sudo dnf groupupdate core
 
+    # https://rpmfusion.org/CommonBugs?highlight=%28ffmpeg%29
+    # swap
+    sudo dnf swap ffmpeg-free ffmpeg --allowerasing
+
+
 }
 
 install_basics() {
