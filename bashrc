@@ -179,9 +179,6 @@ if [[ $- == *i* ]] ; then
             CXXFLAGS=$(rpm -E %optflags); export CXXFLAGS
         fi
 
-        # Printing
-        export CUPS_USER=as14ahs
-
         ulimit -c unlimited
 
         # Vim with X support
