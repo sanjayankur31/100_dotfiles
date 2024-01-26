@@ -3,13 +3,22 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# Cluster head node
+ON_CLUSTER="no"
+
+# Cluster specific bits
+# Herts
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
     export PATH=$HOME/bin/:$HOME/anaconda2/bin/:$HOME/installed-software/cmake/bin/:$PATH
     export MODULEPATH=$HOME/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
     # do not load any modules by default
     module unload mpi/mpich-x86_64
     source activate python3
+    ON_CLUSTER="yes"
+fi
+
+# UCL
+if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ *.ad.ucl.ac.uk ]]; then
+    ON_CLUSTER="yes"
 fi
 
 # gnome-keyring should be started on logging in on gnome.
@@ -40,9 +49,6 @@ fi
 # Only when it is an interactive shell, not a login shell
 if [[ $- == *i* ]] ; then
 
-    # For qutebrowser
-    export QT_QPA_PLATFORM=xcb
-
     # Common settings
     # User specific aliases and functions
     if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]
@@ -54,70 +60,13 @@ if [[ $- == *i* ]] ; then
         export GIT_PS1_SHOWUNTRACKEDFILES=1
     fi
 
-    #alias rm='trash-put'
     alias timestamp='date +%Y%m%d%H%M'
     alias rm='rm -i'
-    alias trp='trash-put'
-    alias trl='trash-list'
-    alias tre='trash-restore'
     alias lsd='ls -d */ --color=auto'
     alias lash='ls -lAsh --color=auto'
-    #alias skype='LD_PRELOAD=/usr/lib/libv4l/v4l1compat.so /usr/bin/skype'
     alias egrep='egrep --color=auto'
-    alias latex-clean='rm -fv *.aux *.bbl *.blg *.log *.nav *.out *.snm *.toc *.dvi *.vrb *.bcf *.run.xml *.cut *.lo*'
     alias bt='echo 0 | gdb -batch-silent -ex "run" -ex "set logging overwrite on" -ex "set logging file gdb.bt" -ex "set logging on" -ex "set pagination off" -ex "handle SIG33 pass nostop noprint" -ex "echo backtrace:\n" -ex "backtrace full" -ex "echo \n\nregisters:\n" -ex "info registers" -ex "echo \n\ncurrent instructions:\n" -ex "x/16i \$pc" -ex "echo \n\nthreads backtrace:\n" -ex "thread apply all backtrace" -ex "set logging off" -ex "quit" --args'
-    #
     # vit related functions, instead of aliases
-    TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
-    vit-tl ()
-    {
-        vit ${TASK_FILTERS}
-    }
-    vit-tl-today () {
-        vit ${TASK_FILTERS} 'due.by:eod'
-    }
-    vit-tl-this-week () {
-        vit ${TASK_FILTERS} 'due.by:eow'
-    }
-    vit-tl-this-month () {
-        vit ${TASK_FILTERS} 'due.by:eom'
-    }
-    vit-tl-in-a-week () {
-        vit ${TASK_FILTERS} 'due.by:1w'
-    }
-    vit-tl-in-a-month () {
-        vit ${TASK_FILTERS} 'due.by:1m'
-    }
-    vit-tl-in-six-months () {
-        vit ${TASK_FILTERS} 'due.by:6m'
-    }
-    vit-tl-in-a-year () {
-        vit ${TASK_FILTERS} 'due.by:1y'
-    }
-    vit-rl () {
-        vit 'project:research.lit'
-    }
-    vit-ticklers () {
-        vit 'tags:tickler'
-    }
-    vit-agenda () {
-        'vit project~agenda'
-    }
-    vit-next () {
-        echo "Active tasks:"
-        echo
-        task active
-        echo
-        echo
-        echo "Next ${1:-2} tasks:"
-        echo
-        task ${TASK_FILTERS} limit:"${1:-2}"
-        echo
-        echo
-    }
-
-    alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
-
     # Set vi mode
     set -o vi
     # Enable globstar
@@ -139,26 +88,8 @@ if [[ $- == *i* ]] ; then
         shopt -s checkwinsize
     fi
 
-    # add fzf based command that uses pushd instead of cd
-    # ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash
-    # use Alt P
-    __fzf_pushd__() {
-      local cmd opts dir
-      cmd="${FZF_ALT_P_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-        -o -type d -print 2> /dev/null | command cut -b3-"}"
-      opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_ALT_P_OPTS-} +m"
-      dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir"
-    }
-
-    # ALT-P - pushd into the selected directory
-    bind -m emacs-standard '"\ep": " \C-b\C-k \C-u`__fzf_pushd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
-    bind -m vi-command '"\ep": "\C-z\ep\C-z"'
-    bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
-
-
-    # Host specific settings. Cluster doesn't have vimx and cowsay, the
-    # flags won't apply, and the path to NEST is different too.
-    if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
+    # Common settings for clusters, where settings for my local machines do not apply
+    if [[ "$ON_CLUSTER" = "yes" ]]; then
         # set all options here in case my vim config isn't on the system
         vman() {
             /usr/bin/man -w "$@" && /usr/bin/man "$@" | col -b | vim  -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'set ft=man' -c 'nmap q :q<cr>' -; 
@@ -181,12 +112,19 @@ if [[ $- == *i* ]] ; then
 
         ulimit -c unlimited
 
+        # For qutebrowser
+        export QT_QPA_PLATFORM=xcb
+
         # Vim with X support
         alias vim='vimx --servername $(pwgen 8 1)'
-        export EDITOR='vim'
 
         # For the vim man viewer
         complete -o default -o nospace -F _man vman
+
+        alias trp='trash-put'
+        alias trl='trash-list'
+        alias tre='trash-restore'
+        alias latex-clean='rm -fv *.aux *.bbl *.blg *.log *.nav *.out *.snm *.toc *.dvi *.vrb *.bcf *.run.xml *.cut *.lo*'
 
         # fzf on Fedora
         if [ -x "$(command -v fzf)"  ]
@@ -199,8 +137,75 @@ if [[ $- == *i* ]] ; then
             export FZF_DEFAULT_COMMAND='fd --type f'
         fi
 
+        TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
+        vit-tl ()
+        {
+            vit ${TASK_FILTERS}
+        }
+        vit-tl-today () {
+            vit ${TASK_FILTERS} 'due.by:eod'
+        }
+        vit-tl-this-week () {
+            vit ${TASK_FILTERS} 'due.by:eow'
+        }
+        vit-tl-this-month () {
+            vit ${TASK_FILTERS} 'due.by:eom'
+        }
+        vit-tl-in-a-week () {
+            vit ${TASK_FILTERS} 'due.by:1w'
+        }
+        vit-tl-in-a-month () {
+            vit ${TASK_FILTERS} 'due.by:1m'
+        }
+        vit-tl-in-six-months () {
+            vit ${TASK_FILTERS} 'due.by:6m'
+        }
+        vit-tl-in-a-year () {
+            vit ${TASK_FILTERS} 'due.by:1y'
+        }
+        vit-rl () {
+            vit 'project:research.lit'
+        }
+        vit-ticklers () {
+            vit 'tags:tickler'
+        }
+        vit-agenda () {
+            'vit project~agenda'
+        }
+        vit-next () {
+            echo "Active tasks:"
+            echo
+            task active
+            echo
+            echo
+            echo "Next ${1:-2} tasks:"
+            echo
+            task ${TASK_FILTERS} limit:"${1:-2}"
+            echo
+            echo
+        }
+
+        alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
+
+        # add fzf based command that uses pushd instead of cd
+        # ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash
+        # use Alt P
+        __fzf_pushd__() {
+          local cmd opts dir
+          cmd="${FZF_ALT_P_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+            -o -type d -print 2> /dev/null | command cut -b3-"}"
+          opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_ALT_P_OPTS-} +m"
+          dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir"
+        }
+
+        # ALT-P - pushd into the selected directory
+        bind -m emacs-standard '"\ep": " \C-b\C-k \C-u`__fzf_pushd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
+        bind -m vi-command '"\ep": "\C-z\ep\C-z"'
+        bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
+
     fi
     alias man='vman'
+    export EDITOR='vim'
 
     # for gpg agent
     GPG_TTY="$(tty)"; export GPG_TTY
