@@ -31,11 +31,16 @@ if ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
 then
     export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
 else
-    if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null && [ -x "$(command -v ssh-agent)" ]
+    if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null
     then
-        eval `$(command -v ssh-agent) -s`
+        if [ -x "$(command -v ssh-agent)" ]
+        then
+            eval `$(command -v ssh-agent) -s`
+        else
+            echo "ssh-agent command not found"
+    fi
     else
-        echo "Could not start any SSH agent"
+        echo "Agent already running"
     fi
 fi
 }
