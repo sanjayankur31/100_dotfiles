@@ -71,7 +71,6 @@ if [[ $- == *i* ]] ; then
     alias lash='ls -lAsh --color=auto'
     alias egrep='egrep --color=auto'
     alias bt='echo 0 | gdb -batch-silent -ex "run" -ex "set logging overwrite on" -ex "set logging file gdb.bt" -ex "set logging on" -ex "set pagination off" -ex "handle SIG33 pass nostop noprint" -ex "echo backtrace:\n" -ex "backtrace full" -ex "echo \n\nregisters:\n" -ex "info registers" -ex "echo \n\ncurrent instructions:\n" -ex "x/16i \$pc" -ex "echo \n\nthreads backtrace:\n" -ex "thread apply all backtrace" -ex "set logging off" -ex "quit" --args'
-    # vit related functions, instead of aliases
     # Set vi mode
     set -o vi
     # Enable globstar
@@ -142,6 +141,7 @@ if [[ $- == *i* ]] ; then
             export FZF_DEFAULT_COMMAND='fd --type f'
         fi
 
+        # vit related functions, instead of aliases
         TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
         vit-tl ()
         {
