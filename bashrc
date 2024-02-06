@@ -24,7 +24,7 @@ if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]
     then
         source /shared/ucl/apps/bin/defmods
         module load python3/3.9
-        source activate .venv
+        module load java/1.8.0_92
     fi
 
 fi
