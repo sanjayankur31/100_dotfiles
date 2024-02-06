@@ -19,6 +19,14 @@ fi
 # UCL
 if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]]; then
     ON_CLUSTER="yes"
+
+    if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]]
+    then
+        source /shared/ucl/apps/bin/defmods
+        module load python3/3.9
+        source activate .venv
+    fi
+
 fi
 
 # gnome-keyring should be started on logging in on gnome.
