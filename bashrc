@@ -282,8 +282,8 @@ if [[ $- == *i* ]] ; then
         PS1="[\u@\h \W\$(__git_ps1 \(%s\))]\$ "
 
     fi
+    #
+    # For virtual env in pew
+    [[ -z "${VIRTUAL_ENV}" ]] || PS1="(\$(basename '$VIRTUAL_ENV'))$PS1"
+    export PS1
 fi
-
-# For virtual env in pew
-[[ -z "${VIRTUAL_ENV}" ]] || PS1="(\$(basename '$VIRTUAL_ENV'))$PS1"
-export PS1
