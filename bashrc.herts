@@ -1,0 +1,10 @@
+if [ -f ~/.dotfiles/bashrc ]; then
+    . ~/dotfiles/bashrc
+fi
+
+export PATH=$HOME/bin/:$HOME/anaconda2/bin/:$HOME/installed-software/cmake/bin/:$PATH
+export MODULEPATH=$HOME/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
+# do not load any modules by default
+module unload mpi/mpich-x86_64
+source activate python3
+

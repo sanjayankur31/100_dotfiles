@@ -7,27 +7,13 @@ ON_CLUSTER="no"
 
 # Cluster specific bits
 # Herts
-if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] ; then
-    export PATH=$HOME/bin/:$HOME/anaconda2/bin/:$HOME/installed-software/cmake/bin/:$PATH
-    export MODULEPATH=$HOME/Documents/02_Code/00_mine/Sinha2016-scripts/modulefiles:$MODULEPATH
-    # do not load any modules by default
-    module unload mpi/mpich-x86_64
-    source activate python3
+if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]] || [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]]; then
     ON_CLUSTER="yes"
 fi
 
 # UCL
-if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]]; then
+if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]] || [[ "$HOSTNAME" =~ ^node-* ]]; then
     ON_CLUSTER="yes"
-
-    if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]]
-    then
-        source /shared/ucl/apps/bin/defmods
-        module load python3/3.9
-        module load java/1.8.0_92
-        source .venv/bin/activate
-    fi
-
 fi
 
 # gnome-keyring should be started on logging in on gnome.
