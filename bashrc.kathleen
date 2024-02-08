@@ -1,5 +1,5 @@
 if [ -f ~/.dotfiles/bashrc ]; then
-    . ~/dotfiles/bashrc
+    . ~/.dotfiles/bashrc
 fi
 
 source /shared/ucl/apps/bin/defmods
