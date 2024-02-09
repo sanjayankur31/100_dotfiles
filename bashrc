@@ -8,13 +8,11 @@ ON_CLUSTER="no"
 # Cluster specific bits
 # Herts
 if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || [[ "$HOSTNAME" =~ ^(node)[0-9]+ ]]; then
-    echo "On Herts cluster."
     ON_CLUSTER="yes"
 fi
 
 # UCL
 if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]] || [[ "$HOSTNAME" =~ ^node-* ]]; then
-    echo "On UCL cluster."
     ON_CLUSTER="yes"
 fi
 
