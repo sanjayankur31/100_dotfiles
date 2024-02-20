@@ -12,7 +12,7 @@ if [[ "$HOSTNAME" = "uhhpc.herts.ac.uk" ]] || [[ "$HOSTNAME" =~ headnode* ]] || 
 fi
 
 # UCL
-if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]] || [[ "$HOSTNAME" =~ ^node-* ]]; then
+if [[ "$SGE_CLUSTER_NAME" == "kathleen" ]] || [[ "$SGE_CLUSTER_NAME" == "myriad" ]] || [[ "$HOSTNAME" =~ "ad.ucl.ac.uk" ]] || [[ "$HOSTNAME" =~ ^node-* ]]; then
     ON_CLUSTER="yes"
 fi
 
