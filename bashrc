@@ -187,6 +187,15 @@ if [[ $- == *i* ]] ; then
 
         alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
 
+        # pdftotext to get word count
+        latex_wc () {
+            if [ -x "$(command -v pdftotext)" ]
+            then
+                pdftotext -nopgbrk "${1}" - | wc
+            else
+                echo "Please install pdftotext"
+            fi
+        }
         # add fzf based command that uses pushd instead of cd
         # ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash
         # use Alt P
