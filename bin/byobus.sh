@@ -30,9 +30,6 @@ research ()
     tmux new-window -n "rl" -t research: 'systemd-run --user --scope bash -i -c "vit-rl"'
     tmux new-window -n "newsboat" -t research: 'systemd-run --user --scope bash -i -c "newsboat"'
     tmux new-window -n "j" -t research:
-    tmux new-window -n "projs" -t research:
-    tmux new-window -n "ideas" -t research:
-    tmux new-window -n "tj" -t research:
     tmux new-window -t research:
     tmux kill-window -t research:0
     tmux move-window -r
