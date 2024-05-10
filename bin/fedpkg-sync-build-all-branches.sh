@@ -40,8 +40,8 @@ impact_check () {
     echo ">> Checking update impact using fedrq for ${branch}"
     echo ">> The following packages will be affected. Please ensure that they do not break as a result of this update:"
     ALL_PROVIDES="($(fedrq subpkgs -F provides ${PACKAGE_NAME} | cut -d  "=" -f1 | sed -e 's/\(lib.*.so\).*$/\1/' -e 's/\s*$//' -e 's/(/\\(/g' -e 's/)/\\)/g' | tr '\n' '|'  | sed 's/|$//'))"
-    #echo "${PACKAGE_NAME} provides: "${ALL_PROVIDES}
-    DEPS=( $(fedrq whatrequires-src -b "${branch}" -Xs "${PACKAGE_NAME}") )
+    # echo "${PACKAGE_NAME} provides: "${ALL_PROVIDES}
+    DEPS=( $(fedrq whatrequires-src -b "${branch}" -X "${PACKAGE_NAME}") )
     for dep in "${DEPS[@]}"
     do
         echo "*** ${dep} ***"
