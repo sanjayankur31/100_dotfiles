@@ -3,23 +3,61 @@
 # based on the qutebrowser password_fill script, and the passmenu script
 
 shopt -s nullglob globstar
+password=""
 
-if [[ -n $WAYLAND_DISPLAY ]]; then
-    dmenu=("wofi" "--prompt" "search>" "--dmenu")
-elif [[ -n $DISPLAY ]]; then
-    dmenu=("rofi" "-p" "search>" "-dmenu")
-else
-	echo "Error: No Wayland or X11 display detected" >&2
-	exit 1
+get_password () {
+
+    if [[ -n $WAYLAND_DISPLAY ]]; then
+        dmenu=("wofi" "-i" "--prompt" "search>" "--dmenu")
+    elif [[ -n $DISPLAY ]]; then
+        dmenu=("rofi" "-i" "-p" "search>" "-dmenu" "~/.config/rofi.rasi")
+    else
+        echo "Error: No Wayland or X11 display detected" >&2
+        exit 1
+    fi
+
+    prefix=${PASSWORD_STORE_DIR-~/.password-store}
+    password_files=( "$prefix"/**/*.gpg )
+    password_files=( "${password_files[@]#"$prefix"/}" )
+    password_files=( "${password_files[@]%.gpg}" )
+
+    password=$(printf '%s\n' "${password_files[@]}" | "${dmenu[@]}" "$@")
+
+    [[ ${password} ]] || { echo "No password file selected/found"; exit -1 ;};
+}
+
+usage() {
+    echo "$0: View pass entries using rofi/wofi"
+    echo
+    echo "Usage: $0 [-c]"
+    echo
+    echo "-c: copy entry instead of showing it"
+    echo "-h: print this usage text and exit"
+}
+
+if [ $# -lt 1 ]
+then
+    get_password
+    pass "$password" 2>/dev/null
+    exit 1
 fi
 
-prefix=${PASSWORD_STORE_DIR-~/.password-store}
-password_files=( "$prefix"/**/*.gpg )
-password_files=( "${password_files[@]#"$prefix"/}" )
-password_files=( "${password_files[@]%.gpg}" )
-
-password=$(printf '%s\n' "${password_files[@]}" | "${dmenu[@]}" "$@")
-
-[[ -n $password ]] || exit
-
-pass show -c "$password" 2>/dev/null
+# parse options
+while getopts "ch" OPTION
+do
+    case $OPTION in
+        c)
+            get_password
+            pass show -c "$password" 2>/dev/null
+            exit 0
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        ?)
+            usage
+            exit 1
+            ;;
+    esac
+done
