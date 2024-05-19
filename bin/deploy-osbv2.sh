@@ -5,8 +5,8 @@
 # File : start OSBv2 deployment
 
 # depends on how you install it
-CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/cloud-harness"
-CLOUD_HARNESS_DEFAULT="release/1.0.0"
+CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/OSB/osbv2/cloud-harness"
+CLOUD_HARNESS_DEFAULT="release/2.1.0"
 CLOUD_HARNESS_BRANCH=""
 SKAFFOLD="skaffold"
 
@@ -19,7 +19,7 @@ DEFAULT_DEPLOYMENT_APP="osb-portal"
 PY_VERSION="python3.9"
 # if not, specify location of virtualenv here
 # I run this from the OSBv2 repo, so I create my venv there
-OSB_DIR="$HOME/Documents/02_Code/00_mine/2020-OSB/osbv2/OSBv2/"
+OSB_DIR="$HOME/Documents/02_Code/00_mine/OSB/osbv2/OSBv2/"
 VENV_DIR="${OSB_DIR}/.venv"
 
 deploy () {
@@ -121,7 +121,7 @@ clean () {
 }
 
 usage () {
-    echo "USAGE $0 -[dv]"
+    echo "USAGE $0 -[dDbBvuUch]"
     echo
     echo "-d: deploy"
     echo "-D: deploy <app>"
