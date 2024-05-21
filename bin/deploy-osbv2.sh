@@ -43,8 +43,8 @@ deploy () {
         echo "-> harnessing deployment"
         harness_deployment
         echo "-> running skaffold"
-        #$SKAFFOLD dev --cleanup=false || notify_fail "Failed: skaffold"
-        $SKAFFOLD dev || notify_fail "Failed: skaffold"
+        $SKAFFOLD dev --cleanup=false || { notify_fail "Failed: skaffold" ; minikube stop; }
+        #$SKAFFOLD dev || notify_fail "Failed: skaffold"
     popd
 }
 
