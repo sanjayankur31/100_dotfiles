@@ -6,7 +6,7 @@
 
 # depends on how you install it
 CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/OSB/osbv2/cloud-harness"
-CLOUD_HARNESS_DEFAULT="release/2.1.0"
+CLOUD_HARNESS_DEFAULT="release/2.3.0"
 CLOUD_HARNESS_BRANCH=""
 SKAFFOLD="skaffold"
 
