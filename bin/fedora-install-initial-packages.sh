@@ -69,7 +69,7 @@ install_texlive_packages() {
         'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
         'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
         texlive-beamertheme-metropolis pdfpc xdotool /usr/bin/latexindent \
-        fedtex --setopt=strict=0
+        fedtex proselint --setopt=strict=0
 }
 
 
