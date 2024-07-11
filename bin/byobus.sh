@@ -12,13 +12,13 @@ default ()
 {
     byobu new-session -s "default" -d
     tmux new-window -n "weechat" -t default: 'systemd-run --user --scope bash -i -c "weechat"'
+    tmux new-window -n "neomutt" -t default: 'systemd-run --user --scope bash -i -c "neomutt-work"'
     tmux new-window -n "eod" -t default: 'systemd-run --user --scope bash -i -c "vit-tl-today"'
     tmux new-window -n "eow" -t default: 'systemd-run --user --scope bash -i -c "vit-tl-this-week"'
     tmux new-window -n "1w" -t default: 'systemd-run --user --scope bash -i -c "vit-tl-in-a-week"'
     tmux new-window -n "eom" -t default: 'systemd-run --user --scope bash -i -c "vit-tl-this-month"'
     tmux new-window -n "1m" -t default: 'systemd-run --user --scope bash -i -c "vit-tl-in-a-month"'
     tmux new-window -n "all" -t default: 'systemd-run --user --scope bash -i -c "vit-tl"'
-    tmux new-window -n "neomutt" -t default: 'systemd-run --user --scope bash -i -c "neomutt-work"'
     tmux new-window -t default:
     tmux kill-window -t default:0
     tmux move-window -r
@@ -27,8 +27,8 @@ default ()
 research ()
 {
     byobu new-session -s "research" -d
-    tmux new-window -n "rl" -t research: 'systemd-run --user --scope bash -i -c "vit-rl"'
     tmux new-window -n "newsboat" -t research: 'systemd-run --user --scope bash -i -c "newsboat"'
+    tmux new-window -n "rl" -t research: 'systemd-run --user --scope bash -i -c "vit-rl"'
     tmux new-window -n "j" -t research:
     tmux new-window -t research:
     tmux kill-window -t research:0
