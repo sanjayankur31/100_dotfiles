@@ -142,25 +142,25 @@ if [[ $- == *i* ]] ; then
         {
             vit ${TASK_FILTERS}
         }
-        vit-tl-today () {
+        vit-today () {
             vit ${TASK_FILTERS} 'due.by:eod'
         }
-        vit-tl-this-week () {
+        vit-this-week () {
             vit ${TASK_FILTERS} 'due.by:eow'
         }
-        vit-tl-this-month () {
+        vit-this-month () {
             vit ${TASK_FILTERS} 'due.by:eom'
         }
-        vit-tl-in-a-week () {
+        vit-in-a-week () {
             vit ${TASK_FILTERS} 'due.by:1w'
         }
-        vit-tl-in-a-month () {
+        vit-in-a-month () {
             vit ${TASK_FILTERS} 'due.by:1m'
         }
-        vit-tl-in-six-months () {
+        vit-in-six-months () {
             vit ${TASK_FILTERS} 'due.by:6m'
         }
-        vit-tl-in-a-year () {
+        vit-in-a-year () {
             vit ${TASK_FILTERS} 'due.by:1y'
         }
         vit-rl () {
@@ -184,29 +184,29 @@ if [[ $- == *i* ]] ; then
             echo
             echo
         }
-        taskestimate-tl ()
+        taskestimate ()
         {
             taskestimate ${TASK_FILTERS}
         }
-        taskestimate-tl-today () {
+        taskestimate-today () {
             taskestimate ${TASK_FILTERS} 'due.by:eod'
         }
-        taskestimate-tl-this-week () {
+        taskestimate-this-week () {
             taskestimate ${TASK_FILTERS} 'due.by:eow'
         }
-        taskestimate-tl-this-month () {
+        taskestimate-this-month () {
             taskestimate ${TASK_FILTERS} 'due.by:eom'
         }
-        taskestimate-tl-in-a-week () {
+        taskestimate-in-a-week () {
             taskestimate ${TASK_FILTERS} 'due.by:1w'
         }
-        taskestimate-tl-in-a-month () {
+        taskestimate-in-a-month () {
             taskestimate ${TASK_FILTERS} 'due.by:1m'
         }
-        taskestimate-tl-in-six-months () {
+        taskestimate-in-six-months () {
             taskestimate ${TASK_FILTERS} 'due.by:6m'
         }
-        taskestimate-tl-in-a-year () {
+        taskestimate-in-a-year () {
             taskestimate ${TASK_FILTERS} 'due.by:1y'
         }
         taskestimate-rl () {
