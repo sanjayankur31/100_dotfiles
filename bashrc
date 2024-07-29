@@ -184,7 +184,7 @@ if [[ $- == *i* ]] ; then
             echo
             echo
         }
-        taskestimate ()
+        taskestimate-tl ()
         {
             taskestimate ${TASK_FILTERS}
         }
