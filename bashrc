@@ -184,6 +184,34 @@ if [[ $- == *i* ]] ; then
             echo
             echo
         }
+        taskestimate-tl ()
+        {
+            taskestimate ${TASK_FILTERS}
+        }
+        taskestimate-tl-today () {
+            taskestimate ${TASK_FILTERS} 'due.by:eod'
+        }
+        taskestimate-tl-this-week () {
+            taskestimate ${TASK_FILTERS} 'due.by:eow'
+        }
+        taskestimate-tl-this-month () {
+            taskestimate ${TASK_FILTERS} 'due.by:eom'
+        }
+        taskestimate-tl-in-a-week () {
+            taskestimate ${TASK_FILTERS} 'due.by:1w'
+        }
+        taskestimate-tl-in-a-month () {
+            taskestimate ${TASK_FILTERS} 'due.by:1m'
+        }
+        taskestimate-tl-in-six-months () {
+            taskestimate ${TASK_FILTERS} 'due.by:6m'
+        }
+        taskestimate-tl-in-a-year () {
+            taskestimate ${TASK_FILTERS} 'due.by:1y'
+        }
+        taskestimate-rl () {
+            taskestimate 'project:research.lit'
+        }
 
         alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
 

@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+"""
+Script to get total estimate (a UDA) for a list of tasks.
+See https://taskwarrior.org for information on using task.
+
+File: taskestimate
+
+Copyright 2024 Ankur Sinha
+Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
+"""
+
+import math
+import subprocess
+import sys
+import json
+from isoduration import parse_duration
+from datetime import timedelta, datetime
+
+timenow = timethen = datetime.now()
+num_tasks = 0
+num_estimated = 0
+
+if len(sys.argv) > 1:
+    arguments = ["task", "status:pending"] + sys.argv[1:] + ["export"]
+else:
+    arguments = ["task", "status:pending"] + ["export"]
+
+
+try:
+    process = subprocess.run(args=arguments, capture_output=True, encoding="utf-8",
+                             errors="replace", check=True)
+except subprocess.CalledProcessError as e:
+    print(e.stderr)
+    sys.exit(0)
+
+output = process.stdout
+# print(output)
+
+tasks = json.loads(output)
+
+for atask in tasks:
+    num_tasks += 1
+    try:
+        thisduration = parse_duration(atask["estimate"])
+        timethen += thisduration
+        num_estimated += 1
+    except KeyError:
+        pass
+
+timedel = timethen - timenow
+total_hrs = math.ceil(timedel/timedelta(seconds=1))/3600
+
+print("Command: " + " ".join(arguments))
+if total_hrs != 0.0:
+    print(f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours")
+else:
+    print("No durations found in these tasks!")
+
+sys.exit(0)
