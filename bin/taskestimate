@@ -23,8 +23,13 @@ num_estimated = 0
 # get context
 context_arguments = ["task", "context", "show"]
 try:
-    process = subprocess.run(args=context_arguments, capture_output=True, encoding="utf-8",
-                             errors="replace", check=True)
+    process = subprocess.run(
+        args=context_arguments,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
 except subprocess.CalledProcessError as e:
     print(e.stderr)
     sys.exit(0)
@@ -49,8 +54,13 @@ else:
 
 
 try:
-    process = subprocess.run(args=arguments, capture_output=True, encoding="utf-8",
-                             errors="replace", check=True)
+    process = subprocess.run(
+        args=arguments,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
 except subprocess.CalledProcessError as e:
     print(e.stderr)
     sys.exit(0)
@@ -70,11 +80,13 @@ for atask in tasks:
         pass
 
 timedel = timethen - timenow
-total_hrs = math.ceil(timedel/timedelta(seconds=1))/3600
+total_hrs = math.ceil(timedel / timedelta(seconds=1)) / 3600
 
 print("Command: " + " ".join(arguments))
 if total_hrs != 0.0:
-    print(f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours")
+    print(
+        f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours"
+    )
 else:
     print("No durations found in these tasks!")
 
