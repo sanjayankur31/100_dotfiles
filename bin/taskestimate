@@ -46,6 +46,8 @@ for line in output.splitlines():
 
 if len(context) > 0:
     print(f"Context is {context_name}: {context}")
+else:
+    print("No context set")
 
 if len(sys.argv) > 1:
     arguments = ["task", "status:pending", context] + sys.argv[1:] + ["export"]
