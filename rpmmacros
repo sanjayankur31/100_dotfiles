@@ -1,0 +1,11 @@
+%_topdir %{getenv:PWD}
+%_sourcedir %{_topdir}
+%_specdir %{_topdir}
+%_srcrpmdir %{_topdir}
+%_builddir %{_topdir}/BUILD
+%_buildrootdir %{_topdir}/BUILDROOT
+
+%__arch_install_post \
+    [ "%{buildarch}" = "noarch" ] || QA_CHECK_RPATHS=1 ; \
+    case "${QA_CHECK_RPATHS:-}" in [1yY]*) /usr/lib/rpm/check-rpaths ;; esac \
+    /usr/lib/rpm/check-buildroot
