@@ -170,7 +170,10 @@ if [[ $- == *i* ]] ; then
             vit 'tags:tickler'
         }
         vit-agenda () {
-            'vit project~agenda'
+            vit 'project~agenda'
+        }
+        vit-on-wait () {
+            vit 'tags:on-wait'
         }
         vit-next () {
             echo "Active tasks:"
