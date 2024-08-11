@@ -12,17 +12,56 @@
 
 PACKAGE_LIST_FILE="packages.txt"
 FEDORA_BRANCH="rawhide"
-COPR_PROJECT="python-nibabel-4x"
-# uncomment to wait for each build, for example a chain build where each
-# package must wait for the previous one to build
-# NOWAIT="yep"
+COPR_PROJECT=""
+dobuilds () {
+    while read pkg ; do
+        if ! [ -d "$pkg" ]
+        then
+            echo "> Checking out ${pkg}"
+            fedpkg co "$pkg"
+        fi
+        echo "> Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
+        pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build --nowait "${COPR_PROJECT}" && popd
+    done < "${PACKAGE_LIST_FILE}"
+}
 
-while read pkg ; do
-    if ! [ -d "$pkg" ]
-    then
-        echo "> Checking out ${pkg}"
-        fedpkg co "$pkg"
-    fi
-    echo "> Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
-    pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build --nowait "${COPR_PROJECT}" && popd
-done < "${PACKAGE_LIST_FILE}"
+usage () {
+    echo "$0"
+    echo
+    echo "-h: print help and exit"
+    echo "-p <COPR project>"
+    echo "-l <name of package list file to read from>"
+    echo "   <default: packages.txt>"
+    echo "-f <branch of SCM to build>"
+    echo "   <default: rawhide>"
+}
+
+if [ $# -lt 1 ]
+then
+    echo "At least -p is required"
+    usage
+    exit -1
+fi
+
+# parse options
+# https://stackoverflow.com/questions/11742996/is-mixing-getopts-with-positional-parameters-possible
+while getopts "p:f:l:h" OPTION
+do
+    case $OPTION in
+        p)
+            COPR_PROJECT="$OPTARG"
+            ;;
+        f)
+            FEDORA_BRANCH="$OPTARG"
+            ;;
+        l)
+            PACKAGE_LIST_FILE="$OPTARG"
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+dobuilds
