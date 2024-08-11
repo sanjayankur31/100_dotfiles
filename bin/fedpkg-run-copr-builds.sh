@@ -13,6 +13,7 @@
 PACKAGE_LIST_FILE="packages.txt"
 FEDORA_BRANCH="rawhide"
 COPR_PROJECT=""
+
 dobuilds () {
     while read pkg ; do
         if ! [ -d "$pkg" ]
@@ -21,7 +22,7 @@ dobuilds () {
             fedpkg co "$pkg"
         fi
         echo "> Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
-        pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git pull --rebase && fedpkg copr-build --nowait "${COPR_PROJECT}" && popd
+        pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase && fedpkg copr-build "${NOWAIT_OPT:+$NOWAIT_OPT}" "${COPR_PROJECT}" && popd
     done < "${PACKAGE_LIST_FILE}"
 }
 
@@ -34,6 +35,7 @@ usage () {
     echo "   <default: packages.txt>"
     echo "-f <branch of SCM to build>"
     echo "   <default: rawhide>"
+    echo "-n do not wait for each build to complete (uses --nowait)"
 }
 
 if [ $# -lt 1 ]
@@ -45,7 +47,7 @@ fi
 
 # parse options
 # https://stackoverflow.com/questions/11742996/is-mixing-getopts-with-positional-parameters-possible
-while getopts "p:f:l:h" OPTION
+while getopts "p:f:l:nh" OPTION
 do
     case $OPTION in
         p)
@@ -56,6 +58,9 @@ do
             ;;
         l)
             PACKAGE_LIST_FILE="$OPTARG"
+            ;;
+        n)
+            NOWAIT_OPT="--nowait"
             ;;
         h)
             usage
