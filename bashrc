@@ -252,7 +252,9 @@ if [[ $- == *i* ]] ; then
 
     # For 256 colours in xterm
     if [ "$TERM" == "xterm" ] || [ "$TERM" == "screen" ] || [ "$TERM" == "screen-256color" ] || [ "$TERM" == "xterm-256color" ]; then
-        export PROMPT_COMMAND='printf "\033]0;%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+        # comment out, unclear why I need this given that I set PS1 below anyway
+        # export PROMPT_COMMAND='printf "\033]0;%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+        export PROMPT_COMMAND='history -a; history -n; $PROMPT_COMMAND'
 
         # Bash prompt
         # Colours:
