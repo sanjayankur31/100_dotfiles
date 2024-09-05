@@ -31,6 +31,20 @@ report ()
 
 }
 
+totals_report ()
+{
+    regex=""
+    for atag in "${tags[@]}"
+    do
+        regex="${regex:+$regex|}${atag} "
+    done
+    # echo "Regex is '^(${regex})'"
+
+    echo "*** Totals by tag ***"
+    timew report totals "$1" | grep -E "^($regex)"
+
+}
+
 usage ()
 {
     echo "$0: wrapper script around timewarrior to carry out common tasks"
@@ -46,6 +60,10 @@ usage ()
     echo "-w    print report for tags for this week"
     echo "-l    print report for tags for last week"
     echo "-m    print report for tags for month"
+    echo "-D    print totals report for tags for current day"
+    echo "-W    print totals report for tags for this week"
+    echo "-L    print totals report for tags for last week"
+    echo "-M    print totals report for tags for month"
 }
 
 # check for options
@@ -55,7 +73,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # parse options
-while getopts "rpcdwlmh" OPTION
+while getopts "rpcdDwWlLmMh" OPTION
 do
     case $OPTION in
         r)
@@ -84,6 +102,22 @@ do
             ;;
         m)
             report ":month"
+            exit 0
+            ;;
+        D)
+            totals_report ":day"
+            exit 0
+            ;;
+        W)
+            totals_report ":week"
+            exit 0
+            ;;
+        L)
+            totals_report ":lastweek"
+            exit 0
+            ;;
+        M)
+            totals_report ":month"
             exit 0
             ;;
         h)
