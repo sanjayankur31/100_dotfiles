@@ -40,7 +40,7 @@ totals_report ()
     done
     # echo "Regex is '^(${regex})'"
 
-    echo "*** Totals by tag ***"
+    echo "*** Totals (${tags[@]}) ***"
     timew report totals "$1" | grep -E "^($regex)"
 
 }
