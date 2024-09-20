@@ -6,4 +6,4 @@ set window-icon-document true
 set window-icon "/usr/share/icons/scalable/apps/org.pwmt.zathura.svg"
 set default-fg "#000000"
 set database "sqlite"
-map <C-a> feedkeys ":exec evince $FILE<Return>"
+map <C-a> feedkeys ":exec mupdf-gl $FILE<Return>"
