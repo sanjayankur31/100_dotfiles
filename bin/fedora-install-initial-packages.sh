@@ -42,7 +42,7 @@ install_basics() {
     notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
     python3-websocket-client xsel flash-plugin deja-dup \
-    anka-coder-\* zathura zathura-plugins-all urlscan timew \
+    anka-coder-\* zathura zathura-plugins-all mupdf urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
     qgnomeplatform cowsay fortune-mod ledger bat pew python3-devel \
@@ -54,7 +54,7 @@ install_basics() {
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 \
-    rpmfusion-packager fedrq \
+    rpmfusion-packager fedrq fbrnch \
     --setopt=strict=0
 
     # parcellite
