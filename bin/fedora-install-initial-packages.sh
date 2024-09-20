@@ -41,7 +41,7 @@ install_basics() {
     weechat mpv vimiv-qt fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
-    python3-websocket-client xsel flash-plugin deja-dup \
+    python3-websocket-client xsel deja-dup \
     anka-coder-\* zathura zathura-plugins-all mupdf urlscan timew \
     /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler fzf wl-clipboard \
