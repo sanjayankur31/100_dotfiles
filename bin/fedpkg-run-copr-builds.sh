@@ -22,7 +22,7 @@ dobuilds () {
             fedpkg co "$pkg"
         fi
         echo "> Rebuilding ${pkg} in COPR project ${COPR_PROJECT} for branch ${FEDORA_BRANCH}"
-        pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase && fedpkg copr-build "${NOWAIT_OPT:+$NOWAIT_OPT}" "${COPR_PROJECT}" && popd
+        pushd "$pkg" && git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase && fedpkg copr-build ${NOWAIT_OPT:+$NOWAIT_OPT} "${COPR_PROJECT}" && popd
     done < "${PACKAGE_LIST_FILE}"
 }
 
