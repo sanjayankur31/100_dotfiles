@@ -55,7 +55,7 @@ install_basics() {
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 \
-    rpmfusion-packager fedrq fbrnch \
+    rpmfusion-packager rfpkg fedrq fbrnch \
     --setopt=strict=0
 
     # parcellite
