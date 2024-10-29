@@ -66,6 +66,7 @@ install_texlive_packages() {
     # some bits for muttprint
     sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
         /usr/bin/lacheck /usr/bin/biber texlive-epstopdf texlive-biblatex-nature \
+        /usr/bin/texexpand \
         'tex(array.sty)' 'tex(babel.sty)' 'tex(fancyhdr.sty)' 'tex(fancyvrb.sty)' \
         'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
         'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
