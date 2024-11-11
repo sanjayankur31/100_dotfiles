@@ -51,11 +51,12 @@ usage ()
     echo "-h: print this help"
     echo "-d: default session"
     echo "-r: research session"
+    echo "-p: pass through argument to byobu"
     echo "-n <name>: new named session"
 }
 
 # parse options
-while getopts "drn:h" OPTION
+while getopts "drn:hp:" OPTION
 do
     case $OPTION in
         d)
@@ -69,6 +70,11 @@ do
         n)
             SESSION_NAME=$OPTARG
             newnamed
+            exit 0
+            ;;
+        p)
+            echo "Passing through to byobu"
+            byobu $OPTARG
             exit 0
             ;;
         h)
