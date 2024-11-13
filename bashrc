@@ -54,12 +54,6 @@ if [[ $- == *i* ]] ; then
 
     # do not enable on cluster, slows down prompt
     if [[ "$ON_CLUSTER" = "no" ]]; then
-        # define empty function
-        __git_ps1 ()
-        {
-            true
-        }
-
         if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]
         then
             source /usr/share/git-core/contrib/completion/git-prompt.sh
@@ -68,6 +62,12 @@ if [[ $- == *i* ]] ; then
             export GIT_PS1_SHOWUPSTREAM="auto"
             export GIT_PS1_SHOWUNTRACKEDFILES=1
         fi
+    else
+        # define empty function
+        __git_ps1 ()
+        {
+            true
+        }
     fi
 
     alias timestamp='date +%Y%m%d%H%M'
