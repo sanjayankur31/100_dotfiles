@@ -227,6 +227,7 @@ if [[ $- == *i* ]] ; then
         }
 
         alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
+        alias neomutt-all='neomutt -F ~/Sync/99_private/all.neomuttrc'
 
         # pdftotext to get word count
         latex_wc () {
