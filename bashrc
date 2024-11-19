@@ -167,7 +167,9 @@ if [[ $- == *i* ]] ; then
             source /usr/share/fzf/shell/key-bindings.bash
             # To not have to use gio open each time, from:
             # https://unix.stackexchange.com/a/518900/30628
-            bind -x '"\C-o": file="$(fzf --height 40% --reverse --prompt="Open file>")" && [ -f "$file" ] &&  history -s gio open "\"${file}\"" && gio open "${file}"'
+            bind -m emacs-standard -x '"\C-o": file="$(fzf --height 40% --reverse --prompt="Open file>")" && [ -f "$file" ] &&  history -s gio open "\"${file}\"" && gio open "${file}"'
+            bind -m vi-command -x '"\C-o": file="$(fzf --height 40% --reverse --prompt="Open file>")" && [ -f "$file" ] &&  history -s gio open "\"${file}\"" && gio open "${file}"'
+            bind -m vi-insert -x '"\C-o": file="$(fzf --height 40% --reverse --prompt="Open file>")" && [ -f "$file" ] &&  history -s gio open "\"${file}\"" && gio open "${file}"'
             # use fd for default command so it ignores .gitignore etc.
             export FZF_DEFAULT_COMMAND='fd --type f'
             #
