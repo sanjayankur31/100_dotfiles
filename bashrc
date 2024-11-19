@@ -157,9 +157,9 @@ if [[ $- == *i* ]] ; then
           dirs
         }
         # ALT O for popd
-        bind -m emacs-standard '"\eo": "pp"'
-        bind -m vi-command '"\eo": "pp"'
-        bind -m vi-insert '"\eo": "pp"'
+        bind -m emacs-standard -x '"\eo": "pp"'
+        bind -m vi-command -x '"\eo": "pp"'
+        bind -m vi-insert -x '"\eo": "pp"'
 
         # fzf on Fedora
         if [ -x "$(command -v fzf)"  ]
