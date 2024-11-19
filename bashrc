@@ -135,6 +135,32 @@ if [[ $- == *i* ]] ; then
         alias tre='trash-restore'
         alias latex-clean='rm -fv *.aux *.bbl *.blg *.log *.nav *.out *.snm *.toc *.dvi *.vrb *.bcf *.run.xml *.cut *.lo*'
 
+        # to prefer pushd popd
+        # adapted from: https://unix.stackexchange.com/a/4291/30628
+        pd()
+        {
+          if [ $# -eq 0 ]; then
+            DIR="${HOME}"
+          else
+            DIR="$1"
+          fi
+
+          builtin pushd "${DIR}" > /dev/null
+          echo -n "DIRSTACK: "
+          dirs
+        }
+
+        pp()
+        {
+          builtin popd > /dev/null
+          echo -n "DIRSTACK: "
+          dirs
+        }
+        # ALT O for popd
+        bind -m emacs-standard '"\eo": "pp"'
+        bind -m vi-command '"\eo": "pp"'
+        bind -m vi-insert '"\eo": "pp"'
+
         # fzf on Fedora
         if [ -x "$(command -v fzf)"  ]
         then
