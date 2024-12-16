@@ -6,7 +6,7 @@
 
 # depends on how you install it
 CLOUD_HARNESS_DIR="$HOME/Documents/02_Code/00_mine/OSB/osbv2/cloud-harness"
-CLOUD_HARNESS_DEFAULT="release/2.3.0"
+CLOUD_HARNESS_DEFAULT="release/2.4.0"
 CLOUD_HARNESS_BRANCH=""
 SKAFFOLD="skaffold"
 
@@ -16,7 +16,7 @@ DEFAULT_DEPLOYMENT_APP="osb-portal"
 
 # Py version
 # Cloud harness doesn't always work on newer versions
-PY_VERSION="python3.9"
+PY_VERSION="python3.12"
 # if not, specify location of virtualenv here
 # I run this from the OSBv2 repo, so I create my venv there
 OSB_DIR="$HOME/Documents/02_Code/00_mine/OSB/osbv2/OSBv2/"
@@ -73,7 +73,7 @@ function update_cloud_harness() {
     echo "Updating cloud harness"
     CLOUD_HARNESS_PACKAGES=$(pip list | grep cloud | tr -s " " | cut -d " " -f1 | tr '\n' ' ')
     pip uninstall ${CLOUD_HARNESS_PACKAGES} -y || echo "No cloud harness packages installed"
-    pushd "$CLOUD_HARNESS_DIR" && git clean -dfx && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
+    pushd "$CLOUD_HARNESS_DIR" && git clean -dfx && git fetch && git checkout ${CLOUD_HARNESS_BRANCH} && git pull && pip install -r requirements.txt && popd
 }
 
 function activate_venv() {
