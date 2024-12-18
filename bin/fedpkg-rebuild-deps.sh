@@ -126,4 +126,11 @@ then
     exit -1
 fi
 
+if ! [ -f "$PACKAGE_LIST_FILE" ]
+then
+    echo "> Could not find a list of pacakges at ${PACKAGE_LIST_FILE}."
+    echo "> Please check that it exists or use the -l flag to specify it."
+    exit -1
+fi
+
 dobuilds
