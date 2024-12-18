@@ -18,6 +18,7 @@ CHANGELOG_ENTRY=""
 DRY_RUN="NO"
 
 dobuilds () {
+    declare -a ALL_PACKAGES
     while read pkg ; do
         if ! [ -d "$pkg" ]
         then
@@ -29,12 +30,13 @@ dobuilds () {
         pushd "$pkg"
         git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase
 
-        if grep "autochangelog" *.spec
+        if grep "autochangelog" "${pkg}.spec"
         then
             echo "> rpmautospec used"
             if [ "NO" == "$DRY_RUN" ]
             then
                 git commit --allow-empty -m "$CHANGELOG_ENTRY"
+                git push
             else
                 echo "> DRY RUN: did not add empty commit for changelog"
             fi
@@ -42,19 +44,25 @@ dobuilds () {
             if [ "NO" == "$DRY_RUN" ]
             then
                 rpmdev-bumpspec -c "${CHANGELOG_ENTRY}"
+                git commit -m "$CHANGELOG_ENTRY"
+                git push
             else
                 echo "> DRY RUN: did not add new changelog entry"
             fi
         fi
-        if [ "NO" == "$DRY_RUN" ]
-        then
-            fedpkg build --target="${SIDE_TAG}"
-            koji wait-repo --request "${SIDE_TAG}"
-        else
-            echo "> DRY RUN: did not run build"
-        fi
+        ALL_PACKAGES+=("$pkg")
         popd
     done < "${PACKAGE_LIST_FILE}"
+
+    if [ "NO" == "$DRY_RUN" ]
+    then
+        echo "> Running chain build"
+        IFS=" " echo "> Command: fedpkg chain-build --target=${SIDE_TAG} ${ALL_PACKAGES[@]}"
+        IFS=" " fedpkg chain-build --target="${SIDE_TAG}" ${ALL_PACKAGES[@]}
+    else
+        echo "> DRY RUN: did not run chain build"
+        IFS=" " echo "> Command: fedpkg chain-build --target=${SIDE_TAG} ${ALL_PACKAGES[@]}"
+    fi
 }
 
 usage () {
@@ -63,8 +71,6 @@ usage () {
     echo "Build packages in order in the provided side tag with the provided changelog entry"
     echo
     echo "Note that the builds happen in linear order, given in the file pointed to by -l."
-    echo "Only when a build completes, and a new repo is generated does the next build proceed."
-    echo "This is to ensure that a build has appeared in the repo before the next build is run, and is currently the only way to ensure this."
     echo
     echo "Usage:"
     echo
