@@ -7,7 +7,8 @@ set -e
 # File : fedpkg-rebuild-deps.sh
 #
 # Run builds for a specified list of packages in a linear order, ensuring that
-# the previous build was in the side tag before proceeding.
+# the previous build was in the side tag before proceeding. Groups can be
+# specified using `:`. See `fedpkg chain-build --help` for more information.
 #
 # To be run in a folder containing the various SCM folders.
 
@@ -16,44 +17,59 @@ FEDORA_BRANCH="rawhide"
 SIDE_TAG=""
 CHANGELOG_ENTRY=""
 DRY_RUN="NO"
+SPECBUMP_USERSTRING="Ankur Sinha <ankursinha AT fedoraproject DOT org>"
+
+# fedpkg chain-build needs to be called from the package dir
+LAST_PACKAGE=""
 
 dobuilds () {
     declare -a ALL_PACKAGES
     while read pkg ; do
-        if ! [ -d "$pkg" ]
+        if ! [ ":" == "$pkg" ]
         then
-            echo "> Checking out ${pkg}"
-            fedpkg co "$pkg"
-        fi
-        echo "> Rebuilding ${pkg} in side tag ${SIDE_TAG} for branch ${FEDORA_BRANCH}"
-
-        pushd "$pkg"
-        git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase
-
-        if grep "autochangelog" "${pkg}.spec"
-        then
-            echo "> rpmautospec used"
-            if [ "NO" == "$DRY_RUN" ]
+            if ! [ -d "$pkg" ]
             then
-                git commit --allow-empty -m "$CHANGELOG_ENTRY"
-                git push
-            else
-                echo "> DRY RUN: did not add empty commit for changelog"
+                echo "> Checking out ${pkg}"
+                fedpkg co "$pkg"
             fi
+            echo "> Rebuilding ${pkg} in side tag ${SIDE_TAG} for branch ${FEDORA_BRANCH}"
+
+            pushd "$pkg"
+            git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase
+
+            if grep "autochangelog" "${pkg}.spec"
+            then
+                echo "> rpmautospec used"
+                if [ "NO" == "$DRY_RUN" ]
+                then
+                    git commit --allow-empty -m "$CHANGELOG_ENTRY"
+                    git push
+                else
+                    echo "> DRY RUN: did not add empty commit for changelog"
+                fi
+            else
+                if [ "NO" == "$DRY_RUN" ]
+                then
+                    rpmdev-bumpspec -c "${CHANGELOG_ENTRY}"  "${pkg}.spec"
+                    git add "${pkg}.spec"
+                    git commit -m "$CHANGELOG_ENTRY"
+                    git push
+                else
+                    echo "> DRY RUN: did not add new changelog entry"
+                fi
+            fi
+            popd
+            LAST_PACKAGE="$pkg"
         else
-            if [ "NO" == "$DRY_RUN" ]
-            then
-                rpmdev-bumpspec -c "${CHANGELOG_ENTRY}"
-                git commit -m "$CHANGELOG_ENTRY"
-                git push
-            else
-                echo "> DRY RUN: did not add new changelog entry"
-            fi
+            echo "> Group boundary encountered"
         fi
         ALL_PACKAGES+=("$pkg")
-        popd
     done < "${PACKAGE_LIST_FILE}"
 
+    # drop the last package from the list, we'll enter this folder to run the
+    # fedpkg-chain command
+    unset 'ALL_PACKAGES[-1]'
+    pushd ${LAST_PACKAGE}
     if [ "NO" == "$DRY_RUN" ]
     then
         echo "> Running chain build"
@@ -63,10 +79,11 @@ dobuilds () {
         echo "> DRY RUN: did not run chain build"
         IFS=" " echo "> Command: fedpkg chain-build --target=${SIDE_TAG} ${ALL_PACKAGES[@]}"
     fi
+    popd
 }
 
 usage () {
-    echo "$0: utility script for building packages in order in a side tag "
+    echo "$0: <options>"
     echo
     echo "Build packages in order in the provided side tag with the provided changelog entry"
     echo
@@ -76,7 +93,7 @@ usage () {
     echo
     echo "-h: print help and exit"
     echo "-s <side tag>"
-    echo "-l <name of package list file to read from>"
+    echo "-l <name of package list file to read from: the last line must be the final package>"
     echo "   <default: packages.txt>"
     echo "-f <branch of SCM to build>"
     echo "   <default: rawhide>"
