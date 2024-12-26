@@ -21,8 +21,8 @@ set term qt enhanced font my_font
 # set default point size
 set pointsize my_ps
 
-# this is to use the user-defined styles we just defined.
-set style increment user
+# this is to use the user-defined styles we just defined: deprecated
+# set style increment user
 
 # set the text color and font for the label
 set label font my_font
