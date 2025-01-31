@@ -38,6 +38,8 @@ usage() {
 if [ $# -lt 1 ]
 then
     get_password
+    echo "** Entry: $password **"
+    echo
     pass "$password" 2>/dev/null
     exit 1
 fi
@@ -48,6 +50,8 @@ do
     case $OPTION in
         c)
             get_password
+            echo "** Entry: $password **"
+            echo
             pass show -c "$password" 2>/dev/null
             exit 0
             ;;
