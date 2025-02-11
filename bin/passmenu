@@ -5,7 +5,7 @@
 shopt -s nullglob globstar
 password=""
 
-get_password () {
+get_password_file () {
 
     if [[ -n $WAYLAND_DISPLAY ]]; then
         dmenu=("wofi" "-i" "--prompt" "search>" "--dmenu")
@@ -27,17 +27,22 @@ get_password () {
 }
 
 usage() {
-    echo "$0: View pass entries using rofi/wofi"
+    prgname=$(basename $(which $0))
+    echo "$prgname: View pass entries using rofi/wofi"
+    echo "Usage: $prgname [-cCeh]"
     echo
-    echo "Usage: $0 [-c]"
+    echo "Without any arguments, opens the rofi/wofi window and displays the selected entry."
+    echo "Optional arguments:"
     echo
-    echo "-c: copy entry instead of showing it"
-    echo "-h: print this usage text and exit"
+    echo "    -c: copy entry instead of showing it"
+    echo "    -C: copy entry and show it"
+    echo "    -e: open entry for editing"
+    echo "    -h: print this usage text and exit"
 }
 
 if [ $# -lt 1 ]
 then
-    get_password
+    get_password_file
     echo "** Entry: $password **"
     echo
     pass "$password" 2>/dev/null
@@ -45,12 +50,30 @@ then
 fi
 
 # parse options
-while getopts "ch" OPTION
+while getopts "Cceh" OPTION
 do
     case $OPTION in
+        e)
+            get_password_file
+            edit_file
+            pass edit "$password"
+            echo "** Entry updated: $password **"
+            echo
+            pass show "$password" 2>/dev/null
+            exit 0
+            ;;
         c)
-            get_password
+            get_password_file
             echo "** Entry: $password **"
+            echo
+            pass show -c "$password" 2>/dev/null
+            exit 0
+            ;;
+        C)
+            get_password_file
+            echo "** Entry: $password **"
+            echo
+            pass show "$password" 2>/dev/null
             echo
             pass show -c "$password" 2>/dev/null
             exit 0
@@ -65,3 +88,8 @@ do
             ;;
     esac
 done
+
+echo "Unexpected arguments: $@"
+echo
+usage
+exit 1
