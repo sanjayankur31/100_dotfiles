@@ -72,11 +72,11 @@ dobuilds () {
     pushd ${LAST_PACKAGE}
     if [ "NO" == "$DRY_RUN" ]
     then
-        echo "> Running chain build"
+        echo "> Running chain build in ${LAST_PACKAGE} directory"
         IFS=" " echo "> Command: fedpkg chain-build --target=${SIDE_TAG} ${ALL_PACKAGES[@]}"
         IFS=" " fedpkg chain-build --target="${SIDE_TAG}" ${ALL_PACKAGES[@]}
     else
-        echo "> DRY RUN: did not run chain build"
+        echo "> DRY RUN: did not run chain build in ${LAST_PACKAGE} directory"
         IFS=" " echo "> Command: fedpkg chain-build --target=${SIDE_TAG} ${ALL_PACKAGES[@]}"
     fi
     popd
@@ -88,6 +88,11 @@ usage () {
     echo "Build packages in order in the provided side tag with the provided changelog entry"
     echo
     echo "Note that the builds happen in linear order, given in the file pointed to by -l."
+    echo "Run builds for a specified list of packages in a linear order, ensuring that"
+    echo "the previous build was in the side tag before proceeding. Groups can be"
+    echo "specified using ':'. See 'fedpkg chain-build --help' for more information."
+    echo ""
+    echo "To be run in a folder containing the various SCM folders."
     echo
     echo "Usage:"
     echo
