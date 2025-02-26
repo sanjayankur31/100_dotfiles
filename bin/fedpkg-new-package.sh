@@ -8,21 +8,39 @@
 
 set -e
 
-# default is GitHub
-REMOTE_URL="git@github.com:sanjayankur31/"
+GITHUB_USER="sanjayankur31"
+REMOTE_URL_BASE="git@github.com"
+
+if ! command -v gh &> /dev/null
+then
+    echo ">> gh not found. Please install gh:"
+    echo ">> sudo dnf install gh"
+    exit -1
+fi
+
+if ! command -v git &> /dev/null
+then
+    echo ">> git not found. Please install git:"
+    echo ">> sudo dnf install git-core"
+    exit -1
+fi
 
 create_and_checkout ()
 {
-    echo "Creating GitHub repository"
-    gh repo create --public "${packagename}" -d "WIP spec for ${packagename}"
+    REMOTE_URL="${REMOTE_URL_BASE}:${GITHUB_USER}"
+    echo "Creating GitHub repository: ${REMOTE_URL}/${PACKAGENAME}"
+    gh repo create --public "${PACKAGENAME}" -d "WIP spec for ${PACKAGENAME}"
 
-    mkdir -pv "${packagename}" && pushd "${packagename}"
+    echo "Creating local folder and setting up remote: ${PACKAGENAME}"
+    mkdir -pv "${PACKAGENAME}" && pushd "${PACKAGENAME}"
     git init .
-    git remote add origin "$REMOTE_URL/${packagename}.git"
+    git remote add origin "$REMOTE_URL/${PACKAGENAME}.git"
+    git remote -v
 }
 
 usage () {
-    echo "$0: <options>"
+    echo
+    echo "$(basename $0): -n <package name> [-g <GitHub username>] [-h]"
     echo
     echo "Init a new package repo and remote"
     echo
@@ -31,6 +49,8 @@ usage () {
     echo "-h: print help and exit"
     echo "-n <package name>"
     echo "   name of package"
+    echo "-g <GitHub user>"
+    echo "   GitHub username"
 
 }
 
@@ -40,11 +60,14 @@ then
     exit -1
 fi
 
-while getopts "n:h" OPTION
+while getopts "n:hg:" OPTION
 do
     case $OPTION in
         n)
-            packagename="$OPTARG"
+            PACKAGENAME="$OPTARG"
+            ;;
+        g)
+            GITHUB_USER="$OPTARG"
             ;;
         h)
             usage

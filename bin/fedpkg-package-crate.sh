@@ -2,25 +2,44 @@
 
 # Copyright 2025 Ankur Sinha
 # Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
-# File : bin/fedpkg-new-crate.sh
+# File : bin/fedpkg-package-crate.sh
 #
-#
+# Set up new folder/repo and try to create a new spec for a crate using rust2rpm
 
 set -e
 
-REMOTE_URL="git@github.com:sanjayankur31/"
 CREATE_REPO="no"
 MOCKBUILD="no"
+
+if ! command -v rust2rpm &> /dev/null
+then
+    echo ">> rust2rpm not found. Please install rust2rpm:"
+    echo ">> sudo dnf install rust2rpm"
+    exit -1
+fi
+
+if ! command -v fedpkg &> /dev/null
+then
+    echo ">> fedpkg not found. Please install fedpkg:"
+    echo ">> sudo dnf install fedpkg"
+    exit -1
+fi
+
+if ! command -v fedpkg-new-package.sh &> /dev/null
+then
+    echo ">> fedpkg-new-package.sh not found. Please download it from the same repo you got this script from."
+    exit -1
+fi
 
 package_crate ()
 {
 
     if ["yes" == "$CREATE_REPO" ]
     then
-        fedpkg-new-package -n "${packagename}"
+        fedpkg-new-package.sh -n "${PACKAGENAME}"
     fi
 
-    rust2rpm -I "$cratename" && spectool -g "${packagename}.spec" && git add "${packagename}.spec" && git commit -m "feat: init" && git push -u origin main 
+    rust2rpm -I "$CRATENAME" && spectool -g "${PACKAGENAME}.spec" && git add "${PACKAGENAME}.spec" && git commit -m "feat: init" && git push -u origin main 
 
     if ["yes" == "$MOCKBUILD" ]
     then
@@ -30,7 +49,8 @@ package_crate ()
 }
 
 usage () {
-    echo "$0: <options>"
+    echo
+    echo "$(basename $0): -n <crate> [-cmh]"
     echo
     echo "Init a new rust crate based package"
     echo
@@ -53,8 +73,8 @@ while getopts "n:cmh" OPTION
 do
     case $OPTION in
         n)
-            cratename="$OPTARG"
-            packagename="rust-$cratename"
+            CRATENAME="$OPTARG"
+            PACKAGENAME="rust-$CRATENAME"
             ;;
         c)
             CREATE_REPO="yes"
