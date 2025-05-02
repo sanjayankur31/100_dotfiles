@@ -33,9 +33,12 @@ create_and_checkout ()
 
     echo "Creating local folder and setting up remote: ${PACKAGENAME}"
     mkdir -pv "${PACKAGENAME}" && pushd "${PACKAGENAME}"
+
     git init .
     git remote add origin "$REMOTE_URL/${PACKAGENAME}.git"
     git remote -v
+
+    popd
 }
 
 usage () {
