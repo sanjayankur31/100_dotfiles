@@ -34,14 +34,14 @@ fi
 package_crate ()
 {
 
-    if ["yes" == "$CREATE_REPO" ]
+    if [ "yes" == "$CREATE_REPO" ]
     then
         fedpkg-new-package.sh -n "${PACKAGENAME}"
     fi
-
+    pushd "${PACKAGENAME}"
     rust2rpm -I "$CRATENAME" && spectool -g "${PACKAGENAME}.spec" && git add "${PACKAGENAME}.spec" && git commit -m "feat: init" && git push -u origin main 
 
-    if ["yes" == "$MOCKBUILD" ]
+    if [ "yes" == "$MOCKBUILD" ]
     then
         fedpkg --release rawhide mockbuild
     fi
