@@ -22,10 +22,10 @@
 # one file
 #
 
-if ! pgrep "mpdscribble" && pgrep "mpd$" ; then
-   mpdscribble
-fi
-
+#if ! pgrep "mpdscribble" && pgrep "mpd$" ; then
+#   mpdscribble
+#fi
+#
 # tj3daemon
 #if ! pgrep "tj3d" ; then
 #    pushd /home/ankur/Documents/work/organize/planning/UTS_masters/tjplan
