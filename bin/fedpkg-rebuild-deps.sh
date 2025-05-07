@@ -18,6 +18,7 @@ SIDE_TAG=""
 CHANGELOG_ENTRY=""
 DRY_RUN="NO"
 SPECBUMP_USERSTRING="Ankur Sinha <ankursinha AT fedoraproject DOT org>"
+MERGE_RAWHIDE="NO"
 
 # fedpkg chain-build needs to be called from the package dir
 LAST_PACKAGE=""
@@ -32,32 +33,44 @@ dobuilds () {
                 echo "> Checking out ${pkg}"
                 fedpkg co "$pkg"
             fi
-            echo "> Rebuilding ${pkg} in side tag ${SIDE_TAG} for branch ${FEDORA_BRANCH}"
 
             pushd "$pkg"
-            git clean -dfx && fedpkg switch-branch "${FEDORA_BRANCH}" && git reset HEAD --hard && git pull --rebase
+                echo "> Rebuilding ${pkg} in side tag ${SIDE_TAG} for branch ${FEDORA_BRANCH}"
+                git clean -dfx && fedpkg switch-branch rawhide && git reset HEAD --hard && git pull --rebase && fedpkg switch-branch "${FEDORA_BRANCH}"
 
-            if grep "autochangelog" "${pkg}.spec"
-            then
-                echo "> rpmautospec used"
-                if [ "NO" == "$DRY_RUN" ]
+                if [ "YES" == "${MERGE_RAWHIDE}" ]
                 then
-                    git commit --allow-empty -m "$CHANGELOG_ENTRY"
-                    git push
+                    echo "> Merging rawhide"
+                    if [ "NO" == "$DRY_RUN" ]
+                    then
+                        git merge rawhide && git push
+                    else
+                        echo "> DRY RUN: did not merge rawhide and push"
+                    fi
                 else
-                    echo "> DRY RUN: did not add empty commit for changelog"
+                    echo "> Adding changelog"
+                    if grep "autochangelog" "${pkg}.spec"
+                    then
+                        echo "> rpmautospec used"
+                        if [ "NO" == "$DRY_RUN" ]
+                        then
+                            git commit --allow-empty -m "$CHANGELOG_ENTRY"
+                            git push
+                        else
+                            echo "> DRY RUN: did not add empty commit for changelog"
+                        fi
+                    else
+                        if [ "NO" == "$DRY_RUN" ]
+                        then
+                            rpmdev-bumpspec -c "${CHANGELOG_ENTRY}"  "${pkg}.spec"
+                            git add "${pkg}.spec"
+                            git commit -m "$CHANGELOG_ENTRY"
+                            git push
+                        else
+                            echo "> DRY RUN: did not add new changelog entry"
+                        fi
+                    fi
                 fi
-            else
-                if [ "NO" == "$DRY_RUN" ]
-                then
-                    rpmdev-bumpspec -c "${CHANGELOG_ENTRY}"  "${pkg}.spec"
-                    git add "${pkg}.spec"
-                    git commit -m "$CHANGELOG_ENTRY"
-                    git push
-                else
-                    echo "> DRY RUN: did not add new changelog entry"
-                fi
-            fi
             popd
             LAST_PACKAGE="$pkg"
         else
@@ -87,11 +100,10 @@ usage () {
     echo
     echo "Build packages in order in the provided side tag with the provided changelog entry"
     echo
-    echo "Note that the builds happen in linear order, given in the file pointed to by -l."
     echo "Run builds for a specified list of packages in a linear order, ensuring that"
     echo "the previous build was in the side tag before proceeding. Groups can be"
     echo "specified using ':'. See 'fedpkg chain-build --help' for more information."
-    echo ""
+    echo
     echo "To be run in a folder containing the various SCM folders."
     echo
     echo "Usage:"
@@ -103,6 +115,7 @@ usage () {
     echo "-f <branch of SCM to build>"
     echo "   <default: rawhide>"
     echo "-c <changelog entry>"
+    echo "-m merge rawhide: instead of adding a new changelog, merge rawhide into the provided branch"
     echo "-d dry run: check out repositories but do not add a changelog and run the builds"
 }
 
@@ -114,7 +127,7 @@ fi
 
 # parse options
 # https://stackoverflow.com/questions/11742996/is-mixing-getopts-with-positional-parameters-possible
-while getopts "c:s:f:l:ndh" OPTION
+while getopts "c:s:f:l:ndmh" OPTION
 do
     case $OPTION in
         s)
@@ -126,13 +139,16 @@ do
         f)
             FEDORA_BRANCH="$OPTARG"
             ;;
+        m)
+            MERGE_RAWHIDE="YES"
+            ;;
         l)
             PACKAGE_LIST_FILE="$OPTARG"
             ;;
         d)
             DRY_RUN="YES"
             echo "> Dry run enabled"
-            echo "> Will checkout repositories but not add changelogs and run builds"
+            echo "> Will checkout repositories but not add changelogs/merge rawhide and run builds"
             ;;
         h)
             usage
@@ -141,9 +157,9 @@ do
     esac
 done
 
-if [ -z "$CHANGELOG_ENTRY" ]
+if [ "NO" == "$MERGE_RAWHIDE" ] || [ -z "$CHANGELOG_ENTRY" ]
 then
-    echo "> A changelog entry is required."
+    echo "> A changelog entry is required when not merging rawhide."
     echo "> Please specify one with the -c flag."
     exit -1
 fi
@@ -156,7 +172,7 @@ fi
 
 if ! [ -f "$PACKAGE_LIST_FILE" ]
 then
-    echo "> Could not find a list of pacakges at ${PACKAGE_LIST_FILE}."
+    echo "> Could not find a list of packages at ${PACKAGE_LIST_FILE}."
     echo "> Please check that it exists or use the -l flag to specify it."
     exit -1
 fi
