@@ -67,7 +67,7 @@ then
     exit -1
 fi
 
-while getopts "pvdnNfaA" OPTION
+while getopts "hpvdnNfaA" OPTION
 do
     case $OPTION in
         p)
@@ -110,6 +110,10 @@ do
             update_dots
             update_packages
             update_flatpaks
+            exit 0
+            ;;
+        h)
+            usage
             exit 0
             ;;
     esac
