@@ -58,6 +58,7 @@ usage () {
     echo "-f: update flatpaks"
     echo "-a: update all (with offline dnf)"
     echo "-A: update all (with online dnf)"
+    echo "-h: print help and exit"
 }
 
 
