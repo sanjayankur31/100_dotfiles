@@ -100,12 +100,15 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-if pgrep -fa qutebrowser
-then
-    echo "Qutebrowser is running. Please exit before running this script"
-    exit 1
-fi
 
+check_qute () {
+    if pgrep -fa qutebrowser
+    then
+        echo "Qutebrowser is running. Please exit before running this script"
+        exit 1
+    fi
+
+}
 while getopts "hdt:" OPTION
 do
     case $OPTION in
@@ -114,6 +117,7 @@ do
             ;;
         t)
             TIME_STRING="$OPTARG"
+            check_qute
             clear_history_since
             exit 0
             ;;
@@ -129,4 +133,5 @@ do
 done
 
 shift $(($OPTIND - 1))
+check_qute
 clear_history "$@"
