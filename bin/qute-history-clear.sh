@@ -44,6 +44,37 @@ clear_history () {
 
     popd
 }
+clear_history_since () {
+    set -e
+    TIME_SINCE=$(date +"%s" -d "$TIME_STRING")
+    set +e
+
+    pushd "$QUTEDIR"
+        SQL_FILE="$(mktemp)"
+        echo ">>> Got: ${TIME_STRING}: ${TIME_SINCE}"
+        echo "delete from History where atime <= ${TIME_SINCE};" >> $SQL_FILE
+        echo "delete from CompletionHistory where last_atime <= ${TIME_SINCE};" >> $SQL_FILE
+        echo ".quit" >> $SQL_FILE
+
+        echo ">>> Script file is: $SQL_FILE"
+        echo ">>> Contents:"
+        cat $SQL_FILE
+
+        if [ "NO" == "$DRY_RUN" ]
+        then
+            echo ">>> Running command"
+            cp "$QUTEFILE"  "$QUTEFILE.backup"
+            sqlite3 history.sqlite < "$SQL_FILE"
+            echo ">>> Command run"
+        else
+            echo ">>> Dry run. No op"
+        fi
+
+        echo ">>> DELETING script file"
+        rm -fv "$SQL_FILE"
+
+    popd
+}
 
 usage () {
     echo
@@ -57,6 +88,8 @@ usage () {
     echo "-h: print help and exit"
     echo "-d: dry run"
     echo "    do not run the sql command"
+    echo "-t: date command time string"
+    echo "    delete history before specified date"
 
 }
 
@@ -73,11 +106,16 @@ then
     exit 1
 fi
 
-while getopts "d" OPTION
+while getopts "hdt:" OPTION
 do
     case $OPTION in
         d)
             DRY_RUN="YES"
+            ;;
+        t)
+            TIME_STRING="$OPTARG"
+            clear_history_since
+            exit 0
             ;;
         h)
             usage
