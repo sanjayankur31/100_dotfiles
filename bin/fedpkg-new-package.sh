@@ -28,16 +28,11 @@ fi
 create_and_checkout ()
 {
     REMOTE_URL="${REMOTE_URL_BASE}:${GITHUB_USER}"
-    echo "Creating GitHub repository: ${REMOTE_URL}/${PACKAGENAME}"
-    gh repo create --public "${PACKAGENAME}" -d "WIP spec for ${PACKAGENAME}"
+    echo "Cloning/creating GitHub repository: ${REMOTE_URL}/${PACKAGENAME}"
+    gh repo clone "${PACKAGENAME}" || gh repo create --clone --public "${PACKAGENAME}" -d "WIP spec for ${PACKAGENAME}"
 
-    echo "Creating local folder and setting up remote: ${PACKAGENAME}"
-    mkdir -pv "${PACKAGENAME}" && pushd "${PACKAGENAME}"
-
-    git init .
-    git remote add origin "$REMOTE_URL/${PACKAGENAME}.git"
-    git remote -v
-
+    pushd "${PACKAGENAME}"
+        git remote -v
     popd
 }
 
