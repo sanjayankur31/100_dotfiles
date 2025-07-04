@@ -54,7 +54,7 @@ install_basics() {
     python3-peewee libolm-python3 python3-jedi ruff /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
-    python3-msal psi-notify gcolor3 \
+    python3-msal psi-notify gcolor3 python3-typer \
     rpmfusion-packager rfpkg fedrq fbrnch \
     --setopt=strict=0
 
