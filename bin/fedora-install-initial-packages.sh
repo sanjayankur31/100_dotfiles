@@ -46,7 +46,7 @@ install_basics() {
     /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
     open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler \
     rubygem-webrick firewall-config fzf wl-clipboard \
-    cowsay fortune-mod ledger bat pew python3-devel \
+    cowsay fortune-mod ledger bat uv python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
     evolution-ews qt6-qtwebengine{,-devtools} \
     /usr/bin/texcount podman kubernetes-client \
