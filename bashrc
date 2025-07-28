@@ -21,27 +21,28 @@ fi
 # If gnome-keyring is not running (if not logged in via gdm), check for an
 # ssh-agent and start a new one if it does not exist
 function start_ssh_agent {
-myid="$(id -u)"
-if ss -xl | grep "/run/user/${myid}/keyring/ssh" > /dev/null
-then
-    export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
-else
-    if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null
+    local myid
+    myid="$(id -u)"
+    if ss -xl | grep -q "/run/user/${myid}/keyring/ssh"
     then
-        if [ -x "$(command -v ssh-agent)" ]
-        then
-            eval `$(command -v ssh-agent) -s`
-        else
-            echo "ssh-agent command not found"
-    fi
+        export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
     else
-        echo "Agent already running"
+        if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null
+        then
+            if command -v ssh-agent > /dev/null
+            then
+                eval "$(ssh-agent -s)"
+            else
+                echo "ssh-agent command not found"
+            fi
+        else
+            echo "Agent already running"
+        fi
     fi
-fi
 }
 
 # Test and start agent when logging in over SSH
-if shopt -q login_shell && ! [ -z ${SSH_CLIENT+x} ]
+if shopt -q login_shell && [ -z "${SSH_AUTH_SOCK}" ]
 then
     start_ssh_agent
 fi
