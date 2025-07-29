@@ -23,7 +23,7 @@ update_vim () {
 
 update_dots () {
     echo ">>> Update dotfiles"
-    pushd ~/.dotfiles && git pull && git push && popd
+    pushd ~/.dotfiles && git clean -dfx && git pull && git push && popd
 }
 
 update_packages () {
