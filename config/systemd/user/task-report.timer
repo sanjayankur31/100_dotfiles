@@ -1,0 +1,10 @@
+[Unit]
+Description=Run task report every Friday
+
+[Timer]
+OnCalendar=Fri *-*-* 19:00:*
+Unit=task-report.service
+Persistent=true
+
+[Install]
+WantedBy=default.target

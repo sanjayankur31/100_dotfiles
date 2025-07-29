@@ -2,4 +2,4 @@
 Description=Quick mail sync
 
 [Service]
-ExecStart=/usr/bin/bash /home/asinha/bin/fetch-mail.sh -q
+ExecStart=/usr/bin/bash %h/bin/fetch-mail.sh -q
