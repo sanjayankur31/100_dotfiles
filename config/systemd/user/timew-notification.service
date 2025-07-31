@@ -2,4 +2,4 @@
 Description=Run time-notification
 
 [Service]
-ExecStart=/usr/bin/bash %h/bin/timew-notification.sh
+ExecStart=/usr/bin/bash %h/bin/timew-notification.sh -n
