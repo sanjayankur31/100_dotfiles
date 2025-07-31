@@ -2,7 +2,7 @@
 Description=Run offlineimap-quick.service every ten minutes during work hours
 
 [Timer]
-OnCalendar=Mon..Fri *-*-* 8..19:0/10:*
+OnCalendar=Mon..Fri *-*-* 8..19:0/10:00
 Unit=offlineimap-quick.service
 
 [Install]
