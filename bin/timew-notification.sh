@@ -8,6 +8,9 @@
 # Print one liner timew summary
 # Can also send a notification about the current timew status
 
+TAGS=$(timew | grep -E 'Tracking' | sed -E 's/^.*Tracking[[:space:]]+//')
+TIME=$(timew | grep -E 'Total' | sed -E 's/^.*Total[[:space:]]+//')
+
 
 notification ()
 {
@@ -17,16 +20,16 @@ notification ()
     fi
 }
 
-TAGS=$(timew | grep -E 'Tracking' | sed -E 's/^.*Tracking[[:space:]]+//')
-TIME=$(timew | grep -E 'Total' | sed -E 's/^.*Total[[:space:]]+//')
+byobu_notify ()
+{
+    # Only print the first five letters of tag string: the idea is just to remind one of what the current task is
+    # https://askubuntu.com/questions/184495/why-byobu-custom-status-notification-code-fail-to-show-in-color
 
-# Only print the first five letters of tag string: the idea is just to remind one of what the current task is
-# https://askubuntu.com/questions/184495/why-byobu-custom-status-notification-code-fail-to-show-in-color
-
-if [ "" != "$TIME" ]
-then
-    echo "#[fg=white,bg=green]${TIME} ${TAGS:0:5}...#[default]"
-fi
+    if [ "" != "$TIME" ]
+    then
+        echo "#[fg=white,bg=green]${TIME} ${TAGS:0:5}...#[default]"
+    fi
+}
 
 while getopts "n" OPTION
 do
@@ -37,3 +40,6 @@ do
             ;;
     esac
 done
+
+# if not -n, byobu notification
+byobu_notify
