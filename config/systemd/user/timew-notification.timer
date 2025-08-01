@@ -2,7 +2,7 @@
 Description=Run timew-notification every 30 minutes on work days
 
 [Timer]
-OnCalendar=Mon..Fri *-*-* 9..18:30:00
+OnCalendar=Mon..Fri *-*-* 9..18:00/30:00
 Unit=timew-notification.service
 
 [Install]
