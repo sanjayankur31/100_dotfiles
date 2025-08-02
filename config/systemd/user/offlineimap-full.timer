@@ -2,7 +2,7 @@
 Description=Run offlineimap-full.service twice a day
 
 [Timer]
-OnCalendar=Mon..Fri *-*-* 7,20:00:00
+OnCalendar=*-*-* 7,20:00:00
 Unit=offlineimap-full.service
 
 [Install]
