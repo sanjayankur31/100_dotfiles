@@ -46,3 +46,5 @@ bin/racc
 .userRootModFile.*
 
 java/
+
+.mypy_cache
