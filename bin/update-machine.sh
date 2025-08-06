@@ -18,7 +18,22 @@ update_pass () {
 
 update_vim () {
     echo ">>> Update vim"
-    pushd ~/.vim && git clean -dfx && git pull && git push && vim "+:PlugClean" "+:PlugInstall" "+:PlugUpdate" "+:qall" && popd
+    set -e
+    pushd ~/.vim
+
+    git clean -dfx && git pull && git push
+
+    # update vim-plug
+    vim "+:PlugUpgrade" "+:qall"
+    if [ -e "autoload/plug.vim.old" ]
+    then
+        rm -f autoload/plug.vim.old && git add autoload/plug.vim && git commit -m "chore: update vim-plug" && git push
+    fi
+
+    vim '+:PlugClean!' "+:PlugInstall" "+:PlugUpdate" "+:qall"
+    popd
+
+    set +e
 }
 
 update_dots () {
