@@ -32,7 +32,7 @@ logger.addHandler(handler)
 
 
 def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
-          dry_run: bool = True) -> None:
+          dry_run: bool = True, annotate: bool = True) -> None:
     """Split task into new sub-tasks
 
     For each provided sub_tasks string, a new task is created using the string
@@ -46,6 +46,11 @@ def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
     :type src_task: int
     :param sub_tasks: list of sub-tasks to create
     :type sub_tasks: list(str)
+    :param dry_run: toggle dry run
+    :type dry_run: bool
+    :param annotate: toggle if annotations should be copied (and initial task
+        summary added as annotation)
+    :type annotate: bool
     :returns: None
 
     """
@@ -81,17 +86,20 @@ def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
             if not dry_run:
                 ret = subprocess.run(new_task_command.split())
 
-            annotate_task_command = f"task +LATEST annotate '{description}'"
-            logger.info(f"COMMAND: {annotate_task_command}")
-            if not dry_run and (ret is not None and ret.returncode == 0):
-                ret = subprocess.run(annotate_task_command.split())
-
-            for annotation in annotations:
-                annotation_description = annotation['description']
-                annotate_task_command = f"task +LATEST annotate '{annotation_description}'"
+            if annotate:
+                annotate_task_command = f"task +LATEST annotate '{description}'"
                 logger.info(f"COMMAND: {annotate_task_command}")
                 if not dry_run and (ret is not None and ret.returncode == 0):
                     ret = subprocess.run(annotate_task_command.split())
+
+                for annotation in annotations:
+                    annotation_description = annotation['description']
+                    annotate_task_command = f"task +LATEST annotate '{annotation_description}'"
+                    logger.info(f"COMMAND: {annotate_task_command}")
+                    if not dry_run and (ret is not None and ret.returncode == 0):
+                        ret = subprocess.run(annotate_task_command.split())
+            else:
+                logger.info("Annotations disabled")
 
         mark_original_as_done_command = f"task uuid:{uuid} done"
         logger.info(f"COMMAND: {mark_original_as_done_command}")
