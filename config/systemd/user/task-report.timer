@@ -2,7 +2,7 @@
 Description=Run task report every Friday
 
 [Timer]
-OnCalendar=Fri *-*-* 19:00:00
+OnCalendar=Fri *-*-* 07:00:00
 Unit=task-report.service
 Persistent=true
 
