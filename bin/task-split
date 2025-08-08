@@ -8,7 +8,6 @@ Copyright 2025 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 
-
 import typing
 import typer
 import subprocess
@@ -31,21 +30,36 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
-          dry_run: bool = True, annotate: bool = True) -> None:
+def split(
+    src_task: int,
+    new_project: str,
+    sub_tasks: typing.List[str],
+    dry_run: bool = True,
+    annotate: bool = False,
+) -> None:
     """Split task into new sub-tasks
 
     For each provided sub_tasks string, a new task is created using the string
     as description in the provided new_project. Annotations from the provided
     src_task are copied over and the src_task is removed.
 
-    If dry_run is enabled (default), the src_task will be obtained but not
-    processed.
+    One can either give explicit new sub_tasks to create, or mention how many
+    tasks to break it into as an integer. The total estimate of the main task
+    will be split into this number.
+
+    If the new_project is an empty string, "", the project of the src_task is
+    used.
+
+    If dry_run is enabled (default), no tasks will be modified, only the task
+    commands shown.
+
 
     :param src_task: id of task to split
     :type src_task: int
-    :param sub_tasks: list of sub-tasks to create
-    :type sub_tasks: list(str)
+    :param new_project: new project, use "" to use the same as the parent task
+    :type new_project: str
+    :param sub_tasks: list of sub-tasks to create or an integer
+    :type sub_tasks: int or list(str)
     :param dry_run: toggle dry run
     :type dry_run: bool
     :param annotate: toggle if annotations should be copied (and initial task
@@ -61,20 +75,36 @@ def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
     ret = None
     get_task_command = f"task {src_task} export"
     logger.info(f"COMMAND: {get_task_command}")
-    ret = subprocess.run(get_task_command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ret = subprocess.run(
+        get_task_command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
 
     if ret.returncode == 0:
         task_stdout = ret.stdout.decode(encoding="utf-8")
-        task_json = (json.loads(task_stdout)[0])
+        task_json = json.loads(task_stdout)[0]
         logger.info(f"TASK JSON: {task_json}")
-        tags = task_json.get('tags', [])
-        priority = task_json.get('priority', 'L')
-        due = task_json.get('due', 'eod')
-        estimate = task_json.get('estimate', '1h')
-        impact = task_json.get('impact', 'L')
-        annotations = task_json.get('annotations', [])
-        description = task_json.get('description')
-        uuid = task_json.get('uuid')
+        tags = task_json.get("tags", [])
+        priority = task_json.get("priority", "L")
+        due = task_json.get("due", "eod")
+        estimate = task_json.get("estimate", "1h")
+        impact = task_json.get("impact", "L")
+        annotations = task_json.get("annotations", [])
+        description = task_json.get("description")
+        uuid = task_json.get("uuid")
+        project = task_json.get("project", "''")
+
+        if not new_project:
+            new_project = project
+
+        # if sub_tasks is an integer
+        if len(sub_tasks) == 1:
+            try:
+                num_sub_tasks = int(sub_tasks[0])
+                logger.info(f"Splitting task into {num_sub_tasks} equal tasks")
+                estimate = f"{estimate}/{num_sub_tasks}"
+                sub_tasks = [f"{description}: {i}" for i in range(num_sub_tasks)]
+            except ValueError:
+                pass
 
         # clear ret for future dry runs
         ret = None
@@ -93,8 +123,10 @@ def split(src_task: int, new_project: str, sub_tasks: typing.List[str],
                     ret = subprocess.run(annotate_task_command.split())
 
                 for annotation in annotations:
-                    annotation_description = annotation['description']
-                    annotate_task_command = f"task +LATEST annotate '{annotation_description}'"
+                    annotation_description = annotation["description"]
+                    annotate_task_command = (
+                        f"task +LATEST annotate '{annotation_description}'"
+                    )
                     logger.info(f"COMMAND: {annotate_task_command}")
                     if not dry_run and (ret is not None and ret.returncode == 0):
                         ret = subprocess.run(annotate_task_command.split())
