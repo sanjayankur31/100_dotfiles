@@ -191,6 +191,8 @@ if [[ $- == *i* ]] ; then
             bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
         fi
 
+        # alias for end of work day
+        alias eowd="today +18h"
         # vit related functions, instead of aliases
         TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
         vit-tl ()
