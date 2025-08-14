@@ -1,5 +1,5 @@
 #!/bin/bash
-# search-tw-projects.sh
+# task-list-projects
 # use wofi/rofi/fzf to quickly search through tw projects
 
 PROJECT=$(task _unique project | fzf)
