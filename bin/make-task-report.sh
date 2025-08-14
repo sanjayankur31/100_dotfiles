@@ -25,8 +25,13 @@
 #
 
 OUTPUTDIR="${HOME}/Sync/taskreports/"
+#
+# if no date is provided, assume today/now
+enddatedefault=$(date +%Y-%m-%d -d "now")
+nowtime=$(date +%Y-%m-%dT%H:%M)
 
 mkdir -pv ${OUTPUTDIR}/
+
 
 function taskreports() {
     # Update list as required
@@ -95,16 +100,12 @@ while getopts "twd:h" OPTION
 do
     case $OPTION in
         t)
-            enddatedefault=$(date +%Y-%m-%d -d "now")
-            nowtime=$(date +%Y-%m-%dT%H:%M)
             enddate=${enddateinput:-$enddatedefault}
             endtimestamp=${enddateinput:-$nowtime}
             taskreports
             exit 0
             ;;
         w)
-            enddatedefault=$(date +%Y-%m-%d -d "now")
-            nowtime=$(date +%Y-%m-%dT%H:%M)
             enddate=${enddateinput:-$enddatedefault}
             endtimestamp=${enddateinput:-$nowtime}
             timesheets
@@ -126,9 +127,6 @@ do
 done
 
 
-# if no date is provided, assume today/now
-enddatedefault=$(date +%Y-%m-%d -d "now")
-nowtime=$(date +%Y-%m-%dT%H:%M)
 enddate=${enddateinput:-$enddatedefault}
 endtimestamp=${enddateinput:-$nowtime}
 taskreports
