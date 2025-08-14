@@ -1,0 +1,10 @@
+[Unit]
+Description=Run only task report everyday
+
+[Timer]
+OnCalendar=*-*-* 07:00:00
+Unit=task-report-daily.service
+Persistent=true
+
+[Install]
+WantedBy=default.target

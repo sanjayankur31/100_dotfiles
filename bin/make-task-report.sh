@@ -84,15 +84,33 @@ usage () {
     echo
     echo "Options:"
     echo
-    echo "-t <date>: date to use as end date/time for time sheets: if not supplied, use today's date and current time"
+    echo "-d <date>: date to use as end date/time for time sheets: if not supplied, use today's date and current time"
+    echo "-t: generate only task reports assuming today's date and current time"
+    echo "-w: generate only timew reports assuming today's date and current time"
     echo "-h: print this help message and exit"
 }
 
 # parse options
-while getopts "t:h" OPTION
+while getopts "twd:h" OPTION
 do
     case $OPTION in
         t)
+            enddatedefault=$(date +%Y-%m-%d -d "now")
+            nowtime=$(date +%Y-%m-%dT%H:%M)
+            enddate=${enddateinput:-$enddatedefault}
+            endtimestamp=${enddateinput:-$nowtime}
+            taskreports
+            exit 0
+            ;;
+        w)
+            enddatedefault=$(date +%Y-%m-%d -d "now")
+            nowtime=$(date +%Y-%m-%dT%H:%M)
+            enddate=${enddateinput:-$enddatedefault}
+            endtimestamp=${enddateinput:-$nowtime}
+            timesheets
+            exit 0
+            ;;
+        d)
             enddateinput="$OPTARG"
             ;;
         h)
