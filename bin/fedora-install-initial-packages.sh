@@ -56,6 +56,7 @@ install_basics() {
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 python3-typer \
     rpmfusion-packager rfpkg fedrq fbrnch \
+    ansi2html \
     --setopt=strict=0
 
     # parcellite
