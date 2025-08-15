@@ -24,7 +24,7 @@ function get_task_data ()
     echo
     echo " -- Overdue tasks -- "
     filter="$project_filter"
-    /usr/bin/task "$rcoptions" $project_filter overdue
+    /usr/bin/task "$rcoptions" $filter overdue
 
     echo
     echo
