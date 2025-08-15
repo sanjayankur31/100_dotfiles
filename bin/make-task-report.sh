@@ -32,10 +32,14 @@ NOWTIME=$(date +%Y-%m-%dT%H:%M)
 
 mkdir -pv ${OUTPUTDIR}/
 
+# update as required
+TASK_PROJECT_LIST=("foss" "job" "research" "personal")
+TIMEW_TAG_LIST=("foss" "job" "research" "personal" "volunteering" "career-development" "citizenship")
+
 
 function taskreports() {
     # Update list as required
-    for p in "foss" "job.ucl" "research" "personal"
+    for p in ${TASK_PROJECT_LIST[@]}
     do
         ${HOME}/bin/generate-taskreports.sh -p $p | ansi2html -w > ${OUTPUTDIR}/taskreport-$p-$ENDDATE.html
     done
@@ -56,14 +60,14 @@ function timesheets() {
     /usr/bin/timew report totals.py :week | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
 
     echo >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-    for p in "foss" "job" "research" "personal" "volunteering" "career-development"
+    for p in ${TIMEW_TAG_LIST[@]}
     do
         echo " -- Week: $p --" >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-        /usr/bin/timew summary "${week_start}" - "${ENDTIMESTAMP}" "$p" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
+        /usr/bin/timew summary "${week_start}" - "${ENDTIMESTAMP}" "$p" :annotations | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
     done
 
     echo " -- Week: all --" >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-    /usr/bin/timew summary "${week_start}" - "${ENDTIMESTAMP}" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
+    /usr/bin/timew summary "${week_start}" - "${ENDTIMESTAMP}" :annotations | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
 
     echo >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
     echo >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
@@ -71,14 +75,14 @@ function timesheets() {
     /usr/bin/timew report totals.py :month | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
 
     echo >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-    for p in "foss" "job" "research" "personal"
+    for p in ${TIMEW_TAG_LIST[@]}
     do
         echo " -- Month: $p --" >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-        /usr/bin/timew summary "${month_start}" - "${ENDTIMESTAMP}" "$p" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
+        /usr/bin/timew summary "${month_start}" - "${ENDTIMESTAMP}" "$p" :annotations | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
     done
 
     echo " -- Month: all --" >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
-    /usr/bin/timew summary "${month_start}" - "${ENDTIMESTAMP}" | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
+    /usr/bin/timew summary "${month_start}" - "${ENDTIMESTAMP}" :annotations | ansi2html -w >> ${OUTPUTDIR}/timesheet-$ENDDATE.html
 
 }
 
