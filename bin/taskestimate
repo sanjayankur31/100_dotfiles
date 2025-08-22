@@ -196,6 +196,7 @@ def main(arguments: typing.List[str]):
     - arguments: all arguments are passed to `task`
     """
 
+    suggested_percentage = 70.
 
     report_end = None
     for arg in arguments:
@@ -276,9 +277,19 @@ def main(arguments: typing.List[str]):
     logger.debug("Command: " + " ".join(arguments))
     if total_hrs != 0.0:
         if report_end:
+            percentage = total_hrs/total_work_hours * 100
             logger.info(
-                f"Estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours with {total_work_hours} working hours remaining till '{report_end}'"
+                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs}/{total_work_hours} working hours ({percentage:.2f}%) till '{report_end}'"
             )
+            if percentage > 100:
+                logger.critical(
+                    f"{percentage}%? Really?"
+                )
+            if percentage > suggested_percentage:
+                logger.warning(
+                    f"You are OVER COMMITTED. Consider reducing planned tasks. Suggested commitment is {suggested_percentage}%."
+                )
+
         else:
             logger.info(
                 f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours"
