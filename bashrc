@@ -330,6 +330,7 @@ if [[ $- == *i* ]] ; then
             fi
         }
         complete -F _venv_completions uvactivate
+        complete -F _venv_completions uvrm
 
     fi
     alias man='vman'
