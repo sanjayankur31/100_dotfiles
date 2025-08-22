@@ -9,6 +9,9 @@ Copyright 2024 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 
+import holidays
+import typing
+import typer
 import math
 import subprocess
 import sys
@@ -16,80 +19,274 @@ import json
 from isoduration import parse_duration
 from datetime import timedelta, datetime
 
-timenow = timethen = datetime.now()
-num_tasks = 0
-num_estimated = 0
-
-# get context
-context_arguments = ["task", "context", "show"]
-try:
-    process = subprocess.run(
-        args=context_arguments,
-        capture_output=True,
-        encoding="utf-8",
-        errors="replace",
-        check=True,
-    )
-except subprocess.CalledProcessError as e:
-    print(e.stderr)
-    sys.exit(0)
-output = process.stdout
-
-context = ""
-context_name = ""
-for line in output.splitlines():
-    if "Context" in line:
-        context_name = line.split()[1]
-    if "read filter" in line:
-        context = line.split(": ", maxsplit=1)[1]
-        context = f"({context.strip("'")})"
-
-if len(context) > 0:
-    print(f"Context is {context_name}: {context}")
-else:
-    print("No context set")
-
-if len(sys.argv) > 1:
-    arguments = ["task", "status:pending", context] + sys.argv[1:] + ["export"]
-else:
-    arguments = ["task", "status:pending", context] + ["export"]
+import logging
 
 
-try:
-    process = subprocess.run(
-        args=arguments,
-        capture_output=True,
-        encoding="utf-8",
-        errors="replace",
-        check=True,
-    )
-except subprocess.CalledProcessError as e:
-    print(e.stderr)
-    sys.exit(0)
+logging.basicConfig(level=logging.NOTSET)
+logger = logging.getLogger("taskestimate")
+logger.setLevel(logging.INFO)
+logger.propagate = False
 
-output = process.stdout
-# print(output)
+formatter = logging.Formatter("%(name)s (%(levelname)s): %(message)s")
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+handler.setFormatter(formatter)
 
-tasks = json.loads(output)
+logger.addHandler(handler)
 
-for atask in tasks:
-    num_tasks += 1
+# https://github.com/dnel/BusinessHours/blob/master/BusinessHours.py
+class BusinessHours:
+
+    def __init__(self, datetime1, datetime2, 
+                 worktiming=[8, 17],
+                 weekends=[6, 7], 
+                 holidays=[]):
+        self.weekends = weekends
+        self.worktiming = worktiming
+        self.datetime1 = datetime1
+        self.datetime2 = datetime2
+        self.day_hours = (self.worktiming[1]-self.worktiming[0])
+        self.day_minutes = self.day_hours * 60 # minutes in a work day
+        self.holidays = holidays
+
+    def getdays(self):
+        """
+        Return the difference in days.
+        """
+        return int(self.getminutes() / self.day_minutes)
+    
+    def gethours(self):
+        """
+        Return the difference in hours.
+        """
+        return int(self.getminutes() / 60)
+
+    def getminutes(self):
+        """
+        Return the difference in minutes.
+        """
+        # Set initial default variables
+        dt_start = self.datetime1  # datetime of start
+        dt_end = self.datetime2    # datetime of end
+        worktime_in_seconds = 0
+
+        if dt_start.date() == dt_end.date():
+            # starts and ends on same workday
+            full_days = 0
+            if self.is_weekend(dt_start) and not self.is_holiday(dt_start):
+                return 0
+            else:
+                if dt_start.hour < self.worktiming[0]:
+                    # set start time to opening hour
+                    dt_start = datetime(
+                        year=dt_start.year,
+                        month=dt_start.month,
+                        day=dt_start.day,
+                        hour=self.worktiming[0],
+                        minute=0)
+                if dt_start.hour >= self.worktiming[1] or \
+                        dt_end.hour < self.worktiming[0]:
+                    return 0
+                if dt_end.hour >= self.worktiming[1]:
+                    dt_end = datetime(
+                        year=dt_end.year,
+                        month=dt_end.month,
+                        day=dt_end.day,
+                        hour=self.worktiming[1],
+                        minute=0)
+                worktime_in_seconds = (dt_end-dt_start).total_seconds()
+        elif (dt_end-dt_start).days < 0:
+            # ends before start
+            return 0
+        else:
+            # start and ends on different days
+            current_day = dt_start  # marker for counting workdays
+            while not current_day.date() == dt_end.date():
+                if not self.is_weekend(current_day) and not self.is_holiday(current_day):
+                    if current_day == dt_start:
+                        # increment hours of first day
+                        if current_day.hour < self.worktiming[0]:
+                            # starts before the work day
+                            worktime_in_seconds += self.day_minutes*60  # add 1 full work day
+                        elif current_day.hour >= self.worktiming[1]:
+                            pass  # no time on first day
+                        else:
+                            # starts during the working day
+                            dt_currentday_close = datetime(
+                                year=dt_start.year,
+                                month=dt_start.month,
+                                day=dt_start.day,
+                                hour=self.worktiming[1],
+                                minute=0)
+                            worktime_in_seconds += (dt_currentday_close
+                                         - dt_start).total_seconds()
+                    else:
+                        # increment one full day
+                        worktime_in_seconds += self.day_minutes*60
+                current_day += timedelta(days=1)  # next day
+            # Time on the last day
+            if not self.is_weekend(dt_end) and not self.is_holiday(dt_end):
+                if dt_end.hour >= self.worktiming[1]:  # finish after close
+                    # Add a full day
+                    worktime_in_seconds += self.day_minutes*60
+                elif dt_end.hour < self.worktiming[0]:  # close before opening
+                    pass  # no time added
+                else:
+                    # Add time since opening
+                    dt_end_open = datetime(
+                        year=dt_end.year,
+                        month=dt_end.month,
+                        day=dt_end.day,
+                        hour=self.worktiming[0],
+                        minute=0)
+                    worktime_in_seconds += (dt_end-dt_end_open).total_seconds()
+        return int(worktime_in_seconds / 60)
+
+    def is_weekend(self, datetime):
+        """
+        Returns True if datetime lands on a weekend.
+        """
+        return datetime.isoweekday() in self.weekends
+
+    def is_holiday(self, datetime):
+        """
+        Returns True if datetime lands on a holiday.
+        """
+        return datetime.date() in self.holidays
+
+def get_work_hours_till_report_end(report_end = None):
+    """Get the number of hours left to work till the end of the report period.
+
+    :param report_end: end time of the report
+    :returns: number of work hours remaining
+
+    """
+    uk_holidays = holidays.UK()
     try:
-        thisduration = parse_duration(atask["estimate"])
-        timethen += thisduration
-        num_estimated += 1
-    except KeyError:
-        pass
+        process = subprocess.run(
+            args=f"task calc {report_end}".split(),
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        logger.error(e.stderr)
+        sys.exit(0)
 
-timedel = timethen - timenow
-total_hrs = math.ceil(timedel / timedelta(seconds=1)) / 3600
+    output = process.stdout
+    output = output.strip()
+    logger.debug(f"task calculated {report_end}: {output}")
 
-print("Command: " + " ".join(arguments))
-if total_hrs != 0.0:
-    print(
-        f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours"
-    )
-else:
-    print("No durations found in these tasks!")
+    timenow = datetime.now()
+    if output.startswith("P"):
+        report_end_date_time = timenow + parse_duration(output)
+    else:
+        report_end_date_time = datetime.fromisoformat(output)
 
-sys.exit(0)
+    bh = BusinessHours(timenow, report_end_date_time, worktiming=[10, 18],
+                       holidays=uk_holidays)
+
+    return bh.gethours()
+
+
+def main(arguments: typing.List[str]):
+    """Get estimates of how much time tasks take.
+
+    - arguments: all arguments are passed to `task`
+    """
+
+
+    report_end = None
+    for arg in arguments:
+        if "due" in arg:
+            report_end = arg.split(":")[1]
+
+    logger.debug(f"{report_end = }")
+    if report_end:
+        total_work_hours = get_work_hours_till_report_end(report_end)
+
+    timenow = timethen = datetime.now()
+    num_tasks = 0
+    num_estimated = 0
+
+    # get context
+    context_arguments = ["task", "context", "show"]
+    try:
+        process = subprocess.run(
+            args=context_arguments,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        logger.error(e.stderr)
+        sys.exit(0)
+    output = process.stdout
+
+    context = ""
+    context_name = ""
+    for line in output.splitlines():
+        if "Context" in line:
+            context_name = line.split()[1]
+        if "read filter" in line:
+            context = line.split(": ", maxsplit=1)[1]
+            context = f"({context.strip("'")})"
+
+    if len(context) > 0:
+        logger.info(f"Context is {context_name}: {context}")
+    else:
+        logger.info("No context set")
+
+    if len(sys.argv) > 1:
+        arguments = ["task", "status:pending", context] + sys.argv[1:] + ["export"]
+    else:
+        arguments = ["task", "status:pending", context] + ["export"]
+
+    try:
+        process = subprocess.run(
+            args=arguments,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        logger.error(e.stderr)
+        sys.exit(0)
+
+    output = process.stdout
+    # print(output)
+
+    tasks = json.loads(output)
+
+    for atask in tasks:
+        num_tasks += 1
+        try:
+            thisduration = parse_duration(atask["estimate"])
+            timethen += thisduration
+            num_estimated += 1
+        except KeyError:
+            pass
+
+    timedel = timethen - timenow
+    total_hrs = math.ceil(timedel / timedelta(seconds=1)) / 3600
+
+    logger.debug("Command: " + " ".join(arguments))
+    if total_hrs != 0.0:
+        if report_end:
+            logger.info(
+                f"Estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours with {total_work_hours} working hours remaining till '{report_end}'"
+            )
+        else:
+            logger.info(
+                f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours"
+            )
+    else:
+        logger.warning("No durations found in these tasks!")
+
+
+if __name__ == "__main__":
+    typer.run(main)
+    sys.exit(0)
