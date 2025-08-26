@@ -277,7 +277,13 @@ def main(arguments: typing.List[str]):
     logger.debug("Command: " + " ".join(arguments))
     if total_hrs != 0.0:
         if report_end:
+
+            # if we're out of work hours and still working, assume another hour
+            if total_work_hours == 0:
+                total_work_hours = 1.0
+
             percentage = total_hrs/total_work_hours * 100
+
             logger.info(
                 f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs}/{total_work_hours} working hours ({percentage:.2f}%) till '{report_end}'"
             )
