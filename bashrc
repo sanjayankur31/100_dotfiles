@@ -349,6 +349,8 @@ if [[ $- == *i* ]] ; then
         complete -F _venv_completions uvactivate
         complete -F _venv_completions uvrm
 
+        alias uvpip="uv pip"
+
     fi
     alias man='vman'
     export EDITOR='vim'
