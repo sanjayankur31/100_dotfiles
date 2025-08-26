@@ -272,6 +272,21 @@ if [[ $- == *i* ]] ; then
         taskestimate-rl () {
             taskestimate 'project:research.lit'
         }
+        taskestimates () {
+            INTERVAL="${1:-1m}"
+            while true
+            do
+                clear
+                echo "Task estimates at $(date '+%Y-%m-%d %H:%M') (every $INTERVAL)"
+                echo
+                taskestimate-today
+                echo
+                echo
+                taskestimate-this-week
+
+                sleep "$INTERVAL"
+            done
+        }
 
         alias neomutt-work='neomutt -F ~/Sync/99_private/work.neomuttrc'
         alias neomutt-all='neomutt -F ~/Sync/99_private/all.neomuttrc'
