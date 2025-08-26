@@ -37,9 +37,9 @@ logger.addHandler(handler)
 # https://github.com/dnel/BusinessHours/blob/master/BusinessHours.py
 class BusinessHours:
 
-    def __init__(self, datetime1, datetime2, 
+    def __init__(self, datetime1, datetime2,
                  worktiming=[8, 17],
-                 weekends=[6, 7], 
+                 weekends=[6, 7],
                  holidays=[]):
         self.weekends = weekends
         self.worktiming = worktiming
@@ -54,7 +54,7 @@ class BusinessHours:
         Return the difference in days.
         """
         return int(self.getminutes() / self.day_minutes)
-    
+
     def gethours(self):
         """
         Return the difference in hours.
@@ -164,7 +164,7 @@ def get_work_hours_till_report_end(report_end = None):
     uk_holidays = holidays.UK()
     try:
         process = subprocess.run(
-            args=f"task calc {report_end}".split(),
+            args=f"task rc.gc=0 calc {report_end}".split(),
             capture_output=True,
             encoding="utf-8",
             errors="replace",
@@ -212,7 +212,7 @@ def main(arguments: typing.List[str]):
     num_estimated = 0
 
     # get context
-    context_arguments = ["task", "context", "show"]
+    context_arguments = ["task", "rc.gc=0", "context", "show"]
     try:
         process = subprocess.run(
             args=context_arguments,
@@ -241,9 +241,9 @@ def main(arguments: typing.List[str]):
         logger.info("No context set")
 
     if len(sys.argv) > 1:
-        arguments = ["task", "status:pending", context] + sys.argv[1:] + ["export"]
+        arguments = ["task", "rc.gc=0", "status:pending", context] + sys.argv[1:] + ["export"]
     else:
-        arguments = ["task", "status:pending", context] + ["export"]
+        arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
 
     try:
         process = subprocess.run(

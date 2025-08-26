@@ -235,12 +235,12 @@ if [[ $- == *i* ]] ; then
         vit-next () {
             echo "Active tasks:"
             echo
-            task active
+            task rc.gc=0 active
             echo
             echo
             echo "Next ${1:-2} tasks:"
             echo
-            task ${TASK_FILTERS} limit:"${1:-2}"
+            task rc.gc=0 ${TASK_FILTERS} limit:"${1:-2}"
             echo
             echo
         }

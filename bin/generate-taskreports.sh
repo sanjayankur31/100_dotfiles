@@ -11,14 +11,14 @@ phrase_last_year="1-years-ago"
 start_last_year=$(date +$fmt -d $phrase_last_year)
 end=$(date +$fmt)
 project_filter=""
-rcoptions="rc.defaultwidth=150 rc.defaultheight=120"
+rcoptions="rc.gc=0 rc.defaultwidth=150 rc.defaultheight=120"
 
 
 function get_task_data ()
 {
-    current_context="$(task context | grep "yes" | cut -d " " -f1)"
+    current_context="$(task "$rcoptions" context | grep "yes" | cut -d " " -f1)"
     # Unset context
-    /usr/bin/task context none
+    /usr/bin/task "$rcoptions" context none
 
     echo " (generated at $(date))"
     echo
@@ -83,7 +83,7 @@ function get_task_data ()
 
 
     # Reset context
-    /usr/bin/task context "${current_context}"
+    /usr/bin/task "$rcoptions" context "${current_context}"
 }
 
 usage () {
