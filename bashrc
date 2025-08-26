@@ -279,9 +279,11 @@ if [[ $- == *i* ]] ; then
                 clear
                 echo "Task estimates at $(date '+%Y-%m-%d %H:%M') (every $INTERVAL)"
                 echo
+                echo "** Today **"
                 taskestimate-today
                 echo
                 echo
+                echo "** End of week **"
                 taskestimate-this-week
 
                 sleep "$INTERVAL"
