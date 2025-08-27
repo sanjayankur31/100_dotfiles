@@ -13,8 +13,10 @@ mkdir -p "$QUTE_BACKUPDIR" || exit -1
 
 pushd "$QUTE_DATADIR" || exit -1
     cp default.yml "$QUTE_BACKUPDIR/$timestamp-default.yml"
+    find . -name "*default.yml" -mtime +14 -delete
 popd
 
 pushd "$QUTE_CONFDIR" || exit -1
     cp autoconfig.yml "$QUTE_BACKUPDIR/$timestamp-autoconfig.yml"
+    find . -name "*autoconfig.yml" -mtime +14 -delete
 popd
