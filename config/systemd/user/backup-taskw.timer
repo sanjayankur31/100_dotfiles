@@ -1,0 +1,10 @@
+[Unit]
+Description=Run taskw backup service
+
+[Timer]
+OnCalendar=*-*-* 19:00:00
+Unit=backup-taskw.service
+Persistent=true
+
+[Install]
+WantedBy=default.target
