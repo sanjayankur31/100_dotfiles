@@ -291,7 +291,8 @@ def main(arguments: typing.List[str]):
                 logger.critical(
                     f"{percentage}%? Really?"
                 )
-            if percentage > suggested_percentage:
+            # only really relevant for longer periods
+            if total_work_hours >= 8 and percentage > suggested_percentage:
                 print()
                 logger.warning(
                     f"You are OVER COMMITTED. Consider reducing planned tasks. Suggested commitment is {suggested_percentage}%."
