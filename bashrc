@@ -197,7 +197,7 @@ if [[ $- == *i* ]] ; then
         export TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
         vit-active ()
         {
-            vit active ${TASK_FILTERS}
+            vit active
         }
         vit-tl ()
         {
@@ -247,6 +247,12 @@ if [[ $- == *i* ]] ; then
             task rc.gc=0 ${TASK_FILTERS} limit:"${1:-2}"
             echo
             echo
+            echo "** Today **"
+            taskestimate-today
+            echo
+            echo
+            echo "** End of week **"
+            taskestimate-this-week
         }
         taskestimate-tl ()
         {
