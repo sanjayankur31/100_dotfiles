@@ -194,7 +194,11 @@ if [[ $- == *i* ]] ; then
         # alias for end of work day
         alias eowd="today +18h"
         # vit related functions, instead of aliases
-        TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
+        export TASK_FILTERS="project!~research.lit.bucket tags!~tickler project!~agenda"
+        vit-active ()
+        {
+            vit active ${TASK_FILTERS}
+        }
         vit-tl ()
         {
             vit ${TASK_FILTERS}

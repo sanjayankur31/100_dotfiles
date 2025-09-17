@@ -15,10 +15,9 @@ default ()
         byobu new-session -s "default" -d
         tmux new-window -n "weechat" -t default: 'systemd-run --user --scope bash -i -c "weechat"'
         tmux new-window -n "neomutt" -t default: 'systemd-run --user --scope bash -i -c "neomutt-work"'
+        tmux new-window -n "active" -t default: 'systemd-run --user --scope bash -i -c "vit-active"'
         tmux new-window -n "eod" -t default: 'systemd-run --user --scope bash -i -c "vit-today"'
         tmux new-window -n "eow" -t default: 'systemd-run --user --scope bash -i -c "vit-this-week"'
-        tmux new-window -n "1w" -t default: 'systemd-run --user --scope bash -i -c "vit-in-a-week"'
-        tmux new-window -n "eom" -t default: 'systemd-run --user --scope bash -i -c "vit-this-month"'
         tmux new-window -n "1m" -t default: 'systemd-run --user --scope bash -i -c "vit-in-a-month"'
         tmux new-window -n "waiting" -t default: 'systemd-run --user --scope bash -i -c "vit-on-wait"'
         tmux new-window -n "all" -t default: 'systemd-run --user --scope bash -i -c "vit-tl"'
