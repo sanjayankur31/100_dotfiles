@@ -234,7 +234,7 @@ if [[ $- == *i* ]] ; then
             vit 'project~agenda'
         }
         vit-on-wait () {
-            vit 'tags:on-wait'
+            vit 'tags:on_wait'
         }
         vit-next () {
             echo "Active tasks:"
