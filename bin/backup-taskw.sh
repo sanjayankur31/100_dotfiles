@@ -9,4 +9,4 @@ timestamp="$(date +%Y%m%d%H%M)"
 filename="taskchampion.sqlite3"
 
 pushd ~/.task/ && cp -av  "${filename}" "${filename}.${timestamp}" && popd
-find ~/.task/ -name "${filename}.*" -mtime +28 -delete
+find ~/.task/ -name "${filename}.*" -mtime +28 -printf "removed '%f'\n " -delete
