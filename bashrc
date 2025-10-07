@@ -146,7 +146,7 @@ if [[ $- == *i* ]] ; then
             DIR="$1"
           fi
 
-          builtin pushd "${DIR}" > /dev/null
+          builtin pushd "${DIR}/" > /dev/null
           echo -n "DIRSTACK: "
           dirs
         }
@@ -182,7 +182,7 @@ if [[ $- == *i* ]] ; then
               cmd="${FZF_ALT_P_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
                 -o -type d -print 2> /dev/null | command cut -b3-"}"
               opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_ALT_P_OPTS-} +m"
-              dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir"
+              dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir/"
             }
 
             # ALT-P - pushd into the selected directory
