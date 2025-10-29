@@ -42,17 +42,17 @@ install_basics() {
     weechat mpv vimiv-qt fedora-packager git-all offlineimap msmtp \
     notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
     vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
-    python3-websocket-client xsel deja-dup \
+    python3-websocket-client deja-dup \
     anka-coder-\* zathura zathura-plugins-all mupdf urlscan timew \
-    /usr/bin/ps2pdf psutils gnome-pomodoro podman python3-unidecode \
-    open-sans-fonts  /usr/bin/xindy rubygem-taskjuggler \
+    psutils gnome-pomodoro podman python3-unidecode \
+    open-sans-fonts  rubygem-taskjuggler \
     rubygem-webrick firewall-config fzf wl-clipboard \
     cowsay fortune-mod ledger bat uv python3-devel \
     @python-science clang-devel @c-development w3m python3-mailmerge \
     evolution-ews qt6-qtwebengine{,-devtools} \
-    /usr/bin/texcount podman kubernetes-client \
+    podman kubernetes-client \
     closure-compiler wofi rofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
-    python3-peewee libolm-python3 python3-jedi ruff /usr/bin/perlcritic \
+    python3-peewee python3-jedi ruff /usr/bin/perlcritic \
     trash-cli gnome-tweak-tool evolution bash-completion \
     gnome-extensions-app cmake npm newsboat \
     python3-msal psi-notify gcolor3 python3-typer \
@@ -73,6 +73,7 @@ install_texlive_packages() {
         'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
         'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
         texlive-beamertheme-metropolis pdfpc xdotool /usr/bin/latexindent \
+        /usr/bin/texcount /usr/bin/xindy /usr/bin/ps2pdf \
         fedtex proselint --setopt=strict=0
 }
 
