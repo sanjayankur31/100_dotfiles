@@ -3,6 +3,7 @@ REL="$(rpm -E %fedora)"
 echo "We are running Fedora $REL."
 
 setup_repos() {
+    sudo dnf install dnf5-plugins
     # taskjuggler
     sudo dnf copr enable ankursinha/rubygem-taskjuggler
     # NeuroFedora
