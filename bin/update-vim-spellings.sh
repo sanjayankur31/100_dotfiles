@@ -14,7 +14,7 @@ SPELLDIR="$HOME"/.vim/spell
 
 pushd "$SPELLDIR" || exit -1
     # make sure we have everything, including syncthing conflict files
-    sort -h "${OURLANG}*.add" "${SPELLFILE}*backup" | uniq > "${SPELLFILE}.new"
+    sort -h "${OURLANG}"*.add "${SPELLFILE}"*backup | uniq > "${SPELLFILE}.new"
 
     # no longer needed, not under git
     # sed -i -e '/^=+$/ d' -e '/^>+$/ d' -e '/^<+$/ d' "$SPELLFILE"
