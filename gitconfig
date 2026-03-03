@@ -44,4 +44,10 @@
 [init]
     defaultBranch = main
 [credential]
-	helper = libsecret
+    helper = libsecret
+[lfs]
+    concurrenttransfers = 3
+[lfs "customtransfer.xet"]
+    path = git-xet
+    args = transfer
+    concurrent = true
