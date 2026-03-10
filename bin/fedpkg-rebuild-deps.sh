@@ -157,7 +157,7 @@ do
     esac
 done
 
-if [ "NO" == "$MERGE_RAWHIDE" ] || [ -z "$CHANGELOG_ENTRY" ]
+if [ "NO" == "$MERGE_RAWHIDE" ] && [ -z "$CHANGELOG_ENTRY" ]
 then
     echo "> A changelog entry is required when not merging rawhide."
     echo "> Please specify one with the -c flag."
