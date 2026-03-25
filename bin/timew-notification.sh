@@ -16,7 +16,7 @@ notification ()
 {
     if [ -x "/usr/bin/notify-send" ]
     then
-        timew > /dev/null 2>&1 && notify-send -t 1000 -u normal -c im -i gnome-pomodoro -a  "Timew" "Timew" "${TIME}\n${TAGS}"
+        timew > /dev/null 2>&1 && notify-send -t 1000 -u low -e -c im -i gnome-pomodoro -a  "Timew" "Timew" "${TIME}\n${TAGS}"
     fi
 }
 
