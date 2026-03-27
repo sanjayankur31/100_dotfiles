@@ -215,17 +215,17 @@ enable_services () {
 usage() {
     echo "$0: Install packages and software"
     echo
-    echo "Usage: $0 [-subtfanFh]"
+    echo "Usage: $0 [-abefhnstu]"
     echo
-    echo "-s: set up DNF repos"
-    echo "-u: update groups: implies -s"
+    echo "-a: do all of the below"
     echo "-b: install basics: implies -s"
-    echo "-t: install TeXlive packages: implies -s"
+    echo "-e: enable services"
     echo "-f: install flatpaks from flathub: also sets up flathub"
-    echo "-a: do all of the above"
-    echo "-n: install nvidia driver"
-    echo "-F: install Flash plugin"
     echo "-h: print this usage text and exit"
+    echo "-n: install nvidia driver"
+    echo "-s: set up DNF repos"
+    echo "-t: install TeXlive packages: implies -s"
+    echo "-u: update groups: implies -s"
 }
 
 if [ $# -lt 1 ]
@@ -235,16 +235,15 @@ then
 fi
 
 # parse options
-while getopts "usbtfahnF" OPTION
+while getopts "abefhnstu" OPTION
 do
     case $OPTION in
-        s)
-            setup_repos
-            exit 0
-            ;;
-        u)
+        a)
             setup_repos
             update_groups
+            install_basics
+            install_texlive_packages
+            install_flatpaks
             enable_services
             exit 0
             ;;
@@ -254,9 +253,8 @@ do
             enable_services
             exit 0
             ;;
-        t)
-            setup_repos
-            install_texlive_packages
+        e)
+            enable_services
             exit 0
             ;;
         f)
@@ -268,16 +266,18 @@ do
             install_nvidia
             exit 0
             ;;
-        a)
+        s)
             setup_repos
-            update_groups
-            install_basics
-            install_texlive_packages
-            install_flatpaks
-            enable_services
             exit 0
             ;;
-        e)
+        t)
+            setup_repos
+            install_texlive_packages
+            exit 0
+            ;;
+        u)
+            setup_repos
+            update_groups
             enable_services
             exit 0
             ;;
