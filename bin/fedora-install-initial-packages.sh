@@ -38,43 +38,135 @@ update_groups() {
 
 install_basics() {
     # Basics
-    sudo dnf install byobu tmux htop syncthing vit task taskopen tasksh neomutt \
-    weechat mpv vimiv-qt fedora-packager git-all offlineimap msmtp \
-    notmuch gnuplot /usr/bin/rg aria2 qutebrowser cscope ctags fedora-review \
-    vim-enhanced vim-X11 notmuch-vim notmuch-mutt rcm pwgen pass \
-    python3-websocket-client deja-dup \
-    anka-coder-\* zathura zathura-plugins-all mupdf urlscan timew \
-    psutils gnome-pomodoro podman python3-unidecode \
-    open-sans-fonts  rubygem-taskjuggler \
-    rubygem-webrick firewall-config fzf wl-clipboard \
-    cowsay fortune-mod ledger bat uv python3-devel \
-    @python-science clang-devel @c-development w3m python3-mailmerge \
-    evolution-ews qt6-qtwebengine{,-devtools} \
-    podman kubernetes-client \
-    closure-compiler wofi rofi fd-find /usr/bin/rstcheck /usr/bin/mypy \
-    python3-peewee python3-jedi ruff /usr/bin/perlcritic \
-    trash-cli gnome-tweak-tool evolution bash-completion \
-    gnome-extensions-app cmake npm newsboat \
-    python3-msal psi-notify gcolor3 python3-typer \
-    rpmfusion-packager rfpkg fedrq fbrnch kstart \
-    ansi2html \
-    --setopt=strict=0
-
-    # parcellite
-    }
+    sudo dnf install \
+        --setopt=strict=0 \
+        /usr/bin/mypy \
+        /usr/bin/perlcritic \
+        /usr/bin/rg \
+        /usr/bin/rstcheck \
+        @c-development \
+        @python-science \
+        ShellCheck \
+        anka-coder-\* \
+        ansi2html \
+        aria2 \
+        bash-completion \
+        bat \
+        byobu \
+        clang-devel \
+        closure-compiler \
+        cmake \
+        cowsay \
+        cscope \
+        ctags \
+        deja-dup \
+        evolution \
+        evolution-ews \
+        fbrnch \
+        fd-find \
+        fedora-packager \
+        fedora-review \
+        fedrq \
+        firewall-config \
+        fortune-mod \
+        fzf \
+        gcolor3 \
+        git-all \
+        gnome-extensions-app \
+        gnome-pomodoro \
+        gnome-tweak-tool \
+        gnuplot \
+        htop \
+        kstart \
+        kubernetes-client \
+        ledger \
+        mpv \
+        msmtp \
+        mupdf \
+        neomutt \
+        newsboat \
+        notmuch \
+        notmuch-mutt \
+        notmuch-vim \
+        npm \
+        offlineimap \
+        open-sans-fonts \
+        pass \
+        podman \
+        psi-notify \
+        psutils \
+        pwgen \
+        python3-devel \
+        python3-jedi \
+        python3-mailmerge \
+        python3-msal \
+        python3-peewee \
+        python3-typer \
+        python3-unidecode \
+        python3-websocket-client \
+        qt6-qtwebengine{,-devtools} \
+        qutebrowser \
+        rcm \
+        rfpkg \
+        rofi \
+        rpmfusion-packager \
+        rubygem-taskjuggler \
+        rubygem-webrick \
+        ruff \
+        syncthing \
+        task \
+        taskopen \
+        tasksh \
+        timew \
+        tmux \
+        trash-cli \
+        urlscan \
+        uv \
+        vim-X11 \
+        vim-enhanced \
+        vimiv-qt \
+        vit \
+        w3m \
+        weechat \
+        wl-clipboard \
+        wofi \
+        zathura \
+        zathura-plugins-all
+}
 
 install_texlive_packages() {
     # texlive bits
     # some bits for muttprint
-    sudo dnf install texlive /usr/bin/pdflatex /usr/bin/latexmk /usr/bin/chktex \
-        /usr/bin/lacheck /usr/bin/biber texlive-epstopdf texlive-biblatex-nature \
+    sudo dnf install  \
+        --setopt=strict=0 \
+        'tex(array.sty)' \
+        'tex(babel.sty)' \
+        'tex(fancyhdr.sty)' \
+        'tex(fancyvrb.sty)' \
+        'tex(fontenc.sty)' \
+        'tex(graphicx.sty)' \
+        'tex(inputenc.sty)' \
+        'tex(lastpage.sty)' \
+        'tex(marvosym.sty)' \
+        'tex(textcomp.sty)' \
+        /usr/bin/biber \
+        /usr/bin/chktex \
+        /usr/bin/lacheck \
+        /usr/bin/latexindent \
+        /usr/bin/latexmk \
+        /usr/bin/pdflatex \
+        /usr/bin/ps2pdf \
+        /usr/bin/texcount \
         /usr/bin/texexpand \
-        'tex(array.sty)' 'tex(babel.sty)' 'tex(fancyhdr.sty)' 'tex(fancyvrb.sty)' \
-        'tex(fontenc.sty)' 'tex(graphicx.sty)' 'tex(inputenc.sty)' \
-        'tex(lastpage.sty)' 'tex(marvosym.sty)' 'tex(textcomp.sty)' \
-        texlive-beamertheme-metropolis pdfpc xdotool /usr/bin/latexindent \
-        /usr/bin/texcount /usr/bin/xindy /usr/bin/ps2pdf \
-        fedtex proselint --setopt=strict=0
+        /usr/bin/xindy \
+        fedtex \
+        pdfpc \
+        proselint \
+        texlive \
+        texlive-beamertheme-metropolis \
+        texlive-biblatex-nature \
+        texlive-epstopdf \
+        xdotool
 }
 
 
