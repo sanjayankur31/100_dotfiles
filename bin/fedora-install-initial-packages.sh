@@ -40,10 +40,10 @@ install_basics() {
     # Basics
     sudo dnf install \
         --setopt=strict=0 \
-        /usr/bin/mypy \
         /usr/bin/perlcritic \
         /usr/bin/rg \
         /usr/bin/rstcheck \
+        /usr/bin/ty \
         @c-development \
         @python-science \
         ShellCheck \
