@@ -178,17 +178,18 @@ if [[ $- == *i* ]] ; then
             # ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash
             # use Alt P
             __fzf_pushd__() {
-              local cmd opts dir
-              cmd="${FZF_ALT_P_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
-                -o -type d -print 2> /dev/null | command cut -b3-"}"
-              opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_ALT_P_OPTS-} +m"
-              dir=$(set +o pipefail; eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin pushd -- %q' "$dir/"
+                local dir
+                dir=$(
+                    FZF_DEFAULT_COMMAND=${FZF_ALT_P_COMMAND:-} \
+                        FZF_DEFAULT_OPTS=$(__fzf_defaults "--reverse --walker=dir,follow,hidden --scheme=path" "${FZF_ALT_P_OPTS-} +m") \
+                        FZF_DEFAULT_OPTS_FILE='' $(__fzfcmd)
+                    ) && printf 'builtin pushd -- %q' "$(builtin unset CDPATH && builtin cd -- "$dir" && builtin pwd)"
             }
-
-            # ALT-P - pushd into the selected directory
-            bind -m emacs-standard '"\ep": " \C-b\C-k \C-u`__fzf_pushd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
-            bind -m vi-command '"\ep": "\C-z\ep\C-z"'
-            bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
+            if [[ ${FZF_ALT_P_COMMAND-x} != "" ]]; then
+                bind -m emacs-standard '"\ep": " \C-b\C-k \C-u`__fzf_pushd__`\e\C-e\C-\e(\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d\C-y\ey\C-_"'
+                bind -m vi-command '"\ep": "\C-z\ep\C-z"'
+                bind -m vi-insert '"\ep": "\C-z\ep\C-z"'
+            fi
         fi
 
         # alias for end of work day
