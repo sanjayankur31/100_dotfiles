@@ -50,6 +50,7 @@ install_basics() {
         anka-coder-\* \
         ansi2html \
         aria2 \
+        autossh \
         bash-completion \
         bat \
         byobu \
