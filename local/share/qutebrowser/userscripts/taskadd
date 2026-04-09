@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Behavior:
 #   Userscript for qutebrowser which adds a task to taskwarrior.
@@ -11,7 +11,7 @@
 #       :spawn --userscript taskadd due:eod pri:H
 #
 #   To enable passing along extra args, I suggest using a mapping like:
-#       :bind <somekey> set-cmd-text -s :spawn --userscript taskadd
+#       :bind <somekey> cmd-set-text -s :spawn --userscript taskadd
 #
 #   If run from hint mode, it uses the selected hint text as the description
 #   and the selected hint url as the annotation.
@@ -19,18 +19,16 @@
 # Ryan Roden-Corrent (rcorre), 2016
 # Any feedback is welcome!
 #
-# For more info on Taskwarrior, see http://taskwarrior.org/
+# For more info on Taskwarrior, see https://taskwarrior.org/
 
 # use either the current page title or the hint text as the task description
-[[ "$QUTE_MODE" == 'hints' ]] && title="$QUTE_SELECTED_TEXT" || title="$QUTE_TITLE"
+[[ $QUTE_MODE == 'hints' ]] && title=$QUTE_SELECTED_TEXT || title=$QUTE_TITLE
 
 # try to add the task and grab the output
-msg="$(task add $title $@ 2>&1 | tr '\n' ' ')"
-
-if [[ $? == 0 ]]; then
+if msg="$(task add "$title" "$*" 2>&1)"; then
     # annotate the new task with the url, send the output back to the browser
-    task +LATEST annotate "$QUTE_URL" 2>&1 >/dev/null
-    echo "message-info '$msg'" > "$QUTE_FIFO"
+    task +LATEST annotate "$QUTE_URL"
+    echo "message-info '$(echo "$msg" | head -n 1)'" >> "$QUTE_FIFO"
 else
-    echo "message-error '$msg'" > "$QUTE_FIFO"
+    echo "message-error '$(echo "$msg" | head -n 1)'" >> "$QUTE_FIFO"
 fi
