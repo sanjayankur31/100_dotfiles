@@ -23,20 +23,33 @@ fi
 function start_ssh_agent {
     local myid
     myid="$(id -u)"
-    if ss -xl | grep -q "/run/user/${myid}/keyring/ssh"
-    then
-        export SSH_AUTH_SOCK="/run/user/${myid}/keyring/ssh"
+
+    # test with gcr-ssh-agent first
+    local gcr_ssh_state
+    gcr_ssh_state=$(systemctl --user show gcr-ssh-agent.socket --property ActiveState --value)
+    if [ "$gcr_ssh_state" = "active" ] || [ "$gcr_ssh_state" = "activating" ]; then
+        local gcr_ssh_socket
+        gcr_ssh_socket=$(systemctl --user show gcr-ssh-agent.socket --property=Listen --value | cut -d ' ' -f1)
+        if [ -S "$gcr_ssh_socket" ]
+        then
+            export SSH_AUTH_SOCK="$gcr_ssh_socket"
+        else
+            systemctl --user restart gcr-ssh-agent.socket >/dev/null 2>&1
+            export SSH_AUTH_SOCK="$gcr_ssh_socket"
+        fi
     else
+        # ssh-agent?
         if ! pgrep -fa -U "${myid}" ssh-agent > /dev/null
         then
-            if command -v ssh-agent > /dev/null
-            then
-                eval "$(ssh-agent -s)"
-            else
-                echo "ssh-agent command not found"
-            fi
+            # ssh-agent is running, but env var is not set---kill it
+            pkill -u "$(id -u)" -x ssh-agent
+        fi
+
+        if command -v ssh-agent > /dev/null
+        then
+            eval "$(ssh-agent -s)"
         else
-            echo "Agent already running"
+            echo "Neither gcr-ssh-agent nor ssh-agent found"
         fi
     fi
 }
@@ -102,7 +115,7 @@ if [[ $- == *i* ]] ; then
     if [[ "$ON_CLUSTER" = "yes" ]]; then
         # set all options here in case my vim config isn't on the system
         vman() {
-            /usr/bin/man -w "$@" && /usr/bin/man "$@" | col -b | vim  -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'set ft=man' -c 'nmap q :q<cr>' -; 
+            /usr/bin/man -w "$@" && /usr/bin/man "$@" | col -b | vim  -c 'setlocal nomod nolist noexpandtab tabstop=8 softtabstop=8 shiftwidth=8 nonu noma noswapfile colorcolumn=0' -c 'set ft=man' -c 'nmap q :q<cr>' -;
             }
     # for all my other machines
     else
