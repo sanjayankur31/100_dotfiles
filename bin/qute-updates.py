@@ -120,7 +120,11 @@ def update_pdfjs():
                     f.write(response.content)
                 logger.info(f"Downloaded {fname} to {PDFJS_DIR}")
 
-                os.rename("pdfjs", "pdfjs-old")
+                try:
+                    os.rename("pdfjs", "pdfjs-old")
+                except FileNotFoundError as e:
+                    logger.warning(e)
+
                 os.mkdir("pdfjs")
                 shutil.unpack_archive(fname, "pdfjs")
 
