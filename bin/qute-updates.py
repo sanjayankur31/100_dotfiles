@@ -72,12 +72,27 @@ def update_dict():
         if result.returncode != 0:
             logger.error(f"Could not run {cmd}")
             logger.error(result.stderr)
+        else:
+            if len(result.stdout):
+                logger.info(result.stdout)
+
+        cmd = shlex.split(f"python {script_name} install en-GB fr-FR hi-IN")
+        result = subprocess.run(cmd, capture_output=True)
+        if result.returncode != 0:
+            logger.error(f"Could not run {cmd}")
+            logger.error(result.stderr)
+        else:
+            if len(result.stdout):
+                logger.info(result.stdout)
 
         cmd = shlex.split(f"python {script_name} update")
         result = subprocess.run(cmd, capture_output=True)
         if result.returncode != 0:
             logger.error(f"Could not run {cmd}")
             logger.error(result.stderr)
+        else:
+            if len(result.stdout):
+                logger.info(result.stdout)
 
 @app.command()
 def update_pdfjs():
