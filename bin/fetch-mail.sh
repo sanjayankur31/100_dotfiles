@@ -15,6 +15,21 @@ OLDMAILS=0
 INCMAILS=0
 LASTSYNC=""
 
+
+source "$HOME/.bashrc"
+
+# do not use `command` here, since `uvls` is a bash function
+if ! uvls | grep offlineimap 2>&1 > /dev/null
+then
+    uvnew offlineimap
+    uvactivate offlineimap
+    uvpip install offlineimap
+else
+    uvactivate offlineimap
+fi
+
+
+
 kill_if_running ()
 {
     status
