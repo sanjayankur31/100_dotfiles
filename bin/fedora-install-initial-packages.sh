@@ -166,6 +166,7 @@ install_texlive_packages() {
         texlive \
         texlive-beamertheme-metropolis \
         texlive-biblatex-nature \
+        texlive-cbfonts\* \  # greek fonts
         texlive-epstopdf \
         xdotool
 }
