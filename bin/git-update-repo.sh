@@ -53,6 +53,7 @@ update_git_project () {
 
     git status -s
     echo
+    git stash list
     echo
 }
 
