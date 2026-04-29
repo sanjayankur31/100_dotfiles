@@ -14,10 +14,14 @@ update_git_project () {
 
     current_branch=$(git branch --show-current) || { echo "** Could not get current branch. Skipping this directory **" ; return ; }
 
+    echo "** Fetching repo updates from remote **"
+    git fetch --all --prune
+
+    echo "** Stashing if required **"
     stash_msg="auto-update-stash-$(date +%Y%m%d-%H%M)"
     stash_res=$(git stash push -a -m "$stash_msg")
 
-    git pull
+    git pull --rebase
 
     IFS=':' read -ra BRANCHES <<< "$DEFAULT_BRANCHES"
     for abranch in "${BRANCHES[@]}"
@@ -32,10 +36,10 @@ update_git_project () {
         if git show-ref --verify --quiet "refs/heads/$abranch"
         then
             echo "** Attempting to update branch: $abranch **"
-            if ! { git checkout "$abranch" && git pull ; }
+            if ! { git checkout "$abranch" && git pull --rebase --quiet ; }
             then
                 echo "!! Conflict or error when updating $abranch. Skipping. !!"
-                git merge --abort 2>/dev/null
+                git rebase --abort 2>/dev/null
             fi
         else
             echo "** Could not find branch: $abranch. Continuing to next. **"
@@ -51,8 +55,10 @@ update_git_project () {
         git stash pop --quiet
     fi
 
+    echo "** Git status **"
     git status -s
     echo
+    echo "** Git stashes: please remove the automatically created stash **"
     git stash list
     echo
 }
@@ -79,7 +85,6 @@ usage () {
     echo "Without any options: updates current folder"
     echo
     echo "-a: update all git directories in current directory"
-    echo "    uses the output of \"ls -d */\""
     echo "-b <branches>"
     echo "    colon separated list of branches to update"
     echo "    default value, if unspecified: ${DEFAULT_BRANCHES}"
@@ -96,9 +101,11 @@ do
     case $OPTION in
         a)
             DEFAULT_DIRECTORIES="$(find . -maxdepth 1 -name '[!.]*' -type d -printf '%P:')"
+            echo "** Found directories to update: $DEFAULT_DIRECTORIES **"
             ;;
         b)
             DEFAULT_BRANCHES="$OPTARG"
+            echo "** Branches to update: $DEFAULT_BRANCHES **"
             ;;
         d)
             DEFAULT_DIRECTORIES="$OPTARG"
