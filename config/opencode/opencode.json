@@ -5,7 +5,8 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "UCL ARC Qwen",
       "options": {
-        "baseURL": "https://inf01.arc-llm.condenser.arc.ucl.ac.uk/v1"
+        "baseURL": "https://inf01.arc-llm.condenser.arc.ucl.ac.uk/v1",
+        "apiKey": "{env:UCL_ARC_API_KEY}"
       },
       "models": {
         "Qwen": {
@@ -17,7 +18,8 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "UCL ARC Qwen-Coder",
       "options": {
-        "baseURL": "https://inf03.arc-llm.condenser.arc.ucl.ac.uk/v1"
+        "baseURL": "https://inf03.arc-llm.condenser.arc.ucl.ac.uk/v1",
+        "apiKey": "{env:UCL_ARC_API_KEY}"
       },
       "models": {
         "Qwen-Coder": {
