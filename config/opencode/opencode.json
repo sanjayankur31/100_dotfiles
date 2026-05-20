@@ -39,5 +39,18 @@
         }
       }
     }
+  },
+  "lsp": {
+      "ruff": {
+          "command": ["ruff", "server"],
+          "extensions": [".py"]
+      },
+      "ty": {
+          "command": ["ty", "server"],
+          "extensions": [".py"]
+      },
+      "pyright": {
+          "disabled": true
+      }
   }
 }
