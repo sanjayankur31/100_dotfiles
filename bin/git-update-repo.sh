@@ -109,6 +109,7 @@ do
             ;;
         d)
             DEFAULT_DIRECTORIES="$OPTARG"
+            echo "** Updating provided directories: $DEFAULT_DIRECTORIES **"
             ;;
         h)
             usage
