@@ -140,6 +140,10 @@ install_texlive_packages() {
     # some bits for muttprint
     sudo dnf install  \
         --setopt=strict=0 \
+        texlive-collection-basic \
+        texlive-collection-latex \
+        texlive-collection-latexrecommended \
+        texlive-collection-fontsrecommended \
         'tex(array.sty)' \
         'tex(babel.sty)' \
         'tex(fancyhdr.sty)' \
@@ -163,7 +167,6 @@ install_texlive_packages() {
         fedtex \
         pdfpc \
         proselint \
-        texlive \
         texlive-beamertheme-metropolis \
         texlive-biblatex-nature \
         texlive-cbfonts\* \  # greek fonts
