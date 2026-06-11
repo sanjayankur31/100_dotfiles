@@ -99,6 +99,7 @@ install_basics() {
         pwgen \
         python3-devel \
         python3-jedi \
+        python3-holidays \
         python3-mailmerge \
         python3-msal \
         python3-peewee \
