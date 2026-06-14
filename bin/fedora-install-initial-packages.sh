@@ -5,9 +5,9 @@ echo "We are running Fedora $REL."
 setup_repos() {
     sudo dnf install dnf5-plugins
     # taskjuggler
-    sudo dnf copr enable ankursinha/rubygem-taskjuggler
+    sudo dnf copr enable ankursinha/rubygem-taskjuggler -y
     # NeuroFedora
-    sudo dnf copr enable @neurofedora/neurofedora-extra
+    sudo dnf copr enable @neurofedora/neurofedora-extra -y
 
     # RPMFusion
     sudo dnf install \
@@ -170,7 +170,7 @@ install_texlive_packages() {
         proselint \
         texlive-beamertheme-metropolis \
         texlive-biblatex-nature \
-        texlive-cbfonts\* \  # greek fonts
+        texlive-cbfonts\* \
         texlive-epstopdf \
         xdotool
 }
