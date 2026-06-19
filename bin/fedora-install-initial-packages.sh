@@ -91,6 +91,7 @@ install_basics() {
         notmuch-vim \
         npm \
         offlineimap \
+        openssh-askpass \
         open-sans-fonts \
         pass \
         podman \
