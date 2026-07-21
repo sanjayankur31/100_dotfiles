@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2025 Ankur Sinha
-# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
+# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 # File : update-machine.sh
 #
 # Script to run various update commands
@@ -58,6 +58,11 @@ update_flatpaks () {
     flatpak --user update -y
 }
 
+update_misc () {
+    echo ">>> Updating opencode"
+    npm i -g opencode-ai
+}
+
 usage () {
     echo "$(basename $0): [-pvdnNfaA]"
     echo
@@ -80,7 +85,7 @@ usage () {
 if [ $# -lt 1 ]
 then
     usage
-    exit -1
+    exit 1
 fi
 
 while getopts "hpvdnNfaA" OPTION
@@ -117,6 +122,7 @@ do
             update_dots
             update_packages
             update_flatpaks
+            update_misc
             exit 0
             ;;
         A)
@@ -126,9 +132,14 @@ do
             update_dots
             update_packages
             update_flatpaks
+            update_misc
             exit 0
             ;;
         h)
+            usage
+            exit 0
+            ;;
+        *)
             usage
             exit 0
             ;;
