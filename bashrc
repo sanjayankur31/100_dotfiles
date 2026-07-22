@@ -103,6 +103,8 @@ if [[ $- == *i* ]] ; then
     then
         shopt -s histappend
     fi
+    # ignore duplicates
+    HISTCONTROL=ignoredups
 
     # check the window size after each command and, if necessary,
     # update the values of LINES and COLUMNS.
