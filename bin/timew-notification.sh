@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2020 Ankur Sinha
-# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com> 
+# Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 # File : timew-notification.sh
 #
 #
@@ -11,12 +11,19 @@
 TAGS=$(timew | grep -E 'Tracking' | sed -E 's/^.*Tracking[[:space:]]+//')
 TIME=$(timew | grep -E 'Total' | sed -E 's/^.*Total[[:space:]]+//')
 
+NOTIF_ID_FILE="${XDG_RUNTIME_DIR:-/tmp}/timew-notification-id"
 
 notification ()
 {
     if [ -x "/usr/bin/notify-send" ]
     then
-        timew > /dev/null 2>&1 && notify-send -t 1000 -u low -e -c im -i io.github.focustimerhq.FocusTimer -a  "Timew" "Timew" "${TIME}\n${TAGS}"
+        REPLACE_ID=""
+        [ -f "$NOTIF_ID_FILE" ] && REPLACE_ID="--replace-id=$(cat "$NOTIF_ID_FILE")"
+        timew > /dev/null 2>&1 && \
+            notify-send --print-id --expire-time=1000 --urgency=low --transient \
+                --category=im --app-icon=io.github.focustimerhq.FocusTimer \
+                --app-name="Timew" "Timew" "${TIME}\n${TAGS}" $REPLACE_ID \
+            > "$NOTIF_ID_FILE"
     fi
 }
 
@@ -38,6 +45,9 @@ do
             notification
             exit 0
             ;;
+        *)
+            echo "No option: what are you looking for?"
+            exit 1
     esac
 done
 
