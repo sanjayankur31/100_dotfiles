@@ -21,6 +21,8 @@ from datetime import timedelta, datetime
 
 import logging
 
+WORK_HOURS_MAP = {"work": (10, 18), "default": (9, 21)}
+
 
 logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger("taskestimate")
@@ -34,19 +36,18 @@ handler.setFormatter(formatter)
 
 logger.addHandler(handler)
 
+
 # https://github.com/dnel/BusinessHours/blob/master/BusinessHours.py
 class BusinessHours:
-
-    def __init__(self, datetime1, datetime2,
-                 worktiming=[8, 17],
-                 weekends=[6, 7],
-                 holidays=[]):
+    def __init__(
+        self, datetime1, datetime2, worktiming=[8, 17], weekends=[6, 7], holidays=[]
+    ):
         self.weekends = weekends
         self.worktiming = worktiming
         self.datetime1 = datetime1
         self.datetime2 = datetime2
-        self.day_hours = (self.worktiming[1]-self.worktiming[0])
-        self.day_minutes = self.day_hours * 60 # minutes in a work day
+        self.day_hours = self.worktiming[1] - self.worktiming[0]
+        self.day_minutes = self.day_hours * 60  # minutes in a work day
         self.holidays = holidays
 
     def getdays(self):
@@ -67,7 +68,7 @@ class BusinessHours:
         """
         # Set initial default variables
         dt_start = self.datetime1  # datetime of start
-        dt_end = self.datetime2    # datetime of end
+        dt_end = self.datetime2  # datetime of end
         worktime_in_seconds = 0
 
         if dt_start.date() == dt_end.date():
@@ -83,9 +84,12 @@ class BusinessHours:
                         month=dt_start.month,
                         day=dt_start.day,
                         hour=self.worktiming[0],
-                        minute=0)
-                if dt_start.hour >= self.worktiming[1] or \
-                        dt_end.hour < self.worktiming[0]:
+                        minute=0,
+                    )
+                if (
+                    dt_start.hour >= self.worktiming[1]
+                    or dt_end.hour < self.worktiming[0]
+                ):
                     return 0
                 if dt_end.hour >= self.worktiming[1]:
                     dt_end = datetime(
@@ -93,21 +97,26 @@ class BusinessHours:
                         month=dt_end.month,
                         day=dt_end.day,
                         hour=self.worktiming[1],
-                        minute=0)
-                worktime_in_seconds = (dt_end-dt_start).total_seconds()
-        elif (dt_end-dt_start).days < 0:
+                        minute=0,
+                    )
+                worktime_in_seconds = (dt_end - dt_start).total_seconds()
+        elif (dt_end - dt_start).days < 0:
             # ends before start
             return 0
         else:
             # start and ends on different days
             current_day = dt_start  # marker for counting workdays
             while not current_day.date() == dt_end.date():
-                if not self.is_weekend(current_day) and not self.is_holiday(current_day):
+                if not self.is_weekend(current_day) and not self.is_holiday(
+                    current_day
+                ):
                     if current_day == dt_start:
                         # increment hours of first day
                         if current_day.hour < self.worktiming[0]:
                             # starts before the work day
-                            worktime_in_seconds += self.day_minutes*60  # add 1 full work day
+                            worktime_in_seconds += (
+                                self.day_minutes * 60
+                            )  # add 1 full work day
                         elif current_day.hour >= self.worktiming[1]:
                             pass  # no time on first day
                         else:
@@ -117,18 +126,20 @@ class BusinessHours:
                                 month=dt_start.month,
                                 day=dt_start.day,
                                 hour=self.worktiming[1],
-                                minute=0)
-                            worktime_in_seconds += (dt_currentday_close
-                                         - dt_start).total_seconds()
+                                minute=0,
+                            )
+                            worktime_in_seconds += (
+                                dt_currentday_close - dt_start
+                            ).total_seconds()
                     else:
                         # increment one full day
-                        worktime_in_seconds += self.day_minutes*60
+                        worktime_in_seconds += self.day_minutes * 60
                 current_day += timedelta(days=1)  # next day
             # Time on the last day
             if not self.is_weekend(dt_end) and not self.is_holiday(dt_end):
                 if dt_end.hour >= self.worktiming[1]:  # finish after close
                     # Add a full day
-                    worktime_in_seconds += self.day_minutes*60
+                    worktime_in_seconds += self.day_minutes * 60
                 elif dt_end.hour < self.worktiming[0]:  # close before opening
                     pass  # no time added
                 else:
@@ -138,8 +149,9 @@ class BusinessHours:
                         month=dt_end.month,
                         day=dt_end.day,
                         hour=self.worktiming[0],
-                        minute=0)
-                    worktime_in_seconds += (dt_end-dt_end_open).total_seconds()
+                        minute=0,
+                    )
+                    worktime_in_seconds += (dt_end - dt_end_open).total_seconds()
         return int(worktime_in_seconds / 60)
 
     def is_weekend(self, datetime):
@@ -154,7 +166,8 @@ class BusinessHours:
         """
         return datetime.date() in self.holidays
 
-def get_work_hours_till_report_end(report_end = None):
+
+def get_work_hours_till_report_end(report_end=None, context_name: str = ""):
     """Get the number of hours left to work till the end of the report period.
 
     :param report_end: end time of the report
@@ -184,8 +197,14 @@ def get_work_hours_till_report_end(report_end = None):
     else:
         report_end_date_time = datetime.fromisoformat(output)
 
-    bh = BusinessHours(timenow, report_end_date_time, worktiming=[10, 18],
-                       holidays=uk_holidays)
+    # default: 9, 21
+    # set for other contexts
+    bh = BusinessHours(
+        timenow,
+        report_end_date_time,
+        worktiming=WORK_HOURS_MAP.get(context_name, WORK_HOURS_MAP.get("default")),
+        holidays=uk_holidays,
+    )
 
     return bh.gethours()
 
@@ -196,7 +215,7 @@ def main(arguments: typing.List[str]):
     - arguments: all arguments are passed to `task`
     """
 
-    suggested_percentage = 70.
+    suggested_percentage = 70.0
 
     report_end = None
     for arg in arguments:
@@ -204,12 +223,6 @@ def main(arguments: typing.List[str]):
             report_end = arg.split(":")[1]
 
     logger.debug(f"{report_end = }")
-    if report_end:
-        total_work_hours = get_work_hours_till_report_end(report_end)
-
-    timenow = timethen = datetime.now()
-    num_tasks = 0
-    num_estimated = 0
 
     # get context
     context_arguments = ["task", "rc.gc=0", "context", "show"]
@@ -240,8 +253,17 @@ def main(arguments: typing.List[str]):
     else:
         logger.info("No context set")
 
+    if report_end:
+        total_work_hours = get_work_hours_till_report_end(report_end, context_name)
+
+    timenow = timethen = datetime.now()
+    num_tasks = 0
+    num_estimated = 0
+
     if len(sys.argv) > 1:
-        arguments = ["task", "rc.gc=0", "status:pending", context] + sys.argv[1:] + ["export"]
+        arguments = (
+            ["task", "rc.gc=0", "status:pending", context] + sys.argv[1:] + ["export"]
+        )
     else:
         arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
 
@@ -277,20 +299,17 @@ def main(arguments: typing.List[str]):
     logger.debug("Command: " + " ".join(arguments))
     if total_hrs != 0.0:
         if report_end:
-
             # if we're out of work hours and still working, assume another hour
             if total_work_hours == 0:
                 total_work_hours = 1.0
 
-            percentage = total_hrs/total_work_hours * 100
+            percentage = total_hrs / total_work_hours * 100
 
             logger.info(
-                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs}/{total_work_hours} working hours ({percentage:.2f}%) till '{report_end}'"
+                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) till '{report_end}'"
             )
             if percentage > 100:
-                logger.critical(
-                    f"{percentage}%? Really?"
-                )
+                logger.critical(f"{percentage}%? Really?")
             # only really relevant for longer periods
             if total_work_hours >= 8 and percentage > suggested_percentage:
                 print()
@@ -300,7 +319,7 @@ def main(arguments: typing.List[str]):
 
         else:
             logger.info(
-                f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs} hours"
+                f"Total estimation for ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f} hours"
             )
     else:
         logger.warning("No durations found in these tasks!")
