@@ -14,7 +14,6 @@ import logging
 import math
 import subprocess
 import sys
-import typing
 from datetime import datetime, timedelta
 
 import colorlog
@@ -25,10 +24,8 @@ from isoduration import parse_duration
 WORK_HOURS_MAP = {"work": (10, 18), "default": (9, 21)}
 
 
-logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger("taskestimate")
 logger.setLevel(logging.INFO)
-logger.propagate = False
 
 formatter = colorlog.ColoredFormatter(
     "%(log_color)s%(name)s (%(levelname)s): %(message)s"
