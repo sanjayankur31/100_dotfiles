@@ -218,10 +218,13 @@ def main(arguments: list[str]):
     suggested_percentage = 70.0
 
     report_end = None
+    report_end_filter = None
     for arg in arguments:
         if "due" in arg:
+            report_end_filter = arg
             report_end = arg.split(":")[1]
 
+    logger.debug(f"{report_end_filter = }")
     logger.debug(f"{report_end = }")
 
     # get context
@@ -248,10 +251,12 @@ def main(arguments: list[str]):
             context = line.split(": ", maxsplit=1)[1]
             context = f"({context.strip("'")})"
 
+    info_str = f"Filter: {' '.join(arguments)}"
     if len(context) > 0:
-        logger.info(f"Context is {context_name}: {context}")
+        info_str += f" Context ({context_name}: {context})"
     else:
-        logger.info("No context set")
+        info_str += " (No context)"
+    logger.info(f"{info_str}")
 
     if report_end:
         total_work_hours = get_work_hours_till_report_end(report_end, context_name)
@@ -260,9 +265,9 @@ def main(arguments: list[str]):
     num_tasks = 0
     num_estimated = 0
 
-    if len(sys.argv) > 1:
+    if len(arguments) >= 1:
         arguments = (
-            ["task", "rc.gc=0", "status:pending", context] + sys.argv[1:] + ["export"]
+            ["task", "rc.gc=0", "status:pending", context] + arguments + ["export"]
         )
     else:
         arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
@@ -306,7 +311,7 @@ def main(arguments: list[str]):
             percentage = total_hrs / total_work_hours * 100
 
             logger.info(
-                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) till '{report_end}'"
+                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) {report_end_filter}"
             )
             if percentage > 100:
                 logger.critical(f"{percentage}%: Review your workload now.")
