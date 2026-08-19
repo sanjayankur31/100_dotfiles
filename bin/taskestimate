@@ -12,6 +12,7 @@ Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 import json
 import logging
 import math
+import shlex
 import subprocess
 import sys
 from datetime import datetime, timedelta
@@ -177,7 +178,7 @@ def get_work_hours_till_report_end(report_end=None, context_name: str = ""):
     uk_holidays = holidays.UK()
     try:
         process = subprocess.run(
-            args=f"task rc.gc=0 calc {report_end}".split(),
+            args=shlex.split(f"task rc.gc=0 calc {report_end}"),
             capture_output=True,
             encoding="utf-8",
             errors="replace",
@@ -199,10 +200,13 @@ def get_work_hours_till_report_end(report_end=None, context_name: str = ""):
 
     # default: 9, 21
     # set for other contexts
+    working_hours = WORK_HOURS_MAP.get(context_name, WORK_HOURS_MAP.get("default"))
+    logger.debug(f"{working_hours = }")
+
     bh = BusinessHours(
         timenow,
         report_end_date_time,
-        worktiming=WORK_HOURS_MAP.get(context_name, WORK_HOURS_MAP.get("default")),
+        worktiming=working_hours,
         holidays=uk_holidays,
     )
 
@@ -246,16 +250,18 @@ def main(arguments: list[str]):
     context_name = ""
     for line in output.splitlines():
         if "Context" in line:
-            context_name = line.split()[1]
+            context_name = line.split()[1].strip("'")
         if "read filter" in line:
             context = line.split(": ", maxsplit=1)[1]
             context = f"({context.strip("'")})"
+    logger.debug(f"{context_name = }; {context = }")
 
-    info_str = f"Filter: {' '.join(arguments)}"
-    if len(context) > 0:
-        info_str += f" Context ({context_name}: {context})"
+    info_str = "Filter"
+    if context_name:
+        info_str += f" (Context: {context_name})"
     else:
         info_str += " (No context)"
+    info_str += f": {' '.join(arguments)}"
     logger.info(f"{info_str}")
 
     if report_end:
@@ -266,15 +272,16 @@ def main(arguments: list[str]):
     num_estimated = 0
 
     if len(arguments) >= 1:
-        arguments = (
+        cmd_arguments = (
             ["task", "rc.gc=0", "status:pending", context] + arguments + ["export"]
         )
     else:
-        arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
+        cmd_arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
 
+    logger.debug("Command: " + " ".join(cmd_arguments))
     try:
         process = subprocess.run(
-            args=arguments,
+            args=cmd_arguments,
             capture_output=True,
             encoding="utf-8",
             errors="replace",
@@ -301,7 +308,6 @@ def main(arguments: list[str]):
     timedel = timethen - timenow
     total_hrs = math.ceil(timedel / timedelta(seconds=1)) / 3600
 
-    logger.debug("Command: " + " ".join(arguments))
     if total_hrs != 0.0:
         if report_end:
             # if we're out of work hours and still working, assume another hour
