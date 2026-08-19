@@ -9,17 +9,18 @@ Copyright 2024 Ankur Sinha
 Author: Ankur Sinha <sanjay DOT ankur AT gmail DOT com>
 """
 
-import holidays
-import typing
-import typer
+import json
+import logging
 import math
 import subprocess
 import sys
-import json
-from isoduration import parse_duration
-from datetime import timedelta, datetime
+import typing
+from datetime import datetime, timedelta
 
-import logging
+import colorlog
+import holidays
+import typer
+from isoduration import parse_duration
 
 WORK_HOURS_MAP = {"work": (10, 18), "default": (9, 21)}
 
@@ -29,8 +30,10 @@ logger = logging.getLogger("taskestimate")
 logger.setLevel(logging.INFO)
 logger.propagate = False
 
-formatter = logging.Formatter("%(name)s (%(levelname)s): %(message)s")
-handler = logging.StreamHandler()
+formatter = colorlog.ColoredFormatter(
+    "%(log_color)s%(name)s (%(levelname)s): %(message)s"
+)
+handler = colorlog.StreamHandler()
 handler.setLevel(logging.INFO)
 handler.setFormatter(formatter)
 
@@ -40,7 +43,7 @@ logger.addHandler(handler)
 # https://github.com/dnel/BusinessHours/blob/master/BusinessHours.py
 class BusinessHours:
     def __init__(
-        self, datetime1, datetime2, worktiming=[8, 17], weekends=[6, 7], holidays=[]
+        self, datetime1, datetime2, worktiming=(8, 17), weekends=(6, 7), holidays=()
     ):
         self.weekends = weekends
         self.worktiming = worktiming
@@ -209,7 +212,7 @@ def get_work_hours_till_report_end(report_end=None, context_name: str = ""):
     return bh.gethours()
 
 
-def main(arguments: typing.List[str]):
+def main(arguments: list[str]):
     """Get estimates of how much time tasks take.
 
     - arguments: all arguments are passed to `task`
@@ -309,12 +312,12 @@ def main(arguments: typing.List[str]):
                 f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) till '{report_end}'"
             )
             if percentage > 100:
-                logger.critical(f"{percentage}%? Really?")
+                logger.critical(f"{percentage}%: Review your workload now.")
             # only really relevant for longer periods
             if total_work_hours >= 8 and percentage > suggested_percentage:
                 print()
                 logger.warning(
-                    f"You are OVER COMMITTED. Consider reducing planned tasks. Suggested commitment is {suggested_percentage}%."
+                    f"You are OVER COMMITTED. Reduce your workload now to bring this down to {suggested_percentage}%."
                 )
 
         else:
