@@ -219,6 +219,9 @@ if [[ $- == *i* ]] ; then
         {
             vit ${TASK_FILTERS}
         }
+        vit-ready () {
+            vit ready ${TASK_FILTERS}
+        }
         vit-today () {
             vit ${TASK_FILTERS} 'due.by:eod'
         }

@@ -16,11 +16,12 @@ default ()
         tmux new-window -n "weechat" -t default: 'systemd-run --user --scope bash -i -c "weechat"'
         tmux new-window -n "neomutt" -t default: 'systemd-run --user --scope bash -i -c "neomutt-work"'
         tmux new-window -n "active" -t default: 'systemd-run --user --scope bash -i -c "vit-active"'
+        tmux new-window -n "ready" -t default: 'systemd-run --user --scope bash -i -c "vit-ready"'
         tmux new-window -n "eod" -t default: 'systemd-run --user --scope bash -i -c "vit-today"'
         tmux new-window -n "eow" -t default: 'systemd-run --user --scope bash -i -c "vit-this-week"'
         tmux new-window -n "1m" -t default: 'systemd-run --user --scope bash -i -c "vit-in-a-month"'
         tmux new-window -n "waiting" -t default: 'systemd-run --user --scope bash -i -c "vit-on-wait"'
-        tmux new-window -n "all" -t default: 'systemd-run --user --scope bash -i -c "vit-tl"'
+        tmux new-window -n "load" -t default: 'systemd-run --user --scope bash -i -c "taskestimates"'
         tmux new-window -t default:
         tmux kill-window -t default:0
         tmux move-window -r
