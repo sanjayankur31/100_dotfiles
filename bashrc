@@ -219,6 +219,10 @@ if [[ $- == *i* ]] ; then
         {
             vit ${TASK_FILTERS}
         }
+        vit-list ()
+        {
+            vit list ${TASK_FILTERS}
+        }
         vit-ready () {
             vit ready ${TASK_FILTERS}
         }
