@@ -21,6 +21,7 @@ default ()
         tmux new-window -n "eow" -t default: 'systemd-run --user --scope bash -i -c "vit-this-week"'
         tmux new-window -n "1m" -t default: 'systemd-run --user --scope bash -i -c "vit-in-a-month"'
         tmux new-window -n "waiting" -t default: 'systemd-run --user --scope bash -i -c "vit-on-wait"'
+        tmux new-window -n "list" -t default: 'systemd-run --user --scope bash -i -c "vit-list"'
         tmux new-window -n "load" -t default: 'systemd-run --user --scope bash -i -c "taskestimates"'
         tmux new-window -t default:
         tmux kill-window -t default:0
