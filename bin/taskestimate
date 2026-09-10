@@ -16,6 +16,7 @@ import shlex
 import subprocess
 import sys
 from datetime import datetime, timedelta
+from typing import Annotated
 
 import colorlog
 import holidays
@@ -36,6 +37,9 @@ handler.setLevel(logging.INFO)
 handler.setFormatter(formatter)
 
 logger.addHandler(handler)
+
+
+app = typer.Typer()
 
 
 # https://github.com/dnel/BusinessHours/blob/master/BusinessHours.py
@@ -213,23 +217,16 @@ def get_work_hours_till_report_end(report_end=None, context_name: str = ""):
     return bh.gethours()
 
 
-def main(arguments: list[str]):
-    """Get estimates of how much time tasks take.
-
-    - arguments: all arguments are passed to `task`
-    """
+@app.command()
+def main(
+    period: Annotated[str, typer.Option(help="Total work period")] = "",
+    arguments: Annotated[list[str] | None, typer.Argument(help="Taskwarrior filters")] = None,
+):
+    """Get estimates of how much time pending tasks will take."""
 
     suggested_percentage = 70.0
-
-    report_end = None
-    report_end_filter = None
-    for arg in arguments:
-        if "due" in arg:
-            report_end_filter = arg
-            report_end = arg.split(":")[1]
-
-    logger.debug(f"{report_end_filter = }")
-    logger.debug(f"{report_end = }")
+    logger.debug(f"{arguments = }")
+    logger.debug(f"{period = }")
 
     # get context
     context_arguments = ["task", "rc.gc=0", "context", "show"]
@@ -261,24 +258,32 @@ def main(arguments: list[str]):
         info_str += f" (Context: {context_name})"
     else:
         info_str += " (No context)"
-    info_str += f": {' '.join(arguments)}"
+    if arguments:
+        info_str += f": {' '.join(arguments)}"
     logger.info(f"{info_str}")
 
-    if report_end:
-        total_work_hours = get_work_hours_till_report_end(report_end, context_name)
+    if period:
+        total_work_hours = get_work_hours_till_report_end(period, context_name)
 
     timenow = timethen = datetime.now()
     num_tasks = 0
     num_estimated = 0
 
-    if len(arguments) >= 1:
+    if arguments and len(arguments) >= 1:
         cmd_arguments = (
-            ["task", "rc.gc=0", "status:pending", context] + arguments + ["export"]
+            ["task", "rc.gc=0", "status:pending"]
+            + ([context] if context else [])
+            + arguments
+            + ["export"]
         )
     else:
-        cmd_arguments = ["task", "rc.gc=0", "status:pending", context] + ["export"]
+        cmd_arguments = (
+            ["task", "rc.gc=0", "status:pending"]
+            + ([context] if context else [])
+            + ["export"]
+        )
 
-    logger.debug("Command: " + " ".join(cmd_arguments))
+    logger.debug(f"Command:  + {cmd_arguments = }")
     try:
         process = subprocess.run(
             args=cmd_arguments,
@@ -309,7 +314,7 @@ def main(arguments: list[str]):
     total_hrs = math.ceil(timedel / timedelta(seconds=1)) / 3600
 
     if total_hrs != 0.0:
-        if report_end:
+        if period:
             # if we're out of work hours and still working, assume another hour
             if total_work_hours == 0:
                 total_work_hours = 1.0
@@ -317,7 +322,7 @@ def main(arguments: list[str]):
             percentage = total_hrs / total_work_hours * 100
 
             logger.info(
-                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) {report_end_filter}"
+                f"Time committed: ({num_estimated}/{num_tasks}) tasks: {total_hrs:.2f}/{total_work_hours:.2f} working hours ({percentage:.2f}%) until {period}"
             )
             if percentage > 100:
                 logger.critical(f"{percentage}%: Review your workload now.")
@@ -337,5 +342,5 @@ def main(arguments: list[str]):
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
     sys.exit(0)

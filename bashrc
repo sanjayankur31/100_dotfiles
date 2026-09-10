@@ -282,25 +282,32 @@ if [[ $- == *i* ]] ; then
             taskestimate ${TASK_FILTERS}
         }
         taskestimate-today () {
-            taskestimate ${TASK_FILTERS} 'due.by:eod'
+            PERIOD="eod"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-this-week () {
-            taskestimate ${TASK_FILTERS} 'due.by:eow'
+            PERIOD="eow"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-this-month () {
-            taskestimate ${TASK_FILTERS} 'due.by:eom'
+            PERIOD="eom"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-in-a-week () {
-            taskestimate ${TASK_FILTERS} 'due.by:1w'
+            PERIOD="1w"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-in-a-month () {
-            taskestimate ${TASK_FILTERS} 'due.by:1m'
+            PERIOD="1m"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-in-six-months () {
-            taskestimate ${TASK_FILTERS} 'due.by:6m'
+            PERIOD="6m"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-in-a-year () {
-            taskestimate ${TASK_FILTERS} 'due.by:1y'
+            PERIOD="1y"
+            taskestimate ${TASK_FILTERS} --period $PERIOD  "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         taskestimate-rl () {
             taskestimate 'project:research.lit'
