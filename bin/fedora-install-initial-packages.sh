@@ -69,12 +69,13 @@ install_basics() {
         fedora-review \
         fedrq \
         firewall-config \
+        focus-timer \
         fortune-mod \
         fzf \
         gcolor3 \
         git-all \
         gnome-extensions-app \
-        gnome-pomodoro \
+        gnome-shell-extension-focus-timer \
         gnome-tweak-tool \
         gnuplot \
         htop \
