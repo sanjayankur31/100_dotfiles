@@ -61,6 +61,14 @@ update_git_project () {
     echo "** Git stashes: please remove the automatically created stash **"
     git stash list
     echo
+
+    echo "** Running a quick clean **"
+    echo
+    git remote prune origin
+    git worktree prune
+    git count-objects -vH
+    git gc
+    echo
 }
 
 update_git_projects () {
