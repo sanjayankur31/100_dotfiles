@@ -227,25 +227,34 @@ if [[ $- == *i* ]] ; then
             vit ready ${TASK_FILTERS}
         }
         vit-today () {
-            vit ${TASK_FILTERS} 'due.by:eod'
+            PERIOD="eod"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-this-week () {
-            vit ${TASK_FILTERS} 'due.by:eow'
+            PERIOD="eow"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-this-month () {
             vit ${TASK_FILTERS} 'due.by:eom'
+            PERIOD="eom"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-in-a-week () {
             vit ${TASK_FILTERS} 'due.by:1w'
+            PERIOD="1w"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-in-a-month () {
-            vit ${TASK_FILTERS} 'due.by:1m'
+            PERIOD="1m"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-in-six-months () {
-            vit ${TASK_FILTERS} 'due.by:6m'
+            PERIOD="6m"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-in-a-year () {
-            vit ${TASK_FILTERS} 'due.by:1y'
+            PERIOD="1y"
+            vit ${TASK_FILTERS} "(scheduled.by:$PERIOD or due.by:$PERIOD)"
         }
         vit-rl () {
             vit 'project:research.lit'
