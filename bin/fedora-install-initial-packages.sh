@@ -201,6 +201,10 @@ install_nvidia() {
 }
 
 enable_services () {
+    echo "Starting/enabling gcr-ssh-agent"
+    systemctl --user start gcr-ssh-agent.service
+    systemctl --user enable gcr-ssh-agent.service
+
     echo "Starting/enabling syncthing"
     systemctl --user start syncthing.service
     systemctl --user enable syncthing.service
