@@ -361,7 +361,7 @@ if [[ $- == *i* ]] ; then
     GPG_TTY="$(tty)"; export GPG_TTY
 
     # For 256 colours in xterm
-    if [ "$TERM" == "xterm" ] || [ "$TERM" == "screen" ] || [ "$TERM" == "screen-256color" ] || [ "$TERM" == "xterm-256color" ]; then
+    if [ "$TERM" == "xterm" ] || [ "$TERM" == "screen" ] || [ "$TERM" == "screen-256color" ] || [ "$TERM" == "xterm-256color" ] || [ "$TERM" == "tmux-256color" ]; then
         # comment out, unclear why I need this given that I set PS1 below anyway
         # export PROMPT_COMMAND='printf "\033]0;%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
 
