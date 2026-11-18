@@ -95,6 +95,7 @@ install_basics() {
         openssh-askpass \
         open-sans-fonts \
         pass \
+        patchutils \
         podman \
         psi-notify \
         psutils \
@@ -113,6 +114,7 @@ install_basics() {
         rcm \
         rfpkg \
         rofi \
+        rpmconf \
         rpmfusion-packager \
         rubygem-taskjuggler \
         rubygem-webrick \
